@@ -1,0 +1,21 @@
+- name: Manage server using  pylxca module
+  hosts: server1
+  connection: local
+  tasks:
+    - name: Manage 10.243.6.68
+      pylxca_module:
+        command_options: manage
+        login_user: USERID
+        login_password: CME44ibm
+        auth_url: https://10.243.14.80
+        discovery_ip: 10.240.74.106
+        manage_user: USERID
+        manage_password: PASSW0RD
+        recovery_password: Passw0rd
+        manage_param: cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true 
+        manage_type: Rack-Tower
+#        manage_uuid: fc3058cadf8b11d48c9b9b1b1b1b1b57 
+        manage_uuid: edabcef2fd5811e39ea740f2e9af0610
+      register: jobid
+    - debug:
+        var: jobid 

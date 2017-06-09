@@ -1,0 +1,79 @@
+#!/usr/bin/python
+import os
+import json
+import logging
+import logging.handlers
+
+#from pylxca import pylxca_cmd
+#from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
+#from pylxca.pylxca_cmd.lxca_ishell import PYTHON_SHELL
+#from pylxca.pylxca_cmd.lxca_pyshell import pyshell
+#from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
+from pylxca.pylxca_cmd.lxca_pyshell import *
+
+def _get_connect_lxca(module, args):
+    #global _conn_lxca
+    _conn_lxca = None
+    kargs = {
+                'url': args.get('auth_url'),
+                'user': args.get('login_user'),
+                'pw': args.get('login_password'),
+                'noverify':'True',
+    }
+    try:
+        #conn = connect("https://10.243.15.168","USERID","CME44ibm","True")
+        _con_lxca = connect(kargs.get('url'),args.get('user'),kargs.get('pw'),kargs['noverify'])
+        module.fail_json(msg = "con: %s, kargs: %s " %(_conn_lxca, kargs))
+    except Exception as e:
+        module.fail_json(msg = "Error authenticating with provided credentials: %s %s %s" %(_conn_lxca, kargs, e))
+    return _conn_lxca
+
+
+def _get_chassis_inventory(conn):
+    conn_obj = connect(module, kwargs)
+    try:
+       return chassis(conn)
+    except ValueError:
+       raise MalformedJsonFileError('%s when reading "%s"' % (conn))
+
+
+# ===========================================
+# Main
+#
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            login_user      = dict(default=None, required=False),
+            login_password  = dict(default=None, required=False),
+            object          = dict(default=None),
+            command_options = dict(default='connect',choices=['connect', 'chassis', 'cmm', 'disconnect']),
+            auth_url        = dict(default=None)
+        ),
+        check_invalid_arguments=False,
+    )
+
+    conn = None
+    rslt = None
+    login_password = module.params["login_password"]
+    login_user = module.params["login_user"]
+    conn_obj = module.params["object"]
+    auth_url = module.params["auth_url"]
+    command_options =  (module.params['command_options'] and module.params['command_options'].upper())
+
+    pyshell()
+#    if command_options == 'connect' and login_password and login_user and auth_url is not None:
+    if command_options == 'CONNECT' and all([login_password, login_user, auth_url]):
+        kwargs = {'auth_url': auth_url, 'login_user':login_user, 'login_password':login_password,}
+        conn_obj = _get_connect_lxca(module, kwargs)
+        module.fail_json(msg = "conn_obj %s" % conn_obj)
+        if not conn_obj:
+           module.exit_json(changed=False, result="Connection failed, con_val= %s" %conn_obj)
+        else:
+           module.exit_json(changed=True, result="Connection success")
+
+# import module snippets
+from ansible.module_utils.basic import *
+main()
+
+

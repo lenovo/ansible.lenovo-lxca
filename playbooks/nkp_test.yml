@@ -1,0 +1,17 @@
+- name: Testing pylxca module
+  hosts: localhost 
+  connection: local
+  tasks:
+
+    - name: capture manifests result
+      pylxca_module:
+        login_user: USERID
+        login_password: Passw0rd
+        auth_url: https://10.240.199.19
+        command_options: manifests
+        manifests_id: 1
+      register: result
+    - debug:
+        var: result
+#   debug: var=result verbosity=2
+#   - debug: msg="{{result.stdout}}"

@@ -1,0 +1,15 @@
+- name: discovery pylxca module
+  hosts: localhost 
+  connection: local
+  tasks:
+    - name: discovery
+      pylxca_module:
+        command_options: discover
+        login_user: USERID
+        login_password: Passw0rd 
+        auth_url: https://10.240.199.19
+        discovery_ip: 10.243.6.68   
+      register: conn
+    - debug:
+        var: conn
+

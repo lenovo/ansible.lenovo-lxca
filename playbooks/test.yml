@@ -1,0 +1,17 @@
+- name: Testing pylxca module
+  hosts: server1
+  connection: local
+
+  tasks:
+    - name: capture output of cmms command
+      pylxca_module: 
+        command_options: connect
+        login_user: USERID
+        login_password: CME44ibm
+#        auth_url: https://10.241.53.171
+        auth_url: https://10.241.106.216
+      register: result
+    - debug:
+        var: result
+#   debug: var=result verbosity=2
+#   - debug: msg="{{result.stdout}}"

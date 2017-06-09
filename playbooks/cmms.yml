@@ -1,0 +1,15 @@
+- name: List all CMMS of Managed chassis from LXCA
+  hosts: localhost 
+  connection: local
+  tasks:
+    - name: cmms
+      pylxca_module:
+        command_options: connect
+        login_user: USERID
+        login_password: CME44ibm
+        auth_url: https://10.243.12.173
+        command_options: chassis
+      register: conn
+    - debug:
+        var: conn
+

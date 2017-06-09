@@ -1,0 +1,16 @@
+- name: send solution manifest to LXCA 
+  hosts: localhost 
+  connection: local
+  tasks:
+    - name: manifests
+      pylxca_module:
+        command_options: manifests
+        login_user: "{{ lxca_user }}"
+        login_password: "{{ lxca_password }}"
+        auth_url: "{{ lxca_url }}"
+        sol_id: "{{ sol_id }}"
+        manifest_path: "{{ manifest_path }}"
+      register: conn
+    - debug:
+        var: conn
+
