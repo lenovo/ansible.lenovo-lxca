@@ -34,12 +34,6 @@ import os
 import json
 import logging
 import logging.handlers
-
-#from pylxca import pylxca_cmd
-#from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
-#from pylxca.pylxca_cmd.lxca_ishell import PYTHON_SHELL
-#from pylxca.pylxca_cmd.lxca_pyshell import pyshell
-#from pylxca.pylxca_cmd import lxca_icommands,lxca_ishell, lxca_pyshell
 from pylxca.pylxca_cmd.lxca_pyshell import *
 
 ip_map = dict()
@@ -167,12 +161,10 @@ def main():
             login_user      = dict(default=None, required=False),
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
-#            command_options = dict(default='connect',choices=['connect', 'chassis', 'cmms', 'disconnect']),
             command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'manage', 'manifests', 'switches', 'updaterepo', 'updatecomp', 'unmanage']),
             auth_url        = dict(default=None),
             discovery_ip    = dict(default=None),
             discover_jobid  = dict(default=None),
-# manage 
             manage_user     = dict(default=None, required=False),
             manage_password = dict(default=None, required=False),
             manage_param    = dict(default=None),
@@ -181,9 +173,7 @@ def main():
             sol_id          = dict(default=None),
             manifest_path   = dict(default=None),
 	    recovery_password = dict(default=None),
-#firmware-updates repository
             repo_key        = dict(default=None),
-#firmware update paramter
             update_mode     = dict(default=None),
             update_action   = dict(default=None),
             update_server   = dict(default=None),
@@ -202,20 +192,24 @@ def main():
     login_user = module.params["login_user"]
     conn_obj = module.params["connobject"]
     auth_url = module.params["auth_url"]
-# Argument needed for discovery
+
+    # Argument needed for discovery
     discovery_ip = module.params["discovery_ip"]
     discover_jobid = module.params["discover_jobid"]
     command_options =  (module.params['command_options'] and module.params['command_options'].upper())
-# Argument needed for managing machine with lxca
+
+    # Argument needed for managing machine with lxca
     manage_user = module.params["manage_user"]
     manage_password = module.params["manage_password"]
     manage_param = module.params["manage_param"]
     manage_type = module.params["manage_type"]
     manage_uuid = module.params["manage_uuid"]
     recovery_password = module.params["recovery_password"]
-#firmware-updates repository
+
+    #firmware-updates repository
     repo_key = module.params["repo_key"]
-#firmware update paramter
+
+    #firmware update paramter
     update_mode = module.params["update_mode"]
     update_action = module.params["update_action"]
     update_server = module.params["update_server"]
@@ -227,15 +221,15 @@ def main():
    
     if module.params['command_options'] == 'connect' and login_password and login_user and auth_url is not None:
         conn = _get_connect_lxca( module, module.params)
-#        conn_rslt = dict(changed=False, ansible_facts=conn)
-#        rslt = _get_cmms_inventory(conn_obj)       
-#        conn = connect(auth_url,login_user,login_password,"True")
+        #conn_rslt = dict(changed=False, ansible_facts=conn)
+        #rslt = _get_cmms_inventory(conn_obj)       
+        #conn = connect(auth_url,login_user,login_password,"True")
         if not conn:
-#            module.exit_json( **conn_rslt )
+           #module.exit_json( **conn_rslt )
            module.exit_json( changed=False,msg="Got connection object")
         else:          
            module.exit_json( changed=False,msg="Fail getting connection object")
-#            module.exit_json( **conn_rslt )
+           #module.exit_json( **conn_rslt )
 
     if  module.params['command_options'] == 'chassis':
         rslt = _get_chassis_inventory(module, module.params)

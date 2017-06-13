@@ -4,12 +4,11 @@
   tasks:
     - name: cmms
       pylxca_module:
-        command_options: connect
-        login_user: USERID
-        login_password: CME44ibm
-        auth_url: https://10.243.12.173
+        login_user: "{{ lxca_user }}"
+        login_password: "{{ lxca_password }}"
+        auth_url: "{{ lxca_url }}"
         command_options: chassis
-      register: conn
+      register: rslt 
     - debug:
-        var: conn
+        var: rslt 
 
