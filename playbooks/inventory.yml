@@ -1,0 +1,5 @@
+- name: Calling inventory Role
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: lenovo.lxca-inventory, lxca_user: "{{ lxca_user }}", lxca_password: "{{ lxca_password }}", lxca_url: "{{ lxca_url }}" }

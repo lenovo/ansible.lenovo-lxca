@@ -1,8 +1,4 @@
----
-  Hosts: server1
-  tasks:
-    - name: Testing pylxca module
-      pylxca_module: command_options= connect login_user= USERID login_password= CME44ibm auth_url= https://10.243.15.168
-      register: result
-   
-    - debug: var=result
+  hosts: localhost
+  connection: local 
+    - easy_install:
+      name: pip 
