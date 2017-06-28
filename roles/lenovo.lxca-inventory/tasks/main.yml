@@ -7,6 +7,78 @@
     auth_url: "{{ lxca_url }}"
     command_options: chassis
   register: rslt
+  tags:
+    chassis
+  
+- name: get cmms data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: cmms
+  register: rslt
+  tags:
+    cmms
+  
+- name: get nodes data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: nodes
+  register: rslt
+  tags:
+     nodes
+  
+- name: get fans data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: fans
+  register: rslt
+  tags:
+     fans
+  
+- name: get fanmuxes data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: fanmuxes
+  register: rslt
+  tags:
+     fanmuxes
+  
+- name: get powersupplies data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: powersupplies
+  register: rslt
+  tags:
+     powersupplies
+  
+- name: get scalablesystem data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: scalablesystem
+  register: rslt
+  tags:
+     scalablesystem
+  
+- name: get switches data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: switches
+  register: rslt
+  tags:
+     switches
   
 
 

@@ -88,6 +88,22 @@ def _get_discover(module, kwargs):
         module.fail_json(msg = "Error discovery")
     return result
 
+def _get_fans(module, kwargs):
+    result = None
+    try:
+        result =  fans(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting fans inventory")
+    return result
+
+def _get_fanmuxes(module, kwargs):
+    result = None
+    try:
+        result =  fanmuxes(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting fanmuxes inventory")
+    return result
+
 def _manage_bare_metal(module, kwargs):
     result = None
     manage_kargs = {
@@ -123,6 +139,30 @@ def _get_manifests(module, kwargs):
         result =  manifests(conn,dict)
     except Exception:
         module.fail_json(msg = find_conn_obj(kwargs))
+    return result
+
+def _get_nodes(module, kwargs):
+    result = None
+    try:
+        result =  nodes(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting nodes inventory")
+    return result
+
+def _get_powersupplies(module, kwargs):
+    result = None
+    try:
+        result =  powersupplies(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting powersupplies inventory")
+    return result
+
+def _get_scalablesystem(module, kwargs):
+    result = None
+    try:
+        result =  scalablesystem(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting scalablesystem inventory")
     return result
 
 def _get_switches_inventory( module, kwargs):
@@ -161,7 +201,7 @@ def main():
             login_user      = dict(default=None, required=False),
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
-            command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'manage', 'manifests', 'switches', 'updaterepo', 'updatecomp', 'unmanage']),
+            command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'fans', 'fanmuxes', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'updaterepo', 'updatecomp', 'unmanage']),
             auth_url        = dict(default=None),
             discovery_ip    = dict(default=None),
             discover_jobid  = dict(default=None),
@@ -182,6 +222,7 @@ def main():
             update_cmm      = dict(default=None)
         ),
         check_invalid_arguments=False,
+	supports_check_mode = False, 
     )
     
     conn = None
@@ -252,6 +293,20 @@ def main():
         else:
            module.exit_json(changed=False,msg="Successful discovery", result=rslt)
 
+    if  module.params['command_options'] == 'fans':
+        rslt = _get_fans(module, module.params)
+        if not rslt:
+           module.exit_json(changed=False, msg="Fail to get fans result", result=rslt)
+        else:
+           module.exit_json(changed=False,msg="Success fans result ", result=rslt)
+
+    if  module.params['command_options'] == 'fanmuxes':
+        rslt = _get_fanmuxes(module, module.params)
+        if not rslt:
+           module.exit_json(changed=False, msg="Fail to get fanmuxes result", result=rslt)
+        else:
+           module.exit_json(changed=False,msg="Success fanmuxes result", result=rslt)
+
     if  module.params['command_options'] == 'manage':
         rslt = _manage_bare_metal(module, module.params)
         if not rslt:
@@ -265,6 +320,27 @@ def main():
            module.exit_json(changed=False, msg="Fail to get manifests", result=rslt)
         else:
            module.exit_json(changed=False,msg="success manifests result", result=rslt)
+
+    if  module.params['command_options'] == 'nodes':
+        rslt = _get_nodes(module, module.params)
+        if not rslt:
+           module.exit_json(changed=False, msg="Fail to get nodes", result=rslt)
+        else:
+           module.exit_json(changed=False,msg="success nodes result", result=rslt)
+
+    if  module.params['command_options'] == 'powersupplies':
+        rslt = _get_powersupplies(module, module.params)
+        if not rslt:
+           module.exit_json(changed=False, msg="Fail to get powersupplies", result=rslt)
+        else:
+           module.exit_json(changed=False,msg="success powersupplies result", result=rslt)
+
+    if  module.params['command_options'] == 'scalablesystem':
+        rslt = _get_scalablesystem(module, module.params)
+        if not rslt:
+           module.exit_json(changed=False, msg="Fail to get scalablesystem", result=rslt)
+        else:
+           module.exit_json(changed=False,msg="success scalablesystem result", result=rslt)
 
     if  module.params['command_options'] == 'switches':
         rslt = _get_switches_inventory(module, module.params)
