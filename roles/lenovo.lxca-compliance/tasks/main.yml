@@ -1,13 +1,4 @@
 ---
-# tasks file for lenovo.lxca-compliance
-- name: validate the compliance 
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: compliance 
-  register: rslt
-  tags:
-    compliance 
-  
 
+- include: gatherer.yml
+- include: validator.yml
