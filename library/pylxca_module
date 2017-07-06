@@ -104,6 +104,14 @@ def _get_fanmuxes(module, kwargs):
         module.fail_json(msg = "Error getting fanmuxes inventory")
     return result
 
+def _get_ffdc(module, kwargs):
+    result = None
+    try:
+        result =  ffdc(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+    except Exception:
+        module.fail_json(msg = "Error getting ffdc inventory")
+    return result
+
 def _manage_bare_metal(module, kwargs):
     result = None
     manage_kargs = {
@@ -113,12 +121,12 @@ def _manage_bare_metal(module, kwargs):
                 'rpw': kwargs.get('recovery_password'), 
                 'mp': kwargs.get('manage_param'),
                 'type': kwargs.get('manage_type'),
-                'epuuid': kwargs.get('manage_uuid') 
+                'uuid': kwargs.get('uuid') 
                 
         }
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('manage_uuid'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'))
     except Exception:
         module.fail_json(msg = " Fail to manage")
     return result
@@ -191,6 +199,34 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware ")
     return result
 
+def _get_users(module, kwargs):
+    result = None
+    try:
+        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+    except Exception:
+        module.fail_json(msg = "Error getting users ")
+    return result
+
+func_dict = {
+                'connect': _get_connect_lxca,
+                'chassis': _get_chassis_inventory,
+                'cmms': _get_cmms_inventory,
+                'discover': _get_discover,
+                'fans': _get_fans,
+                'fanmuxes': _get_fanmuxes,
+                'ffdc': _get_ffdc,
+                'manage': _manage_bare_metal,
+                'manifests': _get_manifests,
+                'nodes': _get_nodes,
+                'powersupplies': _get_powersupplies,
+                'scalablesystem': _get_scalablesystem,
+                'switches': _get_switches_inventory,
+                'updaterepo': _get_updaterepo_info,
+                'updatecomp': _update_firmware,
+                'users': _get_users
+}
+
+
 # ===========================================
 # Main
 #
@@ -201,15 +237,15 @@ def main():
             login_user      = dict(default=None, required=False),
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
-            command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'fans', 'fanmuxes', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'updaterepo', 'updatecomp', 'unmanage']),
+            command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'fans', 'fanmuxes', 'ffdc', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'updaterepo', 'updatecomp', 'unmanage', 'users']),
             auth_url        = dict(default=None),
+            uuid     = dict(default=None),
             discovery_ip    = dict(default=None),
             discover_jobid  = dict(default=None),
             manage_user     = dict(default=None, required=False),
             manage_password = dict(default=None, required=False),
             manage_param    = dict(default=None),
             manage_type     = dict(default=None),
-            manage_uuid     = dict(default=None),
             sol_id          = dict(default=None),
             manifest_path   = dict(default=None),
 	    recovery_password = dict(default=None),
@@ -237,14 +273,14 @@ def main():
     # Argument needed for discovery
     discovery_ip = module.params["discovery_ip"]
     discover_jobid = module.params["discover_jobid"]
-    command_options =  (module.params['command_options'] and module.params['command_options'].upper())
+    command_options =  module.params['command_options']
 
     # Argument needed for managing machine with lxca
     manage_user = module.params["manage_user"]
     manage_password = module.params["manage_password"]
     manage_param = module.params["manage_param"]
     manage_type = module.params["manage_type"]
-    manage_uuid = module.params["manage_uuid"]
+    uuid = module.params["uuid"]
     recovery_password = module.params["recovery_password"]
 
     #firmware-updates repository
@@ -258,110 +294,14 @@ def main():
     update_switch  = module.params["update_switch"]
     update_cmm     = module.params["update_cmm"]
 
-    pyshell()    
-   
-    if module.params['command_options'] == 'connect' and login_password and login_user and auth_url is not None:
-        conn = _get_connect_lxca( module, module.params)
-        #conn_rslt = dict(changed=False, ansible_facts=conn)
-        #rslt = _get_cmms_inventory(conn_obj)       
-        #conn = connect(auth_url,login_user,login_password,"True")
-        if not conn:
-           #module.exit_json( **conn_rslt )
-           module.exit_json( changed=False,msg="Got connection object")
-        else:          
-           module.exit_json( changed=False,msg="Fail getting connection object")
-           #module.exit_json( **conn_rslt )
+    pyshell()
 
-    if  module.params['command_options'] == 'chassis':
-        rslt = _get_chassis_inventory(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get chassis result", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success chassis result", result=rslt) 
+    rslt = func_dict[command_options](module,module.params)
+    if not rslt:
+        module.exit_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
+    else:
+        module.exit_json(changed=False, msg="Success %s result" %command_options, result=rslt)
 
-    if  module.params['command_options'] == 'cmms':
-        rslt = _get_cmms_inventory(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get cmms result", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success cmms result", result=rslt)
-
-    if  module.params['command_options'] == 'discover':
-        rslt = _get_discover(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to discovery", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Successful discovery", result=rslt)
-
-    if  module.params['command_options'] == 'fans':
-        rslt = _get_fans(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get fans result", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success fans result ", result=rslt)
-
-    if  module.params['command_options'] == 'fanmuxes':
-        rslt = _get_fanmuxes(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get fanmuxes result", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success fanmuxes result", result=rslt)
-
-    if  module.params['command_options'] == 'manage':
-        rslt = _manage_bare_metal(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to manage", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Manage successfully initiated", result=rslt)
-
-    if  module.params['command_options'] == 'manifests':
-        rslt = _get_manifests(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get manifests", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="success manifests result", result=rslt)
-
-    if  module.params['command_options'] == 'nodes':
-        rslt = _get_nodes(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get nodes", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="success nodes result", result=rslt)
-
-    if  module.params['command_options'] == 'powersupplies':
-        rslt = _get_powersupplies(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get powersupplies", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="success powersupplies result", result=rslt)
-
-    if  module.params['command_options'] == 'scalablesystem':
-        rslt = _get_scalablesystem(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to get scalablesystem", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="success scalablesystem result", result=rslt)
-
-    if  module.params['command_options'] == 'switches':
-        rslt = _get_switches_inventory(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to switches result", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="successfully got switches result", result=rslt)
-
-    if  module.params['command_options'] == 'updaterepo':
-        rslt = _get_updaterepo_info(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to retrieve firmware info", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success retrieving firmware info", result=rslt)
-
-    if  module.params['command_options'] == 'updatecomp':
-        rslt = _update_firmware(module, module.params)
-        if not rslt:
-           module.exit_json(changed=False, msg="Fail to update firmware", result=rslt)
-        else:
-           module.exit_json(changed=False,msg="Success firmware update", result=rslt)
 
 # import module snippets
 from ansible.module_utils.basic import *
