@@ -80,6 +80,15 @@ def _get_cmms_inventory(module, kwargs):
         module.fail_json(msg = "Error getting cmms inventory")
     return result
 
+def _get_configpatterns(module, kwargs):
+    result = None
+    try:
+        result =  configpatterns(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting configpatterns")
+    return result
+
+
 def _get_discover(module, kwargs):
     result = None
     try:
@@ -110,6 +119,23 @@ def _get_ffdc(module, kwargs):
         result =  ffdc(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception:
         module.fail_json(msg = "Error getting ffdc inventory")
+    return result
+
+def _get_jobs(module, kwargs):
+    result = None
+    try:
+        result =  jobs(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+    except Exception:
+        module.fail_json(msg = "Error getting jobs inventory")
+    return result
+
+
+def _get_lxcalog(module, kwargs):
+    result = None
+    try:
+        result = lxcalog(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting lxcalog ")
     return result
 
 def _manage_bare_metal(module, kwargs):
@@ -176,9 +202,50 @@ def _get_scalablesystem(module, kwargs):
 def _get_switches_inventory( module, kwargs):
     result = None
     try:
-       result = switches(_get_connect_lxca(module,kwargs))
-    except Exception:
-       module.fail_json(msg = find_conn_obj(kwargs))
+        result = switches(_get_connect_lxca(module,kwargs))
+    except Exception, e:
+        module.fail_json(msg="Error getting switches " + str(e))
+    return result
+
+def _get_tasks(module, kwargs):
+    result = None
+    tasks_dict = {}
+    jobUID = kwargs.get("id")
+    action = kwargs.get("action")
+    if action in ['cancel', 'delete']:
+        tasks_dict['jobUID'] = jobUID
+        tasks_dict['action'] = action
+    elif action in ['update']:
+        tasks_dict['action'] = action
+        updateList = kwargs.get("update_list")
+        # updateList = []
+        # jobUIDList = jobUID.split(',')
+        # if kwargs.get('percentage'):
+        #     percentage = kwargs.get("percentage")
+        #     percentageList = percentage.split(',')
+        # if kwargs.get('state'):
+        #     state = kwargs.get("state")
+        #     stateList = state.split(',')
+        # try:
+        #     for i in xrange(len(jobUIDList)):
+        #         internal_dict = {}
+        #         internal_dict['jobUID'] = jobUIDList[i]
+        #         if kwargs.get('percentage'):
+        #             internal_dict['jobState'] = stateList[i]
+        #         if kwargs.get('percentage'):
+        #             internal_dict['percentage'] = int(percentageList[i])
+        #         updateList.append(internal_dict)
+        # except Exception, e:
+        #     module.fail_json(msg="Error switches updateList data  " + str(e))
+        #     return result
+
+        tasks_dict['updateList'] = updateList
+    else:
+        tasks_dict['jobUID'] = jobUID
+    try:
+        result = tasks(_get_connect_lxca(module,kwargs),tasks_dict)
+    except Exception, e:
+        module.fail_json(msg = "Error getting tasks " + str(e))
     return result
 
 def _get_updaterepo_info(module, kwargs):
@@ -199,10 +266,18 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware ")
     return result
 
+def _get_updatepolicy(module, kwargs):
+    result = None
+    try:
+        result =  updatepolicy(_get_connect_lxca(module,kwargs))
+    except Exception:
+        module.fail_json(msg = "Error getting updatepolicy ")
+    return result
+
 def _get_users(module, kwargs):
     result = None
     try:
-        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception:
         module.fail_json(msg = "Error getting users ")
     return result
@@ -211,18 +286,23 @@ func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
                 'cmms': _get_cmms_inventory,
+                'configpatterns': _get_configpatterns,
                 'discover': _get_discover,
                 'fans': _get_fans,
                 'fanmuxes': _get_fanmuxes,
                 'ffdc': _get_ffdc,
+                'jobs': _get_jobs,
+                'lxcalog': _get_lxcalog,
                 'manage': _manage_bare_metal,
                 'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'powersupplies': _get_powersupplies,
                 'scalablesystem': _get_scalablesystem,
                 'switches': _get_switches_inventory,
+                'tasks': _get_tasks,
                 'updaterepo': _get_updaterepo_info,
                 'updatecomp': _update_firmware,
+                'updatepolicy': _get_updatepolicy,
                 'users': _get_users
 }
 
@@ -237,25 +317,31 @@ def main():
             login_user      = dict(default=None, required=False),
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
-            command_options = dict(choices=['connect', 'chassis', 'cmms', 'disconnect', 'discover', 'fans', 'fanmuxes', 'ffdc', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'updaterepo', 'updatecomp', 'unmanage', 'users']),
+            #command_options = dict(choices=['connect', 'chassis', 'cmms', 'configpatterns', 'disconnect', 'discover', 'fans', 'fanmuxes', 'ffdc', 'jobs', 'lxcalog', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'tasks', 'unmanage', 'updaterepo', 'updatecomp', 'updatepolicy', 'users']),
+            command_options = dict( choises=func_dict.keys() ),
+            action          = dict(default=None),
             auth_url        = dict(default=None),
-            uuid     = dict(default=None),
+            uuid            = dict(default=None),
+            id              = dict(default=None),
             discovery_ip    = dict(default=None),
             discover_jobid  = dict(default=None),
             manage_user     = dict(default=None, required=False),
             manage_password = dict(default=None, required=False),
             manage_param    = dict(default=None),
             manage_type     = dict(default=None),
+            percentage      = dict(default=None),
+            state           = dict(default=None),
             sol_id          = dict(default=None),
             manifest_path   = dict(default=None),
-	    recovery_password = dict(default=None),
+	        recovery_password = dict(default=None),
             repo_key        = dict(default=None),
             update_mode     = dict(default=None),
             update_action   = dict(default=None),
             update_server   = dict(default=None),
             update_storage  = dict(default=None),
             update_switch   = dict(default=None),
-            update_cmm      = dict(default=None)
+            update_cmm      = dict(default=None),
+            update_list     = dict(default=None,type=('list'))
         ),
         check_invalid_arguments=False,
 	supports_check_mode = False, 

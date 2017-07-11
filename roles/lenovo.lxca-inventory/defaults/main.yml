@@ -2,6 +2,11 @@
 # defaults file for lenovo.lxca-inventory
 lxca-inventory_version: "0.1"
 uuid: null
+id: null
+action: null
+percentage: null
+state: null
+update_list: null
 
 chassis_inv_args:
   - {  
