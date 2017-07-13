@@ -193,9 +193,9 @@ def _get_manifests(module, kwargs):
 def _get_nodes(module, kwargs):
     result = None
     try:
-        result =  nodes(_get_connect_lxca(module,kwargs))
-    except Exception as e:
-        module.fail_json(msg = "Error getting nodes inventory " + str(e))
+        result =  nodes(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+    except Exception:
+        module.fail_json(msg = "Error getting nodes inventory")
     return result
 
 def _get_powersupplies(module, kwargs):
@@ -276,6 +276,16 @@ def _get_users(module, kwargs):
         module.fail_json(msg = "Error getting users ")
     return result
 
+def _gather_server_facts(module, kwargs):
+    kwargs['uuid'] = kwargs.get('fact_dict')['server_uuid']
+
+    rslt = _get_nodes(module, module.params)
+
+    if not rslt:
+        module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
+    else:
+        module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
+
 func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
@@ -300,6 +310,7 @@ func_dict = {
                 'updatecomp': _update_firmware,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users
+                'gather_server_facts': _gather_server_facts
 }
 
 
@@ -338,9 +349,10 @@ def main():
             update_switch   = dict(default=None),
             update_cmm      = dict(default=None),
             update_list     = dict(default=None,type=('list'))
+            fact_dict       = dict(default=None,type=('dict'))
         ),
         check_invalid_arguments=False,
-	supports_check_mode = False, 
+	    supports_check_mode = False,
     )
     
     conn = None
@@ -383,7 +395,6 @@ def main():
         module.exit_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
     else:
         module.exit_json(changed=False, msg="Success %s result" %command_options, result=rslt)
-
 
 # import module snippets
 from ansible.module_utils.basic import *

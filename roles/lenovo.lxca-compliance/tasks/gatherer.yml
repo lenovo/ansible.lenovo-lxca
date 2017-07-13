@@ -1,32 +1,46 @@
 # Task file for lenovo.lxca-compliance role
 # This task pull the server inventory Data from LXCA and store it in custom facts
 
+- name: Include vars
+  include_vars:
+    file: compliance_vars.yml
+    name: data
+  tags:
+    gather_server_facts
+
+#- name: print vars
+#  debug:
+#    var: data.server
+#  tags:
+#    gather_server_facts
+
 - name: Pulling Server inventory
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    server_uuid: "{{ server_uuid}}"
-    command_options: nodes
-  register: rslt
+    fact_dict: "{{ data.server }}"
+    command_options: gather_server_facts
   tags:
     gather_server_facts
 
-- name: Filtering facts
-  set_fact:
-    node_list: "{{ node_list|default([]) | union([{ 'uuid': item.uuid, 'machineType': item.machineType }]) }}"
-  when:
-    - item.uuid == server_uuid
-  with_items: "{{ rslt.result.nodeList}}"
+#- name: Filtering facts
+#  set_fact:
+#    node_list: "{{ node_list|default([]) | union([{ 'uuid': item.uuid, 'machineType': item.machineType }]) }}"
+#  when:
+#    - item.uuid == server_uuid
+#  with_items: "{{ rslt.result.nodeList}}"
+#  tags:
+#    gather_server_facts
+
+#- name: Update custom facts
+#  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{item.uuid}}.fact
+#  with_items: "{{ node_list }}"
+#  tags:
+#    gather_server_facts
+
+- name: Print Ansible Facts
+  debug:
+    msg: ansible_facts
   tags:
     gather_server_facts
-
-- name: Update custom facts
-  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{item.uuid}}.fact
-  with_items: "{{ node_list }}"
-  tags:
-    gather_server_facts
-
-#- name: Print Ansible Facts
-#  debug:
-#    msg: "{{ node_list }} "

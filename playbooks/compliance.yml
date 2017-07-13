@@ -1,8 +1,7 @@
----
-
 - name: Executing Compliance Engine
   hosts: localhost
   connection: local
   gather_facts: no
+
   roles:
-    - { role: lenovo.lxca-compliance, lxca_user: "{{ lxca_user }}", lxca_password: "{{ lxca_password }}", lxca_url: "{{ lxca_url }}" , server_uuid: "{{ server_uuid }}", property: "{{ property }}",  ref_value: "{{ ref_value }}" }
+    - { role: lenovo.lxca-compliance, lxca_user: "{{ lxca_user }}", lxca_password: "{{ lxca_password }}", lxca_url: "{{ lxca_url }}"  }

@@ -1,0 +1,4 @@
+server:
+  server_uuid: 909145e6dc9411e4a97b6eae8b4bd9a3
+  basic_facts: [{ property: machineType, ref_value: 6241},{ property: server-type, ref_value: 'Rack-Tower Server'}]
+  plugin_facts: [{ plugin: check_config}]
