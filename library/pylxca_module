@@ -68,24 +68,40 @@ def _get_chassis_inventory( module, kwargs):
     result = None
     try:
        result = chassis(_get_connect_lxca(module,kwargs))
-    except Exception:
-       module.fail_json(msg = find_conn_obj(kwargs))
+    except Exception as e:
+       module.fail_json(msg = "Error getting chassis inventory" + str(e))
     return result
 
 def _get_cmms_inventory(module, kwargs):
     result = None
     try:
         result =  cmms(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting cmms inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting cmms inventory" + str(e))
     return result
 
 def _get_configpatterns(module, kwargs):
     result = None
     try:
         result =  configpatterns(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting configpatterns")
+    except Exception as e:
+        module.fail_json(msg = "Error getting configpatterns" + str(e))
+    return result
+
+def _get_configprofiles(module, kwargs):
+    result = None
+    try:
+        result =  configprofiles(_get_connect_lxca(module,kwargs), kwargs.get('id'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting configprofiles" + str(e))
+    return result
+
+def _get_configtargets(module, kwargs):
+    result = None
+    try:
+        result =  configtargets(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting configtargets" + str(e))
     return result
 
 
@@ -93,40 +109,40 @@ def _get_discover(module, kwargs):
     result = None
     try:
         result =  discover(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'))
-    except Exception:
-        module.fail_json(msg = "Error discovery")
+    except Exception as e:
+        module.fail_json(msg = "Error discovery " + str(e))
     return result
 
 def _get_fans(module, kwargs):
     result = None
     try:
         result =  fans(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting fans inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting fans inventory " + str(e))
     return result
 
 def _get_fanmuxes(module, kwargs):
     result = None
     try:
         result =  fanmuxes(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting fanmuxes inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting fanmuxes inventory " + str(e))
     return result
 
 def _get_ffdc(module, kwargs):
     result = None
     try:
         result =  ffdc(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
-    except Exception:
-        module.fail_json(msg = "Error getting ffdc inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting ffdc inventory " + str(e))
     return result
 
 def _get_jobs(module, kwargs):
     result = None
     try:
         result =  jobs(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
-    except Exception:
-        module.fail_json(msg = "Error getting jobs inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting jobs inventory " + str(e))
     return result
 
 
@@ -134,8 +150,8 @@ def _get_lxcalog(module, kwargs):
     result = None
     try:
         result = lxcalog(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting lxcalog ")
+    except Exception as e:
+        module.fail_json(msg = "Error getting lxcalog " + str(e))
     return result
 
 def _manage_bare_metal(module, kwargs):
@@ -148,21 +164,20 @@ def _manage_bare_metal(module, kwargs):
                 'mp': kwargs.get('manage_param'),
                 'type': kwargs.get('manage_type'),
                 'uuid': kwargs.get('uuid') 
-                
         }
 
     try:
        result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'))
-    except Exception:
-        module.fail_json(msg = " Fail to manage")
+    except Exception as e:
+        module.fail_json(msg = " Fail to manage" + str(e))
     return result
 
 def _manage_metal_percent(module, kwargs):
     result = None
     try:
        result = manage(_get_connect_lxca(module,kwargs),kwargs.get(discover_jobid))
-    except Exception:
-        module.fail_json(msg = "Error getting info abt jobid")
+    except Exception as e:
+        module.fail_json(msg = "Error getting info abt jobid" + str(e))
     return result
 
 def _get_manifests(module, kwargs):
@@ -171,39 +186,39 @@ def _get_manifests(module, kwargs):
         dict = {'id':kwargs.get('sol_id'),'file':kwargs.get('manifest_path')}
         conn = _get_connect_lxca(module,kwargs)
         result =  manifests(conn,dict)
-    except Exception:
-        module.fail_json(msg = find_conn_obj(kwargs))
+    except Exception as e:
+        module.fail_json(msg = "Error getting manifest " + str(e))
     return result
 
 def _get_nodes(module, kwargs):
     result = None
     try:
         result =  nodes(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting nodes inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting nodes inventory " + str(e))
     return result
 
 def _get_powersupplies(module, kwargs):
     result = None
     try:
         result =  powersupplies(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting powersupplies inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting powersupplies inventory " + str(e))
     return result
 
 def _get_scalablesystem(module, kwargs):
     result = None
     try:
         result =  scalablesystem(_get_connect_lxca(module,kwargs))
-    except Exception:
-        module.fail_json(msg = "Error getting scalablesystem inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting scalablesystem inventory " + str(e))
     return result
 
 def _get_switches_inventory( module, kwargs):
     result = None
     try:
         result = switches(_get_connect_lxca(module,kwargs))
-    except Exception, e:
+    except Exception as e:
         module.fail_json(msg="Error getting switches " + str(e))
     return result
 
@@ -218,33 +233,12 @@ def _get_tasks(module, kwargs):
     elif action in ['update']:
         tasks_dict['action'] = action
         updateList = kwargs.get("update_list")
-        # updateList = []
-        # jobUIDList = jobUID.split(',')
-        # if kwargs.get('percentage'):
-        #     percentage = kwargs.get("percentage")
-        #     percentageList = percentage.split(',')
-        # if kwargs.get('state'):
-        #     state = kwargs.get("state")
-        #     stateList = state.split(',')
-        # try:
-        #     for i in xrange(len(jobUIDList)):
-        #         internal_dict = {}
-        #         internal_dict['jobUID'] = jobUIDList[i]
-        #         if kwargs.get('percentage'):
-        #             internal_dict['jobState'] = stateList[i]
-        #         if kwargs.get('percentage'):
-        #             internal_dict['percentage'] = int(percentageList[i])
-        #         updateList.append(internal_dict)
-        # except Exception, e:
-        #     module.fail_json(msg="Error switches updateList data  " + str(e))
-        #     return result
-
         tasks_dict['updateList'] = updateList
     else:
         tasks_dict['jobUID'] = jobUID
     try:
         result = tasks(_get_connect_lxca(module,kwargs),tasks_dict)
-    except Exception, e:
+    except Exception as e:
         module.fail_json(msg = "Error getting tasks " + str(e))
     return result
 
@@ -287,6 +281,8 @@ func_dict = {
                 'chassis': _get_chassis_inventory,
                 'cmms': _get_cmms_inventory,
                 'configpatterns': _get_configpatterns,
+                'configprofiles': _get_configprofiles,
+                'configtargets': _get_configtargets,
                 'discover': _get_discover,
                 'fans': _get_fans,
                 'fanmuxes': _get_fanmuxes,
@@ -318,7 +314,7 @@ def main():
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
             #command_options = dict(choices=['connect', 'chassis', 'cmms', 'configpatterns', 'disconnect', 'discover', 'fans', 'fanmuxes', 'ffdc', 'jobs', 'lxcalog', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'tasks', 'unmanage', 'updaterepo', 'updatecomp', 'updatepolicy', 'users']),
-            command_options = dict( choises=func_dict.keys() ),
+            command_options = dict( choises=list(func_dict) ),
             action          = dict(default=None),
             auth_url        = dict(default=None),
             uuid            = dict(default=None),

@@ -102,6 +102,14 @@
   tags:
      users
 
+
+- assert:
+       that:
+         - " 'Success' in rslt.msg"
+  tags:
+     users
+
+
 - name: get lxcalog data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
@@ -156,3 +164,26 @@
   register: rslt
   tags:
      configpatterns
+
+- name: get configprofiles data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: configprofiles
+  register: rslt
+  tags:
+     configprofiles
+
+
+- name: get configtargets data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: configtargets
+  register: rslt
+  tags:
+     configtargets
