@@ -155,35 +155,3 @@
   tags:
      updatepolicy
 
-- name: get configpatterns data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: configpatterns
-  register: rslt
-  tags:
-     configpatterns
-
-- name: get configprofiles data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    id: "{{ id }}"
-    command_options: configprofiles
-  register: rslt
-  tags:
-     configprofiles
-
-
-- name: get configtargets data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    id: "{{ id }}"
-    command_options: configtargets
-  register: rslt
-  tags:
-     configtargets

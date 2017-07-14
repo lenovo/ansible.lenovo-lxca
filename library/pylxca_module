@@ -75,7 +75,7 @@ def _get_chassis_inventory( module, kwargs):
 def _get_cmms_inventory(module, kwargs):
     result = None
     try:
-        result =  cmms(_get_connect_lxca(module,kwargs))
+        result =  cmms(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting cmms inventory" + str(e))
     return result
@@ -83,7 +83,7 @@ def _get_cmms_inventory(module, kwargs):
 def _get_configpatterns(module, kwargs):
     result = None
     try:
-        result =  configpatterns(_get_connect_lxca(module,kwargs))
+        result =  configpatterns(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting configpatterns" + str(e))
     return result
@@ -116,7 +116,7 @@ def _get_discover(module, kwargs):
 def _get_fans(module, kwargs):
     result = None
     try:
-        result =  fans(_get_connect_lxca(module,kwargs))
+        result =  fans(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting fans inventory " + str(e))
     return result
@@ -124,7 +124,7 @@ def _get_fans(module, kwargs):
 def _get_fanmuxes(module, kwargs):
     result = None
     try:
-        result =  fanmuxes(_get_connect_lxca(module,kwargs))
+        result =  fanmuxes(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting fanmuxes inventory " + str(e))
     return result
@@ -145,7 +145,7 @@ def _get_jobs(module, kwargs):
         module.fail_json(msg = "Error getting jobs inventory " + str(e))
     return result
 
-
+# TODO filter
 def _get_lxcalog(module, kwargs):
     result = None
     try:
@@ -190,10 +190,11 @@ def _get_manifests(module, kwargs):
         module.fail_json(msg = "Error getting manifest " + str(e))
     return result
 
+#TODO chassis , status
 def _get_nodes(module, kwargs):
     result = None
     try:
-        result =  nodes(_get_connect_lxca(module,kwargs))
+        result =  nodes(_get_connect_lxca(module,kwargs), kwargs('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting nodes inventory " + str(e))
     return result
@@ -201,23 +202,25 @@ def _get_nodes(module, kwargs):
 def _get_powersupplies(module, kwargs):
     result = None
     try:
-        result =  powersupplies(_get_connect_lxca(module,kwargs))
+        result =  powersupplies(_get_connect_lxca(module,kwargs), kwargs('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting powersupplies inventory " + str(e))
     return result
 
+#TODO type, status
 def _get_scalablesystem(module, kwargs):
     result = None
     try:
-        result =  scalablesystem(_get_connect_lxca(module,kwargs))
+        result =  scalablesystem(_get_connect_lxca(module,kwargs), kwargs('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting scalablesystem inventory " + str(e))
     return result
 
+# TODO chassis, ports, action
 def _get_switches_inventory( module, kwargs):
     result = None
     try:
-        result = switches(_get_connect_lxca(module,kwargs))
+        result = switches(_get_connect_lxca(module,kwargs), kwargs('uuid'))
     except Exception as e:
         module.fail_json(msg="Error getting switches " + str(e))
     return result
@@ -260,6 +263,7 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware ")
     return result
 
+# TODO policy, info
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
