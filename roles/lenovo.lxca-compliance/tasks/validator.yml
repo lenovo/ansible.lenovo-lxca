@@ -6,25 +6,53 @@
   tags:
     validate_server_facts
 
-- name: Evaluate Failure
-  set_fact:
-    comp_result: False
-  when:  ( ansible_local[server_uuid][property]|string != ref_value )
+- name: Include vars
+  include_vars:
+    file: compliance_vars.yml
+    name: facts
   tags:
     validate_server_facts
 
-- name: Evaluate Success
-  set_fact:
-    comp_result: True
-  when:  ( ansible_local[server_uuid][property]|string == ref_value )
-  tags:
-    validate_server_facts
-
-- name: debug data
+- name: Print Ansible Facts
   debug:
-    var: comp_result
+    var: ansible_local
   tags:
     validate_server_facts
+
+- name: print vars
+  debug:
+    var: facts
+  tags:
+    validate_server_facts
+
+- name: validate facts
+  pylxca_module:
+    fact_dict: "{{ ansible_local }}"
+    command_options: validate_server_facts
+  tags:
+    validate_server_facts
+
+
+
+#- name: Evaluate Failure
+#  set_fact:
+#    comp_result: False
+#  when:  ( ansible_local[server_uuid][property]|string != ref_value )
+#  tags:
+#    validate_server_facts
+#
+#- name: Evaluate Success
+#  set_fact:
+#    comp_result: True
+#  when:  ( ansible_local[server_uuid][property]|string == ref_value )
+#  tags:
+#    validate_server_facts
+#
+#- name: debug data
+#  debug:
+#    var: comp_result
+#  tags:
+#    validate_server_facts
 
 #- name: Update result in fact file
 #  template: src=/etc/ansible/facts.d/{{server_uuid}}.fact dest=/etc/ansible/facts.d/{{server_uuid}}.fact

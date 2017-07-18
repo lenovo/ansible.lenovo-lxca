@@ -286,6 +286,17 @@ def _gather_server_facts(module, kwargs):
     else:
         module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
 
+def _validate_server_facts(module, kwargs):
+    # kwargs['uuid'] = kwargs.get('fact_dict')['server_uuid']
+    #
+    # rslt = _get_nodes(module, module.params)
+    #
+    # if not rslt:
+    #     module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
+    # else:
+    #     module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
+    module.exit_json(changed=True, msg="Success retrieving information", result=True)
+    
 func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
@@ -309,8 +320,9 @@ func_dict = {
                 'updaterepo': _get_updaterepo_info,
                 'updatecomp': _update_firmware,
                 'updatepolicy': _get_updatepolicy,
-                'users': _get_users
-                'gather_server_facts': _gather_server_facts
+                'users': _get_users,
+                'gather_server_facts': _gather_server_facts,
+                'validate_server_facts': _validate_server_facts
 }
 
 
@@ -348,7 +360,7 @@ def main():
             update_storage  = dict(default=None),
             update_switch   = dict(default=None),
             update_cmm      = dict(default=None),
-            update_list     = dict(default=None,type=('list'))
+            update_list     = dict(default=None,type=('list')),
             fact_dict       = dict(default=None,type=('dict'))
         ),
         check_invalid_arguments=False,

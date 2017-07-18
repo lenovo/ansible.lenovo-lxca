@@ -4,7 +4,22 @@
 - name: Include vars
   include_vars:
     file: compliance_vars.yml
-    name: data
+    name: facts
+  tags:
+    gather_server_facts
+
+- name: Pulling Server inventory
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    fact_dict: "{{ facts.server }}"
+    command_options: gather_server_facts
+  tags:
+    gather_server_facts
+
+- name: Update custom factsl
+  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}.fact
   tags:
     gather_server_facts
 
@@ -13,16 +28,6 @@
 #    var: data.server
 #  tags:
 #    gather_server_facts
-
-- name: Pulling Server inventory
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    fact_dict: "{{ data.server }}"
-    command_options: gather_server_facts
-  tags:
-    gather_server_facts
 
 #- name: Filtering facts
 #  set_fact:
@@ -39,8 +44,8 @@
 #  tags:
 #    gather_server_facts
 
-- name: Print Ansible Facts
-  debug:
-    msg: ansible_facts
-  tags:
-    gather_server_facts
+#- name: Print Ansible Facts
+#  debug:
+#    msg: ansible_facts
+#  tags:
+#    gather_server_facts
