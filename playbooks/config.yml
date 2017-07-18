@@ -1,0 +1,5 @@
+- name: Calling Config Role
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: lenovo.lxca-config, lxca_user: "{{ lxca_user }}", lxca_password: "{{ lxca_password }}", lxca_url: "{{ lxca_url }}" }

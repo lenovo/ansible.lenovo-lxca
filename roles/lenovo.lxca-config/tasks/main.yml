@@ -1,0 +1,53 @@
+---
+# tasks file for lenovo.lxca-config
+- name: get configpatterns data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: configpatterns
+  register: rslt
+  tags:
+     configpatterns
+
+- name: get configprofiles data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: configprofiles
+  register: rslt
+  tags:
+     configprofiles
+
+
+- name: get configtargets data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: configtargets
+  register: rslt
+  tags:
+     configtargets
+
+- name: get manage data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    discovery_ip: "{{ discovery_ip }}"
+    manage_user: "{{ manage_user }}"
+    manage_password: "{{ manage_password }}"
+    recovery_password: "{{ recovery_password }}"
+    manage_param: "{{ manage_param }}"
+    manage_type: "{{ manage_type }}"
+    uuid: "{{ uuid }}"
+    discover_jobid: "{{ discover_jobid }}"
+    force: "{{ force }}"
+    command_options: manage
+  register: rslt
+  tags:
+     manage

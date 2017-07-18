@@ -1,3 +1,4 @@
 ---
 # file: site.yml
 - include: playbooks/inventory.yml 
+- include: playbooks/config.yml

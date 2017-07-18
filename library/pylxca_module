@@ -75,7 +75,7 @@ def _get_chassis_inventory( module, kwargs):
 def _get_cmms_inventory(module, kwargs):
     result = None
     try:
-        result =  cmms(_get_connect_lxca(module,kwargs))
+        result =  cmms(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting cmms inventory" + str(e))
     return result
@@ -83,7 +83,7 @@ def _get_cmms_inventory(module, kwargs):
 def _get_configpatterns(module, kwargs):
     result = None
     try:
-        result =  configpatterns(_get_connect_lxca(module,kwargs))
+        result =  configpatterns(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting configpatterns" + str(e))
     return result
@@ -116,7 +116,7 @@ def _get_discover(module, kwargs):
 def _get_fans(module, kwargs):
     result = None
     try:
-        result =  fans(_get_connect_lxca(module,kwargs))
+        result =  fans(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting fans inventory " + str(e))
     return result
@@ -124,7 +124,7 @@ def _get_fans(module, kwargs):
 def _get_fanmuxes(module, kwargs):
     result = None
     try:
-        result =  fanmuxes(_get_connect_lxca(module,kwargs))
+        result =  fanmuxes(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting fanmuxes inventory " + str(e))
     return result
@@ -145,7 +145,7 @@ def _get_jobs(module, kwargs):
         module.fail_json(msg = "Error getting jobs inventory " + str(e))
     return result
 
-
+# TODO filter
 def _get_lxcalog(module, kwargs):
     result = None
     try:
@@ -167,7 +167,7 @@ def _manage_bare_metal(module, kwargs):
         }
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'), kwargs.get('discover_jobid'), kwargs.get('force'))
     except Exception as e:
         module.fail_json(msg = " Fail to manage" + str(e))
     return result
@@ -190,34 +190,37 @@ def _get_manifests(module, kwargs):
         module.fail_json(msg = "Error getting manifest " + str(e))
     return result
 
+#TODO chassis , status
 def _get_nodes(module, kwargs):
     result = None
     try:
         result =  nodes(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
-    except Exception:
-        module.fail_json(msg = "Error getting nodes inventory")
+    except Exception as e:
+        module.fail_json(msg = "Error getting nodes inventory " + str(e))
     return result
 
 def _get_powersupplies(module, kwargs):
     result = None
     try:
-        result =  powersupplies(_get_connect_lxca(module,kwargs))
+        result =  powersupplies(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting powersupplies inventory " + str(e))
     return result
 
+#TODO type, status
 def _get_scalablesystem(module, kwargs):
     result = None
     try:
-        result =  scalablesystem(_get_connect_lxca(module,kwargs))
+        result =  scalablesystem(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting scalablesystem inventory " + str(e))
     return result
 
+# TODO chassis, ports, action
 def _get_switches_inventory( module, kwargs):
     result = None
     try:
-        result = switches(_get_connect_lxca(module,kwargs))
+        result = switches(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg="Error getting switches " + str(e))
     return result
@@ -260,6 +263,7 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware ")
     return result
 
+# TODO policy, info
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
@@ -348,6 +352,7 @@ def main():
             manage_password = dict(default=None, required=False),
             manage_param    = dict(default=None),
             manage_type     = dict(default=None),
+            force           = dict(default=None),
             percentage      = dict(default=None),
             state           = dict(default=None),
             sol_id          = dict(default=None),
@@ -362,6 +367,7 @@ def main():
             update_cmm      = dict(default=None),
             update_list     = dict(default=None,type=('list')),
             fact_dict       = dict(default=None,type=('dict'))
+
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,
