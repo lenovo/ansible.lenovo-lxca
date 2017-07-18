@@ -1,8 +1,7 @@
 galaxy_info:
   author: Prashant Bhosale 
   
-  description:  The lxca.inventory ansible role facilitates collecting inventory data from Lenovo
-   		xClarity Adiministrator.
+  description:  The lxca.inventory ansible role facilitates collecting inventory data from Lenovo xClarity Adiministrator.
   
   company: Lenovo 
 
