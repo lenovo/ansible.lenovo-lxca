@@ -275,7 +275,7 @@ def _get_updatepolicy(module, kwargs):
 def _get_users(module, kwargs):
     result = None
     try:
-        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('id'))
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('name'))
     except Exception:
         module.fail_json(msg = "Error getting users ")
     return result
@@ -300,7 +300,23 @@ def _validate_server_facts(module, kwargs):
     # else:
     #     module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
     module.exit_json(changed=True, msg="Success retrieving information", result=True)
-    
+
+def _create_resourcegroups(module, kwargs):
+    result = None
+    try:
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('group_name'))
+    except Exception:
+        module.fail_json(msg = "Error getting users ")
+    return result
+
+def _add_resourcegroup_member(module, kwargs):
+    result = None
+    try:
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('group_name'))
+    except Exception:
+        module.fail_json(msg = "Error getting users ")
+    return result
+
 func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
@@ -326,7 +342,9 @@ func_dict = {
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
                 'gather_server_facts': _gather_server_facts,
-                'validate_server_facts': _validate_server_facts
+                'validate_server_facts': _validate_server_facts,
+                'create_resourcegroups':_create_resourcegroups,
+                'add_resourcegroup_member':_add_resourcegroup_member
 }
 
 
@@ -357,7 +375,13 @@ def main():
             state           = dict(default=None),
             sol_id          = dict(default=None),
             manifest_path   = dict(default=None),
-	        recovery_password = dict(default=None),
+            group_name      = dict(default=None),
+            group_desc      = dict(default=None),
+            group_type      = dict(default=None),
+            solutionVPD     = dict(default=None, type=('dict')),
+            group_members   = dict(default=None, type=('list')),
+            group_criteria  = dict(default=None, type=('list')),
+            recovery_password = dict(default=None),
             repo_key        = dict(default=None),
             update_mode     = dict(default=None),
             update_action   = dict(default=None),

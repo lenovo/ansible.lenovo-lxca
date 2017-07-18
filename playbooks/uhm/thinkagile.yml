@@ -1,0 +1,5 @@
+- name: Calling UHM Role
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: lenovo.lxca-uhm }

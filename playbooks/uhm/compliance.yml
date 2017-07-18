@@ -4,4 +4,4 @@
   gather_facts: no
 
   roles:
-    - { role: lenovo.lxca-compliance, lxca_user: "{{ lxca_user }}", lxca_password: "{{ lxca_password }}", lxca_url: "{{ lxca_url }}"  }
+    - { role: lenovo.lxca-compliance  }

@@ -1,0 +1,12 @@
+---
+# defaults file for lenovo.lxca-config
+manage_user: null
+manage_password: null
+group_name: null
+group_desc: null
+group_type: null
+solutionVPD: null
+group_members: null
+group_criteria: null
+sol_id: null
+manifest_path: null
