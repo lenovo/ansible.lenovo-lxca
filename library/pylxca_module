@@ -167,7 +167,7 @@ def _manage_bare_metal(module, kwargs):
         }
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'), kwargs.get('discover_jobid'), kwargs.get('force'))
     except Exception as e:
         module.fail_json(msg = " Fail to manage" + str(e))
     return result
@@ -329,6 +329,7 @@ def main():
             manage_password = dict(default=None, required=False),
             manage_param    = dict(default=None),
             manage_type     = dict(default=None),
+            force           = dict(default=None),
             percentage      = dict(default=None),
             state           = dict(default=None),
             sol_id          = dict(default=None),
@@ -342,6 +343,7 @@ def main():
             update_switch   = dict(default=None),
             update_cmm      = dict(default=None),
             update_list     = dict(default=None,type=('list'))
+
         ),
         check_invalid_arguments=False,
 	supports_check_mode = False, 

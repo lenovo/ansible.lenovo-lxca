@@ -3,3 +3,11 @@
 lxca-config_version: "0.1"
 uuid: null
 id: null
+discovery_ip: null
+manage_user: null
+manage_password: null
+recovery_password: null
+manage_param: null
+manage_type: null
+discover_jobid: null
+force: null
