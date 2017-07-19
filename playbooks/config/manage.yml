@@ -1,21 +1,49 @@
 - name: Manage server using  pylxca module
-  hosts: server1
+  hosts: localhost
   connection: local
   tasks:
-    - name: Manage 10.243.6.68
+    - name: Manage 10.240.72.172
       pylxca_module:
         command_options: manage
-        login_user: USERID
+        login_user: TEST
         login_password: CME44ibm
-        auth_url: https://10.243.14.80
-        discovery_ip: 10.240.74.106
+        auth_url: https://10.240.29.220
+        discovery_ip: 10.240.72.172
         manage_user: USERID
-        manage_password: PASSW0RD
-        recovery_password: Passw0rd
-        manage_param: cimxml-http;5988;true,cimxml-https;5989;true,http;80;true,snmpv3;163;true,https;443;true,snmpv1;161;true,ssh;22;true,telnet;23;true,rem-pres;3900;true,rmcp;623;true 
-        manage_type: Rack-Tower
-#        manage_uuid: fc3058cadf8b11d48c9b9b1b1b1b1b57 
-        manage_uuid: edabcef2fd5811e39ea740f2e9af0610
+        manage_password: CME44ibm
+        recovery_password: null
+        manage_param: null
+        manage_type: null
+        manage_uuid: null
+        discover_jobid: null
+        force: True
       register: jobid
     - debug:
-        var: jobid 
+           var: jobid
+    - assert:
+        that:
+          - " 'Success' in jobid.msg"
+
+
+    - name: Result of Manage  10.240.72.172
+      pylxca_module:
+        command_options: manage_metal_percent
+        login_user: TEST
+        login_password: CME44ibm
+        auth_url: https://10.240.29.220
+        discovery_ip: null
+        manage_user: null
+        manage_password: null
+        recovery_password: null
+        manage_param: null
+        manage_type: null
+        manage_uuid: null
+        discover_jobid: "{{ jobid.result }}"
+        force: True
+      register: result
+      until: result.result.progress == 100.0
+      retries: 20
+      delay: 15
+
+    - debug:
+           var: result.result.progress

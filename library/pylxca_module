@@ -140,7 +140,7 @@ def _get_ffdc(module, kwargs):
 def _get_jobs(module, kwargs):
     result = None
     try:
-        result =  jobs(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+        result =  jobs(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting jobs inventory " + str(e))
     return result
@@ -175,7 +175,7 @@ def _manage_bare_metal(module, kwargs):
 def _manage_metal_percent(module, kwargs):
     result = None
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get(discover_jobid))
+       result = manage(_get_connect_lxca(module,kwargs), None, None, None, None, None, None, None, kwargs.get('discover_jobid'))
     except Exception as e:
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
     return result
@@ -331,6 +331,7 @@ func_dict = {
                 'jobs': _get_jobs,
                 'lxcalog': _get_lxcalog,
                 'manage': _manage_bare_metal,
+                'manage_metal_percent': _manage_metal_percent,
                 'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'powersupplies': _get_powersupplies,
