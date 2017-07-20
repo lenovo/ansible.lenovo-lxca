@@ -33,21 +33,74 @@
   tags:
      configtargets
 
-- name: get manage data from LXCA
+- block:
+  - name: get manage data from LXCA
+    pylxca_module:
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      discovery_ip: "{{ discovery_ip }}"
+      manage_user: "{{ manage_user }}"
+      manage_password: "{{ manage_password }}"
+      recovery_password: "{{ recovery_password }}"
+      manage_param: "{{ manage_param }}"
+      manage_type: "{{ manage_type }}"
+      uuid: "{{ uuid }}"
+      discover_jobid: "{{ discover_jobid }}"
+      force: "{{ force }}"
+      command_options: manage
+    register: jobid
+  - debug:
+      var: jobid
+  - assert:
+      that:
+        - " 'Success' in jobid.msg"
+
+  - name: Result of Manage
+    pylxca_module:
+      command_options: manage_metal_percent
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      discovery_ip: null
+      manage_user: null
+      manage_password: null
+      recovery_password: null
+      manage_param: null
+      manage_type: null
+      manage_uuid: null
+      discover_jobid: "{{ jobid.result }}"
+      force: True
+    register: result
+    until: result.result.progress == 100.0
+    retries: 20
+    delay: 15
+
+  - debug:
+      var: result.result.progress
+  tags:
+    manage
+
+- name: get updaterepo data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    discovery_ip: "{{ discovery_ip }}"
-    manage_user: "{{ manage_user }}"
-    manage_password: "{{ manage_password }}"
-    recovery_password: "{{ recovery_password }}"
-    manage_param: "{{ manage_param }}"
-    manage_type: "{{ manage_type }}"
-    uuid: "{{ uuid }}"
-    discover_jobid: "{{ discover_jobid }}"
-    force: "{{ force }}"
-    command_options: manage
+    repo_key: "{{ repo_key }}"
+    command_options: updaterepo
   register: rslt
   tags:
-     manage
+     updaterepo
+
+- name: get updatecomp data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    update_mode: "{{ update_mode}}"
+    update_action: "{{ update_action }}"
+    update_server: "{{ update_server }}"
+    command_options: updatecomp
+  register: rslt
+  tags:
+     updatecomp

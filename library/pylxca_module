@@ -248,8 +248,8 @@ def _get_tasks(module, kwargs):
 def _get_updaterepo_info(module, kwargs):
     result = None
     try:
-#        result =  updaterepo(_get_connect_lxca(module,kwargs),kwargs.get('repo_key'))
-        result =  updaterepo(_get_connect_lxca(module,kwargs),key="updatesByMt")
+        repo_key = kwargs.get('repo_key')
+        result =  updaterepo(_get_connect_lxca(module,kwargs), repo_key)
     except Exception:
         module.fail_json(msg = "Error retriving firmware info.")
     return result

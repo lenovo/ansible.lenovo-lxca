@@ -1,5 +1,5 @@
 - name: Display information about firmware from firmware-updates repository
-  hosts: server1
+  hosts: localhost
   connection: local
 #  vars:
 #    key:  '{{ key }}'
@@ -7,10 +7,10 @@
     - name: firmware-updates repository information
       pylxca_module:
         command_options: updaterepo
-        login_user: USERID
+        login_user: TEST
         login_password: CME44ibm
-        auth_url: https://10.243.14.80
-#        repo_key: '{{ key }}'
+        auth_url: https://10.240.29.220
+        repo_key: updatesByM
       register: firmware_info
     - debug:
         var: firmware_info

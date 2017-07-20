@@ -10,4 +10,7 @@ recovery_password: null
 manage_param: null
 manage_type: null
 discover_jobid: null
+update_mode: null
+update_action: null
+update_server: null
 force: null
