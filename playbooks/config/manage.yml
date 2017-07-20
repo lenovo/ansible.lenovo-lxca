@@ -1,49 +1,5 @@
-- name: Manage server using  pylxca module
+- name: Managing given endpoint
   hosts: localhost
   connection: local
-  tasks:
-    - name: Manage 10.240.72.172
-      pylxca_module:
-        command_options: manage
-        login_user: TEST
-        login_password: CME44ibm
-        auth_url: https://10.240.29.220
-        discovery_ip: 10.240.72.172
-        manage_user: USERID
-        manage_password: CME44ibm
-        recovery_password: null
-        manage_param: null
-        manage_type: null
-        manage_uuid: null
-        discover_jobid: null
-        force: True
-      register: jobid
-    - debug:
-           var: jobid
-    - assert:
-        that:
-          - " 'Success' in jobid.msg"
-
-
-    - name: Result of Manage  10.240.72.172
-      pylxca_module:
-        command_options: manage_metal_percent
-        login_user: TEST
-        login_password: CME44ibm
-        auth_url: https://10.240.29.220
-        discovery_ip: null
-        manage_user: null
-        manage_password: null
-        recovery_password: null
-        manage_param: null
-        manage_type: null
-        manage_uuid: null
-        discover_jobid: "{{ jobid.result }}"
-        force: True
-      register: result
-      until: result.result.progress == 100.0
-      retries: 20
-      delay: 15
-
-    - debug:
-           var: result.result.progress
+  roles:
+    - { role: lenovo.lxca-config, tags: ['manage'] }

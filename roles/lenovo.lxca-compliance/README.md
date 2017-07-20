@@ -1,7 +1,7 @@
-Role Name
+Lenovo xClarity Role for Compliance Rule Validation 
 =========
 
-A brief description of the role goes here.
+This role validate the compliance rules for Lenovo Hardware thorugh xClarity Administrator. User can specify xClarity Configuration 
 
 Requirements
 ------------
@@ -35,4 +35,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Prashant Bhosale

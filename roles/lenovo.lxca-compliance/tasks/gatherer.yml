@@ -18,7 +18,7 @@
   tags:
     gather_server_facts
 
-- name: Update custom factsl
+- name: Update custom facts
   template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}.fact
   tags:
     gather_server_facts

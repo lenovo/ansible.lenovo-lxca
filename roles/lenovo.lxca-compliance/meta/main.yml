@@ -1,8 +1,7 @@
 galaxy_info:
   author: Prashant Bhosale 
   
-  description:  The lxca.compliance ansible role facilitates validating compliance rules by Lenovo
-          xClarity Adiministrator.
+  description:  The lxca.compliance ansible role facilitates validating compliance rules by Lenovo xClarity Adiministrator.
   
   company: Lenovo 
 
