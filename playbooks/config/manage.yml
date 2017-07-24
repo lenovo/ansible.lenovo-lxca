@@ -2,4 +2,4 @@
   hosts: localhost
   connection: local
   roles:
-    - { role: lenovo.lxca-config, tags: ['manage'] }
+    - { role: lenovo.lxca-config }
