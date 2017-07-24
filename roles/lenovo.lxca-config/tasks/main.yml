@@ -34,43 +34,31 @@
      configtargets
 
 - block:
-  - name: get manage data from LXCA
+  - name: Manage given endpoint
     pylxca_module:
       login_user: "{{ lxca_user }}"
       login_password: "{{ lxca_password }}"
       auth_url: "{{ lxca_url }}"
-      discovery_ip: "{{ discovery_ip }}"
-      manage_user: "{{ manage_user }}"
-      manage_password: "{{ manage_password }}"
+      endpoint_ip: "{{ endpoint_ip }}"
+      user: "{{ user }}"
+      password: "{{ password }}"
       recovery_password: "{{ recovery_password }}"
-      manage_param: "{{ manage_param }}"
-      manage_type: "{{ manage_type }}"
-      uuid: "{{ uuid }}"
-      discover_jobid: "{{ discover_jobid }}"
       force: "{{ force }}"
       command_options: manage
-    register: jobid
+    register: rslt_job
   - debug:
-      var: jobid
+      var: rslt_job
   - assert:
       that:
-        - " 'Success' in jobid.msg"
+        - " 'Success' in rslt_job.msg"
 
-  - name: Result of Manage
+  - name: Polling for Status of Manage Operation
     pylxca_module:
-      command_options: manage_metal_percent
+      command_options: manage_status
       login_user: "{{ lxca_user }}"
       login_password: "{{ lxca_password }}"
       auth_url: "{{ lxca_url }}"
-      discovery_ip: null
-      manage_user: null
-      manage_password: null
-      recovery_password: null
-      manage_param: null
-      manage_type: null
-      manage_uuid: null
-      discover_jobid: "{{ jobid.result }}"
-      force: True
+      jobid: "{{ rslt_job.result }}"
     register: result
     until: result.result.progress == 100.0
     retries: 20

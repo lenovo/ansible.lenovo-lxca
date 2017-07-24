@@ -154,28 +154,19 @@ def _get_lxcalog(module, kwargs):
         module.fail_json(msg = "Error getting lxcalog " + str(e))
     return result
 
-def _manage_bare_metal(module, kwargs):
+def _manage_endpoint(module, kwargs):
     result = None
-    manage_kargs = {
-                'ip': kwargs.get('discovery_ip'),
-                'user': kwargs.get('manage_user'),
-                'pw': kwargs.get('manage_password'),
-                'rpw': kwargs.get('recovery_password'), 
-                'mp': kwargs.get('manage_param'),
-                'type': kwargs.get('manage_type'),
-                'uuid': kwargs.get('uuid') 
-        }
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('discovery_ip'),kwargs.get('manage_user'),kwargs.get('manage_password'),kwargs.get('recovery_password'),kwargs.get('manage_param'),kwargs.get('manage_type'),kwargs.get('uuid'), kwargs.get('discover_jobid'), kwargs.get('force'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'),kwargs.get('user'),kwargs.get('password'),kwargs.get('recovery_password'), None, kwargs.get('force'))
     except Exception as e:
-        module.fail_json(msg = " Fail to manage" + str(e))
+        module.fail_json(msg = " Fail to manage the endpoint" + str(e))
     return result
 
-def _manage_metal_percent(module, kwargs):
+def _manage_status(module, kwargs):
     result = None
     try:
-       result = manage(_get_connect_lxca(module,kwargs), None, None, None, None, None, None, None, kwargs.get('discover_jobid'))
+       result = manage(_get_connect_lxca(module,kwargs), None, None, None, None, kwargs.get('jobid'))
     except Exception as e:
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
     return result
@@ -330,8 +321,8 @@ func_dict = {
                 'ffdc': _get_ffdc,
                 'jobs': _get_jobs,
                 'lxcalog': _get_lxcalog,
-                'manage': _manage_bare_metal,
-                'manage_metal_percent': _manage_metal_percent,
+                'manage': _manage_endpoint,
+                'manage_status': _manage_status,
                 'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'powersupplies': _get_powersupplies,
@@ -359,18 +350,15 @@ def main():
             login_user      = dict(default=None, required=False),
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
-            #command_options = dict(choices=['connect', 'chassis', 'cmms', 'configpatterns', 'disconnect', 'discover', 'fans', 'fanmuxes', 'ffdc', 'jobs', 'lxcalog', 'manage', 'manifests', 'nodes', 'powersupplies', 'scalablesystem', 'switches', 'tasks', 'unmanage', 'updaterepo', 'updatecomp', 'updatepolicy', 'users']),
             command_options = dict( choises=list(func_dict) ),
             action          = dict(default=None),
             auth_url        = dict(default=None),
             uuid            = dict(default=None),
             id              = dict(default=None),
-            discovery_ip    = dict(default=None),
-            discover_jobid  = dict(default=None),
-            manage_user     = dict(default=None, required=False),
-            manage_password = dict(default=None, required=False),
-            manage_param    = dict(default=None),
-            manage_type     = dict(default=None),
+            endpoint_ip     = dict(default=None),
+            jobid           = dict(default=None),
+            user            = dict(default=None, required=False),
+            password        = dict(default=None, required=False),
             force           = dict(default=None),
             percentage      = dict(default=None),
             state           = dict(default=None),
@@ -400,36 +388,8 @@ def main():
     
     conn = None
     rslt = None
+    command_options = module.params['command_options']
     global ip_map
-    
-    login_password = module.params["login_password"]
-    login_user = module.params["login_user"]
-    conn_obj = module.params["connobject"]
-    auth_url = module.params["auth_url"]
-
-    # Argument needed for discovery
-    discovery_ip = module.params["discovery_ip"]
-    discover_jobid = module.params["discover_jobid"]
-    command_options =  module.params['command_options']
-
-    # Argument needed for managing machine with lxca
-    manage_user = module.params["manage_user"]
-    manage_password = module.params["manage_password"]
-    manage_param = module.params["manage_param"]
-    manage_type = module.params["manage_type"]
-    uuid = module.params["uuid"]
-    recovery_password = module.params["recovery_password"]
-
-    #firmware-updates repository
-    repo_key = module.params["repo_key"]
-
-    #firmware update paramter
-    update_mode = module.params["update_mode"]
-    update_action = module.params["update_action"]
-    update_server = module.params["update_server"]
-    update_storage = module.params["update_storage"]
-    update_switch  = module.params["update_switch"]
-    update_cmm     = module.params["update_cmm"]
 
     pyshell()
 
