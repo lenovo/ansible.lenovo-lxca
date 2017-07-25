@@ -1,4 +1,4 @@
-- name: Managing given endpoint
+- name: Manage / UnManage given endpoint
   hosts: localhost
   connection: local
   roles:

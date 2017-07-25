@@ -171,6 +171,23 @@ def _manage_status(module, kwargs):
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
     return result
 
+def _unmanage_endpoint(module, kwargs):
+    result = None
+
+    try:
+       result = unmanage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'), kwargs.get('force'), None)
+    except Exception as e:
+        module.fail_json(msg = " Fail to unmanage the endpoint" + str(e))
+    return result
+
+def _unmanage_status(module, kwargs):
+    result = None
+    try:
+       result = unmanage(_get_connect_lxca(module,kwargs), None, kwargs.get('jobid'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting info abt jobid" + str(e))
+    return result
+
 def _get_manifests(module, kwargs):
     result = None
     try:
@@ -322,7 +339,9 @@ func_dict = {
                 'jobs': _get_jobs,
                 'lxcalog': _get_lxcalog,
                 'manage': _manage_endpoint,
+                'unmanage': _unmanage_endpoint,
                 'manage_status': _manage_status,
+                'unmanage_status': _unmanage_status,
                 'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'powersupplies': _get_powersupplies,

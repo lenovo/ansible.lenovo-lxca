@@ -34,7 +34,7 @@
      configtargets
 
 - block:
-  - name: Manage given endpoint
+  - name: Managing given endpoint
     pylxca_module:
       login_user: "{{ lxca_user }}"
       login_password: "{{ lxca_password }}"
@@ -68,6 +68,40 @@
       var: result.result.progress
   tags:
     manage
+
+- block:
+  - name: Unmanaging given endpoint
+    pylxca_module:
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      endpoint_ip: "{{ endpoint_ip }}"
+      force: "{{ force }}"
+      command_options: unmanage
+    register: rslt_job
+  - debug:
+      var: rslt_job
+  - assert:
+      that:
+        - " 'Success' in rslt_job.msg"
+
+  - name: Polling for Status of UnManage Operation
+    pylxca_module:
+      command_options: unmanage_status
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      jobid: "{{ rslt_job.result }}"
+    register: result
+    until: result.result.progress == 100.0
+    retries: 20
+    delay: 15
+
+  - debug:
+      var: result.result.progress
+  tags:
+    unmanage
+
 
 - name: get updaterepo data from LXCA
   pylxca_module:
