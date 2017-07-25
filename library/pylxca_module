@@ -297,7 +297,7 @@ def _get_updatepolicy(module, kwargs):
 def _get_users(module, kwargs):
     result = None
     try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('name'))
+        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('name'))
     except Exception:
         module.fail_json(msg = "Error getting users ")
     return result
