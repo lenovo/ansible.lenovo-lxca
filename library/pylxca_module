@@ -1,6 +1,13 @@
 #!/usr/bin/python
 
 #---- Documentation Start ----------------------------------------------------#
+ANSIBLE_METADATA = {
+    'metadata_version': '1.0',
+    'supported_by': 'community',
+    'status': ['preview']
+}
+
+
 DOCUMENTATION = '''
 ---
 version_added: "1.0"
@@ -29,6 +36,7 @@ EXAMPLES = '''
 # get cmms info
 - pylxca_module: command_options=connect login_user=USERID login_password=CME44ibm auth_url=https://10.243.15.168
 '''
+
 
 import os
 import json
@@ -275,7 +283,13 @@ def _update_firmware(module, kwargs):
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
-        result =  updatepolicy(_get_connect_lxca(module,kwargs))
+        result =  updatepolicy(_get_connect_lxca(module,kwargs),
+                               kwargs.get('update_policy_info'),
+                               kwargs.get('jobid'),
+                               kwargs.get('uuid'),
+                               kwargs.get('update_policy_name'),
+                               kwargs.get('update_policy_type')
+                               )
     except Exception:
         module.fail_json(msg = "Error getting updatepolicy ")
     return result
@@ -397,6 +411,9 @@ def main():
             update_storage  = dict(default=None),
             update_switch   = dict(default=None),
             update_cmm      = dict(default=None),
+            update_policy_info = dict(default=None),
+            update_policy_name = dict(default=None),
+            update_policy_type = dict(default=None),
             update_list     = dict(default=None,type=('list')),
             fact_dict       = dict(default=None,type=('dict'))
 

@@ -12,3 +12,7 @@ update_mode: null
 update_action: null
 update_server: null
 force: null
+update_policy_info: null
+update_policy_name: null
+update_policy_type: null
+jobid: null

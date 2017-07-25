@@ -126,3 +126,18 @@
   register: rslt
   tags:
      updatecomp
+
+- name: get updatepolicy data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    update_policy_info: "{{ update_policy_info}}"
+    update_policy_name: "{{ update_policy_name}}"
+    update_policy_type: "{{ update_policy_type}}"
+    uuid: "{{ uuid }}"
+    jobid: "{{ jobid }}"
+    command_options: updatepolicy
+  register: rslt
+  tags:
+     updatepolicy
