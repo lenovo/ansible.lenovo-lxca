@@ -28,9 +28,21 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 
 Example Update Operations in LXCA
 ============
-Get List of policies
+List all  policy  
 ----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220" playbooks/config/config.yml -vvvv --tag updatepolicy
+
+Get List of Applicable Frimware policies
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 update_policy_info=FIRMWARE" playbooks/config/config.yml -vvvv --tag updatepolicy
+
+List  the persisted compare result for servers to which a compliance policy is assigned
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 update_policy_info=RESULTS" playbooks/config/config.yml -vvvv --tag updatepolicy
+
+Check compliant with the assigned compliance policy using the job or task ID that was returned when the compliance policy was assigned.  
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 update_policy_info=COMPARE_RESULTS uuid=EF362CF0FB4511E397AB40F2E9AF01D0 jobid=2" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Assign policy to Endpoint
 ----------------
