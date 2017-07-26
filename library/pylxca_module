@@ -273,8 +273,25 @@ def _get_updaterepo_info(module, kwargs):
 def _update_firmware(module, kwargs):
     result = None
     try:
-        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('update_mode'),action=kwargs.get('update_action'),server=kwargs.get('update_server'))
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'),cmm=kwargs.get('cmm'),switch=kwargs.get('switch'),server=kwargs.get('server'),storage=kwargs.get('storage'))
 #        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
+    except Exception:
+        module.fail_json(msg = "Error updating firmware ")
+    return result
+
+def _update_firmware_query_status(module, kwargs):
+    result = None
+    try:
+        result =  updatecomp(_get_connect_lxca(module,kwargs),query='status')
+#        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
+    except Exception:
+        module.fail_json(msg = "Error updating firmware ")
+    return result
+
+def _update_firmware_query_comp(module, kwargs):
+    result = None
+    try:
+        result =  updatecomp(_get_connect_lxca(module,kwargs),query='components')
     except Exception:
         module.fail_json(msg = "Error updating firmware ")
     return result
@@ -363,7 +380,9 @@ func_dict = {
                 'switches': _get_switches_inventory,
                 'tasks': _get_tasks,
                 'updaterepo': _get_updaterepo_info,
-                'updatecomp': _update_firmware,
+                'update_firmware': _update_firmware,
+                'update_firmware_query_status':_update_firmware_query_status,
+                'update_firmware_query_comp':_update_firmware_query_comp,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
                 'gather_server_facts': _gather_server_facts,
@@ -405,12 +424,11 @@ def main():
             group_criteria  = dict(default=None, type=('list')),
             recovery_password = dict(default=None),
             repo_key        = dict(default=None),
-            update_mode     = dict(default=None),
-            update_action   = dict(default=None),
-            update_server   = dict(default=None),
-            update_storage  = dict(default=None),
-            update_switch   = dict(default=None),
-            update_cmm      = dict(default=None),
+            mode     = dict(default=None),
+            server   = dict(default=None),
+            storage  = dict(default=None),
+            switch   = dict(default=None),
+            cmm      = dict(default=None),
             update_policy_info = dict(default=None),
             update_policy_name = dict(default=None),
             update_policy_type = dict(default=None),

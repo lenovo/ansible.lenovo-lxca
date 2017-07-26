@@ -8,9 +8,12 @@ user: null
 password: null
 recovery_password: null
 jobid: null
-update_mode: null
-update_action: null
-update_server: null
+mode: null
+action: null
+server: null
+switch: null
+storage: null
+cmm: null
 force: null
 update_policy_info: null
 update_policy_name: null

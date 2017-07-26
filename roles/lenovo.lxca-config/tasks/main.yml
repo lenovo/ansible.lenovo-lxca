@@ -113,20 +113,43 @@
   tags:
      updaterepo
 
-- name: get updatecomp data from LXCA
+- name: Updating Firmware of device from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    update_mode: "{{ update_mode}}"
-    update_action: "{{ update_action }}"
-    update_server: "{{ update_server }}"
-    command_options: updatecomp
+    mode: "{{ mode}}"
+    action: "{{ action }}"
+    cmm: "{{ cmm }}"
+    switch: "{{ switch }}"
+    server: "{{ server }}"
+    storage: "{{ storage }}"
+    command_options: update_firmware
   register: rslt
   tags:
-     updatecomp
+     update_firmware
 
-- name: get updatepolicy data from LXCA
+- name: Getting Firmware Update Status from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: update_firmware_query_status
+  register: rslt
+  tags:
+     query_update_status
+
+- name: Getting Updatable Components from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: update_firmware_query_comp
+  register: rslt
+  tags:
+     query_update_comp
+
+- name: Get or Apply updatepolicy to device from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
