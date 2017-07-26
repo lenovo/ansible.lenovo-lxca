@@ -102,7 +102,6 @@
   tags:
     unmanage
 
-
 - name: get updaterepo data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"

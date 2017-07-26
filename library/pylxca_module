@@ -191,7 +191,7 @@ def _unmanage_endpoint(module, kwargs):
 def _unmanage_status(module, kwargs):
     result = None
     try:
-       result = unmanage(_get_connect_lxca(module,kwargs), None, kwargs.get('jobid'))
+       result = unmanage(_get_connect_lxca(module,kwargs), None,None, kwargs.get('jobid'))
     except Exception as e:
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
     return result
