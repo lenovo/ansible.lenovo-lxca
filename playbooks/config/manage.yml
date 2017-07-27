@@ -1,5 +1,0 @@
-- name: Manage / UnManage given endpoint
-  hosts: localhost
-  connection: local
-  roles:
-    - { role: lenovo.lxca-config }
