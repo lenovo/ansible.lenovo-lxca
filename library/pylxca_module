@@ -301,11 +301,11 @@ def _get_updatepolicy(module, kwargs):
     result = None
     try:
         result =  updatepolicy(_get_connect_lxca(module,kwargs),
-                               kwargs.get('update_policy_info'),
+                               kwargs.get('policy_info'),
                                kwargs.get('jobid'),
                                kwargs.get('uuid'),
-                               kwargs.get('update_policy_name'),
-                               kwargs.get('update_policy_type')
+                               kwargs.get('policy_name'),
+                               kwargs.get('policy_type')
                                )
     except Exception:
         module.fail_json(msg = "Error getting updatepolicy ")
@@ -429,9 +429,9 @@ def main():
             storage  = dict(default=None),
             switch   = dict(default=None),
             cmm      = dict(default=None),
-            update_policy_info = dict(default=None),
-            update_policy_name = dict(default=None),
-            update_policy_type = dict(default=None),
+            policy_info = dict(default=None),
+            policy_name = dict(default=None),
+            policy_type = dict(default=None),
             update_list     = dict(default=None,type=('list')),
             fact_dict       = dict(default=None,type=('dict'))
 

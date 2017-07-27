@@ -154,9 +154,9 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    update_policy_info: "{{ update_policy_info}}"
-    update_policy_name: "{{ update_policy_name}}"
-    update_policy_type: "{{ update_policy_type}}"
+    policy_info: "{{ policy_info}}"
+    policy_name: "{{ policy_name}}"
+    policy_type: "{{ policy_type}}"
     uuid: "{{ uuid }}"
     jobid: "{{ jobid }}"
     command_options: updatepolicy
