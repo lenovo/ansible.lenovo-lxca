@@ -108,6 +108,11 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     repo_key: "{{ repo_key }}"
+    action: "{{ action }}"
+    machine_type: "{{ machine_type }}"
+    scope: "{{ scope }}"
+    fixids: "{{ fixids }}"
+    file_type: "{{ file_type }}"
     command_options: updaterepo
   register: rslt
   tags:

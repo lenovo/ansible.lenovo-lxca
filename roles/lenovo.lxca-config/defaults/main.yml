@@ -19,3 +19,9 @@ policy_info: null
 policy_name: null
 policy_type: null
 jobid: null
+repo_key: null
+action: null
+machine_type: null
+scope: null
+fixids: null
+file_type: null

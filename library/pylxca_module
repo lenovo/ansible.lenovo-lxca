@@ -264,8 +264,13 @@ def _get_tasks(module, kwargs):
 def _get_updaterepo_info(module, kwargs):
     result = None
     try:
-        repo_key = kwargs.get('repo_key')
-        result =  updaterepo(_get_connect_lxca(module,kwargs), repo_key)
+        result =  updaterepo(_get_connect_lxca(module,kwargs),
+                             kwargs.get('repo_key'),
+                             kwargs.get('action'),
+                             kwargs.get('machine_type'),
+                             kwargs.get('scope'),
+                             kwargs.get('fixids'),
+                             kwargs.get('file_type'))
     except Exception:
         module.fail_json(msg = "Error retriving firmware info.")
     return result
@@ -433,8 +438,11 @@ def main():
             policy_name = dict(default=None),
             policy_type = dict(default=None),
             update_list     = dict(default=None,type=('list')),
-            fact_dict       = dict(default=None,type=('dict'))
-
+            fact_dict       = dict(default=None,type=('dict')),
+            machine_type    = dict(default=None),
+            fixids          = dict(default=None),
+            scope           = dict(default=None),
+            file_type        = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,
