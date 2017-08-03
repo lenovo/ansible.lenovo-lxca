@@ -361,6 +361,10 @@ def _add_resourcegroup_member(module, kwargs):
         module.fail_json(msg = "Error getting users ")
     return result
 
+def _compliance_engine(module, kwargs):
+    # TODO Stub for compliance engine REST API
+    return True
+
 func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
@@ -393,7 +397,8 @@ func_dict = {
                 'gather_server_facts': _gather_server_facts,
                 'validate_server_facts': _validate_server_facts,
                 'create_resourcegroups':_create_resourcegroups,
-                'add_resourcegroup_member':_add_resourcegroup_member
+                'add_resourcegroup_member':_add_resourcegroup_member,
+                'compliance_engine':_compliance_engine
 }
 
 

@@ -1,4 +1,14 @@
 ---
 
-- include: gatherer.yml
-- include: validator.yml
+#- include: gatherer.yml
+#- include: validator.yml
+
+- name: Call Compliance Engine
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: compliance_engine
+  register: rslt
+  tags:
+     compliance
