@@ -5,6 +5,10 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    endpoint: "{{ endpoint }}"
+    restart: "{{ restart }}"
+    type: "{{ type }}"
     command_options: configpatterns
   register: rslt
   tags:
@@ -16,6 +20,13 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     id: "{{ id }}"
+    name: "{{ name }}"
+    endpoint: "{{ endpoint}}"
+    restart: "{{ restart }}"
+    action: "{{ action }}"
+    powerdown: "{{ powerdown }}"
+    resetimm: "{{ resetimm }}"
+    force: "{{ force }}"
     command_options: configprofiles
   register: rslt
   tags:
@@ -48,9 +59,10 @@
     register: rslt_job
   - debug:
       var: rslt_job
-  - assert:
+  - name: Check manage job submission
+    assert:
       that:
-        - " 'Success' in rslt_job.msg"
+       -  " 'Success' in rslt_job.msg"
 
   - name: Polling for Status of Manage Operation
     pylxca_module:
@@ -81,7 +93,8 @@
     register: rslt_job
   - debug:
       var: rslt_job
-  - assert:
+  - name: Check submission of Unmanage job
+    assert:
       that:
         - " 'Success' in rslt_job.msg"
 

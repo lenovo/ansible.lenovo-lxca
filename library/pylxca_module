@@ -30,6 +30,8 @@ options:
   auth_url:
     description:
       lxca https full web address
+requirements:
+  - pylxca
 '''
 
 EXAMPLES = '''
@@ -91,15 +93,38 @@ def _get_cmms_inventory(module, kwargs):
 def _get_configpatterns(module, kwargs):
     result = None
     try:
-        result =  configpatterns(_get_connect_lxca(module,kwargs), kwargs.get('id'))
+        result =  configpatterns(_get_connect_lxca(module,kwargs),
+                                      kwargs.get('id'),
+                                      kwargs.get('endpoint'),
+                                      kwargs.get('restart'),
+                                      kwargs.get('type'),
+                                )
     except Exception as e:
         module.fail_json(msg = "Error getting configpatterns" + str(e))
     return result
 
 def _get_configprofiles(module, kwargs):
     result = None
+    delete_profile = None
+    unassign_profile = None
     try:
-        result =  configprofiles(_get_connect_lxca(module,kwargs), kwargs.get('id'))
+        action = kwargs.get("action")
+        if action:
+            if action.lower() in ['delete']:
+                delete_profile = 'True'
+            elif action.lower() in ['unassign']:
+               unassign_profile = 'True'
+        result = configprofiles( _get_connect_lxca(module,kwargs),
+                                 kwargs.get('id'),
+                                 kwargs.get('name'),
+                                 kwargs.get('endpoint'),
+                                 kwargs.get('restart'),
+                                 delete_profile,
+                                 unassign_profile,
+                                 kwargs.get('powerdown'),
+                                 kwargs.get('resetimm'),
+                                 kwargs.get('force'),)
+# kwargs.get('delete_profile'), kwargs.get('unassign') )
     except Exception as e:
         module.fail_json(msg = "Error getting configprofiles" + str(e))
     return result
@@ -447,7 +472,15 @@ def main():
             machine_type    = dict(default=None),
             fixids          = dict(default=None),
             scope           = dict(default=None),
-            file_type        = dict(default=None),
+            file_type       = dict(default=None),
+            endpoint        = dict(default=None),
+            restart         = dict(default=None),
+            type            = dict(default=None),
+            name            = dict(default=None),
+            delete_profile  = dict(default=None),
+            unassign        = dict(default=None),
+            powerdown       = dict(default=None),
+            resetimm        = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

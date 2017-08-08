@@ -25,3 +25,11 @@ machine_type: null
 scope: null
 fixids: null
 file_type: null
+endpoint: null
+restart: null
+type: null
+name: null
+powerdown: null
+resetimm: null
+
+
