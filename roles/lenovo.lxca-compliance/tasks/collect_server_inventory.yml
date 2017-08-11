@@ -1,0 +1,12 @@
+- name: Pulling Server inventory Data for given server
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    uuid: "{{ item['UUID'] }}"
+    command_options: gather_server_facts
+  tags: gather_server_facts
+
+- name: Update custom facts
+  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}.fact
+  tags: gather_server_facts

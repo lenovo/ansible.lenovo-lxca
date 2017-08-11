@@ -1,33 +1,16 @@
 # Task file for lenovo.lxca-compliance role
 # This task pull the server inventory Data from LXCA and store it in custom facts
 
-- name: Include vars
+- name: Reading Compliance Rules
   include_vars:
-    file: compliance_vars.yml
-    name: facts
-  tags:
-    gather_server_facts
+    file: compliance_rules.yml
+    name: comp_rules_dict
+  tags: gather_server_facts,validate_server_facts
 
-- name: Pulling Server inventory
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    fact_dict: "{{ facts.server }}"
-    command_options: gather_server_facts
-  tags:
-    gather_server_facts
+- include: collect_server_inventory.yml
+  with_items: "{{ comp_rules_dict['Servers'] }}"
+  tags: gather_server_facts
 
-- name: Update custom facts
-  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}.fact
-  tags:
-    gather_server_facts
-
-#- name: print vars
-#  debug:
-#    var: data.server
-#  tags:
-#    gather_server_facts
 
 #- name: Filtering facts
 #  set_fact:

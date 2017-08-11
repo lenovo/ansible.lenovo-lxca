@@ -350,25 +350,25 @@ def _get_users(module, kwargs):
     return result
 
 def _gather_server_facts(module, kwargs):
-    kwargs['uuid'] = kwargs.get('fact_dict')['server_uuid']
-
-    rslt = _get_nodes(module, module.params)
-
+    rslt = _get_nodes(module, kwargs)
     if not rslt:
         module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
     else:
         module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
 
-def _validate_server_facts(module, kwargs):
-    # kwargs['uuid'] = kwargs.get('fact_dict')['server_uuid']
-    #
-    # rslt = _get_nodes(module, module.params)
-    #
-    # if not rslt:
-    #     module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
-    # else:
-    #     module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
-    module.exit_json(changed=True, msg="Success retrieving information", result=True)
+def _validate_basic_rules(module, kwargs):
+    rule_list = kwargs.get("comp_rule")["BASIC_RULES"]
+    inv_data_dict = kwargs.get("inv_data")
+    compliance_status = True
+
+    for each_rule in rule_list:
+        if inv_data_dict[each_rule["property"]] == str(each_rule["ref_value"]):
+            compliance_status = True
+        else:
+            compliance_status = False
+            break
+
+    module.exit_json(changed=True, msg="Success retrieving information", result=compliance_status)
 
 def _create_resourcegroups(module, kwargs):
     result = None
@@ -420,7 +420,7 @@ func_dict = {
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
                 'gather_server_facts': _gather_server_facts,
-                'validate_server_facts': _validate_server_facts,
+                'validate_basic_rules': _validate_basic_rules,
                 'create_resourcegroups':_create_resourcegroups,
                 'add_resourcegroup_member':_add_resourcegroup_member,
                 'compliance_engine':_compliance_engine
@@ -481,6 +481,8 @@ def main():
             unassign        = dict(default=None),
             powerdown       = dict(default=None),
             resetimm        = dict(default=None),
+            inv_data        = dict(default=None,type=('dict')),
+            comp_rule        = dict(default=None,type=('dict'))
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

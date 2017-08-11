@@ -1,0 +1,24 @@
+{
+"Servers":
+ [
+  {
+    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a3",
+    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
+  },
+  {
+    "UUID": "EF362CF0FB4511E397AB40F2E9AF01D0",
+    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
+  }
+ ],
+"Switches":
+ [
+  {
+    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a3",
+    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
+  },
+  {
+    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a4",
+    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
+  }
+ ]
+}
