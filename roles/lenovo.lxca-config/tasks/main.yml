@@ -1,11 +1,11 @@
 ---
 # tasks file for lenovo.lxca-config
 
-- name: Reading Compliance Rules
+- name: Checking for pattern from file
   include_vars:
     file: config_pattern_import.yml
     name: pattern_update_dict
-  when: read_from_file == 'true'
+  when: pattern_from_file == 'true'
   tags: configpatterns
 
 
