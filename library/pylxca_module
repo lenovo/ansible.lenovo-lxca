@@ -485,7 +485,7 @@ def main():
             powerdown       = dict(default=None),
             resetimm        = dict(default=None),
             inv_data        = dict(default=None,type=('dict')),
-            comp_rule        = dict(default=None,type=('dict'))
+            comp_rule        = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
         ),
         check_invalid_arguments=False,

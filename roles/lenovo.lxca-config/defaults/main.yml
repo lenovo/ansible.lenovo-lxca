@@ -32,4 +32,4 @@ name: null
 powerdown: null
 resetimm: null
 pattern_update_dict: null
-
+read_from_file: null
