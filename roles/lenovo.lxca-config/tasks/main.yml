@@ -9,6 +9,7 @@
     endpoint: "{{ endpoint }}"
     restart: "{{ restart }}"
     type: "{{ type }}"
+    pattern_update_dict: "{{ pattern_update_dict }}"
     command_options: configpatterns
   register: rslt
   tags:

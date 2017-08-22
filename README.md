@@ -66,9 +66,9 @@ Applying Firmware with policy
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 mode=immediate action=apply server='7C5E041E3CCA11E18B715CF3FC112D8A,IMM2 (Primary)'" playbooks/config/config.yml -vvvv --tag update_firmware
 
 Update Repostory commands
-----------------
+============
 Querys
-
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=importDir" playbooks/config/config.yml -vvvv --tag updaterepo
 
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=lastRefreshed" playbooks/config/config.yml -vvvv --tag updaterepo
@@ -86,7 +86,7 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=updatesByMtByComp" playbooks/config/config.yml -vvvv --tag updaterepo
 
 Action
-
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 action=read" playbooks/config/config.yml -vvvv --tag updaterepo
 
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 action=refresh machine_type=7903" playbooks/config/config.yml -vvvv --tag updaterepo
@@ -97,21 +97,46 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 
 
 Config Profiles
-
+============
 get all profiles
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 " playbooks/config/config.yml -vvvv --tag configprofiles
 
 get specified profile with id
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Change profile name of id
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 name='changed name 3' " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Activate profile for endpoint
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 endpoint=B918EDCA1B5F11E2803EBECB82710ADE restart=immediate " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Unassign profile
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 action=unassign " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Delete profile
+----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 action=delete" playbooks/config/config.yml -vvvv --tag configprofiles
+
+
+Config Patterns
+============
+Get All config patterns
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220" playbooks/config/config.yml -vvvv --tag configpatterns
+
+Get specified config pattern with id
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=65" playbooks/config/config.yml -vvvv --tag configpatterns
+
+Apply pattern to endpoint
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=65 endpoint=B918EDCA1B5F11E2803EBECB82710ADE restart=pending type=node" playbooks/config/config.yml -vvvv --tag configpatterns
+
+Import SystemInfo pattern
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 pattern_update_dict={'template_type':'SystemInfo','template':{'contact':'contact','description':'Pattern created by test API ','location':'location','name':'Learned-System_Info-99','systemName':{'autogen':'Disable','hyphenChecked':False},'type':'SystemInfo','uri':'\/config\/template\/61','userDefined':True}}" playbooks/config/config.yml -vvvv --tag configpatterns

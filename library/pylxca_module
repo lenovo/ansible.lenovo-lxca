@@ -93,14 +93,17 @@ def _get_cmms_inventory(module, kwargs):
 def _get_configpatterns(module, kwargs):
     result = None
     try:
+        pattern_dict = {}
+        pattern_dict['id'] = kwargs.get('id')
+        pattern_dict['endpoint'] = kwargs.get('endpoint')
+        pattern_dict['restart'] = kwargs.get('restart')
+        pattern_dict['type'] = kwargs.get('type')
+        pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
         result =  configpatterns(_get_connect_lxca(module,kwargs),
-                                      kwargs.get('id'),
-                                      kwargs.get('endpoint'),
-                                      kwargs.get('restart'),
-                                      kwargs.get('type'),
+                                      pattern_dict
                                 )
     except Exception as e:
-        module.fail_json(msg = "Error getting configpatterns" + str(e))
+        module.fail_json(msg = "Error in configpatterns" + str(e))
     return result
 
 def _get_configprofiles(module, kwargs):
@@ -483,6 +486,7 @@ def main():
             resetimm        = dict(default=None),
             inv_data        = dict(default=None,type=('dict')),
             comp_rule        = dict(default=None,type=('dict'))
+            pattern_update_dict = dict(default=None, type=('dict')),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,
