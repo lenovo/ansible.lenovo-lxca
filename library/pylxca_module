@@ -95,6 +95,7 @@ def _get_configpatterns(module, kwargs):
     try:
         pattern_dict = {}
         pattern_dict['id'] = kwargs.get('id')
+        pattern_dict['includeSettings'] = kwargs.get('includeSettings')
         pattern_dict['endpoint'] = kwargs.get('endpoint')
         pattern_dict['restart'] = kwargs.get('restart')
         pattern_dict['type'] = kwargs.get('type')
@@ -485,8 +486,9 @@ def main():
             powerdown       = dict(default=None),
             resetimm        = dict(default=None),
             inv_data        = dict(default=None,type=('dict')),
-            comp_rule        = dict(default=None,type=('dict')),
+            comp_rule       = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
+            includeSettings  = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

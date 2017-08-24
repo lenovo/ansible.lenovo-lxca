@@ -133,6 +133,10 @@ Get specified config pattern with id
 ----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=65" playbooks/config/config.yml -vvvv --tag configpatterns
 
+Get specified config pattern for id with includeSettings
+----------------
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=65 includeSettings=true" playbooks/config/config.yml -vvvv --tag configpatterns
+
 Apply pattern to endpoint
 ----------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=65 endpoint=B918EDCA1B5F11E2803EBECB82710ADE restart=pending type=node" playbooks/config/config.yml -vvvv --tag configpatterns

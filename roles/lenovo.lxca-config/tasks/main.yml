@@ -15,6 +15,7 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     id: "{{ id }}"
+    includeSettings: "{{ includeSettings }}"
     endpoint: "{{ endpoint }}"
     restart: "{{ restart }}"
     type: "{{ type }}"
