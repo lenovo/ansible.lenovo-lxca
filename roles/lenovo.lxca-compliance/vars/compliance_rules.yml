@@ -3,7 +3,20 @@
  [
   {
     "UUID": "909145e6dc9411e4a97b6eae8b4bd9a3",
-    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'},{ property: type, ref_value: "Rack-Tower Server" }]
+    "BASIC_RULES": [
+                    {
+                      property: machineType,
+                      ref_value: 6241
+                    },
+                    {
+                      property: model,
+                      ref_value: 'AC2'
+                    },
+                    {
+                      property: type,
+                      ref_value: "Rack-Tower Server"
+                    }
+                  ]
   },
   {
     "UUID": "EF362CF0FB4511E397AB40F2E9AF01D0",

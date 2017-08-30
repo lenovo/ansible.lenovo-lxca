@@ -44,7 +44,7 @@ import os
 import json
 import logging
 import logging.handlers
-from pylxca.pylxca_cmd.lxca_pyshell import *
+from pylxca import *
 
 ip_map = dict()
 
@@ -498,8 +498,6 @@ def main():
     rslt = None
     command_options = module.params['command_options']
     global ip_map
-
-    pyshell()
 
     rslt = func_dict[command_options](module,module.params)
     if not rslt:
