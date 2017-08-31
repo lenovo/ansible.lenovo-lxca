@@ -7,15 +7,26 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    group_name: "{{ group_name }}"
-    group_desc: "{{ group_desc }}"
-    group_type: "{{ group_type }}"
+    name: "{{ name }}"
+    description: "{{ description }}"
+    type: "{{ type }}"
     solutionVPD: "{{ solutionVPD }}"
-    group_members: "{{ group_members }}"
-    group_criteria: "{{ group_criteria }}"
+    members: "{{ members }}"
+    criteria: "{{ criteria }}"
   register: rslt
   tags:
-    create_group
+    create_resourcegroups
+
+- name: get a resource group
+  pylxca_module:
+    command_options: create_resourcegroups
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    uuid: "{{ uuid }}"
+  register: rslt
+  tags:
+    get_resourcegroups
 
 - name: Add a member to resource group for ThingAgile Solution
   pylxca_module:
@@ -23,8 +34,8 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    group_name: "{{ group_name }}"
-    group_members: "{{ group_members }}"
+    name: "{{ name }}"
+    members: "{{ members }}"
   register: rslt
   tags:
     add_group_member
