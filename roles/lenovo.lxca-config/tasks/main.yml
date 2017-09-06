@@ -6,24 +6,29 @@
     file: config_pattern_import.yml
     name: pattern_update_dict
   when: pattern_from_file == 'true'
-  tags: configpatterns
+  tags: import_configpatterns
 
+
+- name: Importing configpatterns on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    pattern_update_dict: "{{ pattern_update_dict }}"
+    command_options: set_configpatterns
+  register: rslt
+  tags:
+     import_configpatterns
 
 - name: get configpatterns data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    id: "{{ id }}"
-    includeSettings: "{{ includeSettings }}"
-    endpoint: "{{ endpoint }}"
-    restart: "{{ restart }}"
-    type: "{{ type }}"
-    pattern_update_dict: "{{ pattern_update_dict }}"
-    command_options: configpatterns
+    command_options: get_configpatterns
   register: rslt
   tags:
-     configpatterns
+     get_configpatterns
 
 - name: get configprofiles data from LXCA
   pylxca_module:
