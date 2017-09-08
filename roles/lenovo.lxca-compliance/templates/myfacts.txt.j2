@@ -1,5 +1,5 @@
 {
-  "machineType": "{{ machineType }}",
-  "model": "{{ model }}",
-  "type": "{{ type }}"
+  "machineType": "{{ _raw_params.machineType | default("") }}",
+  "model": "{{ _raw_params.model | default("") }}",
+  "type": "{{ _raw_params.type | default("") }}"
 }

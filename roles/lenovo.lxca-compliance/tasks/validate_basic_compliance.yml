@@ -1,0 +1,27 @@
+# Task file for lenovo.lxca-compliance role
+# This task will read custom fact and validate them against compliance rule
+
+#Gatherer code for Complance Engine for Basic Rule Validation
+#This code is responsible for gathering inventory data for given Endpoint
+
+- name: Reading Compliance Rules
+  include_vars:
+    file: compliance_rules.yml
+    name: comp_rules_dict
+  tags: gather_server_facts,validate_server_facts
+
+- include: collect_server_inventory.yml
+  with_items: "{{ comp_rules_dict['Servers'] }}"
+  tags: gather_server_facts
+
+
+#Validator code for Complance Engine for Basic Rule Validation
+#This code is responsible for validating Gathered Facts against Rules
+
+- name: Reload the facts
+  setup: ~
+  tags: validate_server_facts
+
+- include: validate_compliance_rules.yml
+  with_items: "{{ comp_rules_dict['Servers'] }}"
+  tags: validate_server_facts

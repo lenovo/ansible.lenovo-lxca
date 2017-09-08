@@ -2,15 +2,15 @@
 "Servers":
  [
   {
-    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a3",
+    "UUID": "EADEBE8316174750A27FEC2E8226AC48",
     "BASIC_RULES": [
                     {
                       property: machineType,
-                      ref_value: 6241
+                      ref_value: 5462
                     },
                     {
                       property: model,
-                      ref_value: 'AC2'
+                      ref_value: '35Z'
                     },
                     {
                       property: type,
@@ -19,7 +19,7 @@
                   ]
   },
   {
-    "UUID": "EF362CF0FB4511E397AB40F2E9AF01D0",
+    "UUID": "EF362CF0FB4511E397AB40F2E9AF01D5",
     "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
   }
  ],
