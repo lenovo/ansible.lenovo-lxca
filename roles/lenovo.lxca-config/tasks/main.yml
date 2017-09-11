@@ -15,10 +15,24 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     pattern_update_dict: "{{ pattern_update_dict }}"
-    command_options: set_configpatterns
+    command_options: import_configpatterns
   register: rslt
   tags:
      import_configpatterns
+
+- name: get configpatterns data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    endpoint: "{{ endpoint }}"
+    restart: "{{ restart }}"
+    type: "{{ type }}"
+    command_options: apply_configpatterns
+  register: rslt
+  tags:
+     apply_configpatterns
 
 - name: get configpatterns data from LXCA
   pylxca_module:
@@ -29,6 +43,18 @@
   register: rslt
   tags:
      get_configpatterns
+
+- name: get configpatterns data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    includeSettings: "{{ includeSettings }}"
+    command_options: get_particular_configpattern
+  register: rslt
+  tags:
+     get_particular_configpattern
 
 - name: get configprofiles data from LXCA
   pylxca_module:
@@ -197,3 +223,15 @@
   register: rslt
   tags:
      updatepolicy
+
+- name: Get or Apply osimages to device from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    osimages_info: "{{ osimages_info }}"
+    osimages_dict: "{{ osimages_dict }}"
+    command_options: osimages
+  register: rslt
+  tags:
+     osimages

@@ -45,6 +45,7 @@ import imp
 import json
 import logging
 import logging.handlers
+#from pylxca.pylxca_cmd.lxca_pyshell import *
 from pylxca import *
 
 ip_map = dict()
@@ -116,21 +117,42 @@ def _get_configpatterns(module, kwargs):
         module.fail_json(msg = "Error in configpatterns " + str(e))
     return result
 
-def _set_configpatterns(module, kwargs):
+def _get_particular_configpattern(module, kwargs):
     result = None
     try:
         pattern_dict = {}
         pattern_dict['id'] = kwargs.get('id')
         pattern_dict['includeSettings'] = kwargs.get('includeSettings')
+        result =  configpatterns(_get_connect_lxca(module,kwargs), **pattern_dict)
+    except Exception as e:
+        module.fail_json(msg = "Error in getting particular configpattern " + str(e))
+    return result
+
+def _apply_configpatterns(module, kwargs):
+    result = None
+    try:
+        pattern_dict = {}
+        pattern_dict['id'] = kwargs.get('id')
         pattern_dict['endpoint'] = kwargs.get('endpoint')
         pattern_dict['restart'] = kwargs.get('restart')
         pattern_dict['type'] = kwargs.get('type')
-        pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
         result =  configpatterns(_get_connect_lxca(module,kwargs),
-                                      pattern_dict
+                                      **pattern_dict
                                 )
     except Exception as e:
-        module.fail_json(msg = "Error in configpatterns" + str(e))
+        module.fail_json(msg = "Error in applying configpatterns" + str(e))
+    return result
+
+def _import_configpatterns(module, kwargs):
+    result = None
+    try:
+        pattern_dict = {}
+        pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
+        result =  configpatterns(_get_connect_lxca(module,kwargs),
+                                      **pattern_dict
+                                )
+    except Exception as e:
+        module.fail_json(msg = "Error in import configpatterns" + str(e))
     return result
 
 def _get_configprofiles(module, kwargs):
@@ -278,7 +300,7 @@ def _get_powersupplies(module, kwargs):
         module.fail_json(msg = "Error getting powersupplies inventory " + str(e))
     return result
 
-#TODO type, status
+#TODO type
 def _get_scalablesystem(module, kwargs):
     result = None
     try:
@@ -356,7 +378,7 @@ def _update_firmware_query_comp(module, kwargs):
         module.fail_json(msg = "Error updating firmware ")
     return result
 
-# TODO policy, info
+
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
@@ -369,6 +391,32 @@ def _get_updatepolicy(module, kwargs):
                                )
     except Exception:
         module.fail_json(msg = "Error getting updatepolicy ")
+    return result
+
+def _get_osimages(module, kwargs):
+    result = None
+    try:
+        osimages_info = kwargs.get('osimages_info')
+        osimages_dict = kwargs.get('osimages_dict')
+        if osimages_info and osimages_dict:
+            result =  osimages(_get_connect_lxca(module,kwargs),
+                               osimages_info,
+                               **osimages_dict
+                        )
+        elif osimages_dict:
+            result = osimages(_get_connect_lxca(module, kwargs),
+                              **osimages_dict
+                              )
+
+        elif osimages_info:
+            result = osimages(_get_connect_lxca(module, kwargs),
+                              osimages_info
+                              )
+        else:
+            result = osimages(_get_connect_lxca(module,kwargs))
+
+    except Exception:
+        module.fail_json(msg = "Error processing osimages ")
     return result
 
 def _get_users(module, kwargs):
@@ -450,7 +498,9 @@ func_dict = {
                 'chassis': _get_chassis_inventory,
                 'cmms': _get_cmms_inventory,
                 'get_configpatterns': _get_configpatterns,
-                'set_configpatterns': _set_configpatterns,
+                'get_particular_configpattern': _get_particular_configpattern,
+                'import_configpatterns': _import_configpatterns,
+                'apply_configpatterns': _apply_configpatterns,
                 'configprofiles': _get_configprofiles,
                 'configtargets': _get_configtargets,
                 'discover': _get_discover,
@@ -465,6 +515,7 @@ func_dict = {
                 'unmanage_status': _unmanage_status,
                 'manifests': _get_manifests,
                 'nodes': _get_nodes,
+                'osimages': _get_osimages,
                 'powersupplies': _get_powersupplies,
                 'scalablesystem': _get_scalablesystem,
                 'switches': _get_switches_inventory,
@@ -541,6 +592,8 @@ def main():
             comp_rule       = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
             includeSettings  = dict(default=None),
+            osimages_info   = dict(default=None),
+            osimages_dict   = dict(default=None, type=('dict')),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

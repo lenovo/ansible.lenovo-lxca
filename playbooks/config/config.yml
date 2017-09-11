@@ -1,5 +1,7 @@
 - name: Calling Config Role
   hosts: localhost
   connection: local
+  vars_files:
+     - additional.yml
   roles:
     - { role: lenovo.lxca-config }

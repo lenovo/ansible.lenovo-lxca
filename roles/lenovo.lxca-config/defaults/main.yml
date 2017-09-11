@@ -34,3 +34,5 @@ resetimm: null
 pattern_update_dict: null
 pattern_from_file: null
 includeSettings: null
+osimages_info: null
+osimages_dict: null
