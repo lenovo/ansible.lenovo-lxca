@@ -1,0 +1,17 @@
+{
+	'lxca_user': 'USERID',
+	'lxca_password': 'Passw0rd',
+	'lxca_url': 'https://10.240.29.217',
+	'name': 'TEST4',
+	'description': 'TestGroup',
+	'type': 'solution',
+	'solutionVPD': {
+		'id': '59A54997C18DCF0594A8CCD2',
+		'machineType': 'TESTMTM',
+		'model': 'TESTMODEL',
+		'serialNumber': 'TESTSERIAL',
+		'manufacturer': 'LENOVO'
+	},
+	'members': [],
+	'criteria': []
+}
