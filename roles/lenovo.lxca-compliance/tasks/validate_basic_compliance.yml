@@ -8,10 +8,11 @@
   include_vars:
     file: compliance_rules.yml
     name: comp_rules_dict
-  tags: gather_server_facts,validate_server_facts
+  tags: gather_server_facts,validate_basic_server_facts
 
 - include: collect_server_inventory.yml
   with_items: "{{ comp_rules_dict['Servers'] }}"
+  when: comp_rules_dict.Servers is defined
   tags: gather_server_facts
 
 
@@ -20,8 +21,9 @@
 
 - name: Reload the facts
   setup: ~
-  tags: validate_server_facts
+  tags: validate_basic_server_facts
 
-- include: validate_compliance_rules.yml
+- include: validate_basic_server_facts.yml
   with_items: "{{ comp_rules_dict['Servers'] }}"
-  tags: validate_server_facts
+  when: comp_rules_dict.Servers is defined
+  tags: validate_basic_server_facts

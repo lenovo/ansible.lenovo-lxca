@@ -50,21 +50,24 @@ from pylxca import *
 
 ip_map = dict()
 
+
 def load_compliance_plugin( location, name ):
     plugin = None
-    PLUGIN_MAIN_MODULE = "__init__"
     plugins_list = os.listdir(location)
 
-    # Find the specified plugin in plugins list
-    for plugin_name in plugins_list:
-        if str(plugin_name).lower() == str(name).lower():
-            location = os.path.join(location, plugin_name)
+    try:
+        # Find the specified plugin in plugins folder
+        for plugin_name in plugins_list:
+            if str(plugin_name).lower() == str(name).lower():
+                plugin_dir = os.path.join(location, plugin_name)
 
-            if not os.path.isdir(location) or not PLUGIN_MAIN_MODULE + ".py" in os.listdir(location):
-                raise Exception("Invalid Compliance Plugin")
+                if not os.path.isdir(plugin_dir) or not "__init__.py" in os.listdir(plugin_dir):
+                    raise Exception("Invalid Compliance Plugin")
 
-            info = imp.find_module(PLUGIN_MAIN_MODULE, [location])
-            plugin = imp.load_module(PLUGIN_MAIN_MODULE, info)
+                info = imp.find_module(name, [location])
+                plugin = imp.load_module(name, *info)
+    except Exception as err:
+        raise err
     return plugin
 
 def find_conn_obj ( kwargs ):
@@ -449,15 +452,17 @@ def _validate_basic_rules(module, kwargs):
     module.exit_json(changed=True, msg="Executed Compliance Validation", result=compliance_status)
 
 def _validate_plugin_rules(module, kwargs):
-    plugin_location = kwargs.get("plugin_location")
-    plugin_name = kwargs.get("plugin_name")
+    location = kwargs.get("plugin_location")
+    name = kwargs.get("plugin_name")
 
-    compliance_status = True
-
-    plugin = load_compliance_plugin(plugin_location, plugin_name)
-    compliance_status = plugin.validate_complaince()
-
-    module.exit_json(changed=True, msg="Executed Compliance Validation", result=compliance_status)
+    try:
+        compliance_status = False
+        plugin = load_compliance_plugin( location, name )
+        if plugin:
+            compliance_status = plugin.validate_compliance()
+    except Exception as err:
+        module.fail_json(msg = err.__str__())
+    module.exit_json(changed=True, msg="Executed Compliance Validation through Plugin", result=compliance_status)
 
 def _create_resourcegroups(module, kwargs):
     result = None

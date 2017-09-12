@@ -7,7 +7,8 @@ ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10
 
 Example Executung Compliance Validation in LXCA
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_server_facts
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
+ansible-playbook -e "plugin_name=test_plugin plugin_location=/home/prashant/git/ansible.lenovo-lxca/files/compliance_plugins" playbooks/uhm/compliance.yml  --tag validate_plugin_compliance -vvvv
 
 Example Collect inventory in LXCA
 ----------------

@@ -4,7 +4,7 @@
     inv_data: "{{ ansible_local[item['UUID']] }}"
     command_options: validate_basic_rules
   register: result
-  tags: validate_server_facts
+  tags: validate_basic_server_facts
 
 
 - name: Storing Results of the compliance
@@ -12,17 +12,4 @@
     uuid: "{{ item['UUID'] }}"
     compliance_status: "{{  result['result'] }}"
   template: src=myfacts2.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}_comp_results.fact
-  tags: validate_server_facts
-
-
-#- name: Printing Compliance Rules
-#  debug:
-#    var: item
-#  tags:
-#    validate_server_facts
-#
-#- name: Printing Ansible Facts
-#  debug:
-#    var: ansible_local[item['UUID']]
-#  tags:
-#    validate_server_facts
+  tags: validate_basic_server_facts

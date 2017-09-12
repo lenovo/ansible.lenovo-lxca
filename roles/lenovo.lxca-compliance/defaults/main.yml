@@ -6,3 +6,10 @@ chassis_inv_args:
   - {  
       command_options: chassis
     }
+validate_plugin_rules: null
+login_user: null
+login_password: null
+auth_url: null
+plugin_name: null
+comp_rules_dict: null
+plugin_location: null
