@@ -136,6 +136,7 @@ def _apply_configpatterns(module, kwargs):
     try:
         pattern_dict = {}
         pattern_dict['id'] = kwargs.get('id')
+        pattern_dict['name'] = kwargs.get('name')
         pattern_dict['endpoint'] = kwargs.get('endpoint')
         pattern_dict['restart'] = kwargs.get('restart')
         pattern_dict['type'] = kwargs.get('type')

@@ -17,8 +17,7 @@
     pattern_update_dict: "{{ pattern_update_dict }}"
     command_options: import_configpatterns
   register: rslt
-  tags:
-     import_configpatterns
+  tags: import_configpatterns
 
 - name: get configpatterns data from LXCA
   pylxca_module:
@@ -26,6 +25,7 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     id: "{{ id }}"
+    name: "{{ name }}"
     endpoint: "{{ endpoint }}"
     restart: "{{ restart }}"
     type: "{{ type }}"
@@ -222,7 +222,7 @@
     command_options: updatepolicy
   register: rslt
   tags:
-     updatepolicy
+    updatepolicy
 
 - name: Get or Apply osimages to device from LXCA
   pylxca_module:
@@ -235,3 +235,31 @@
   register: rslt
   tags:
      osimages
+
+- block:
+  - name: Get Jobid for import file to repository of osimages
+    pylxca_module:
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      osimages_dict: "{{ osimages_imagetype_dict }}"
+      command_options: osimages
+    register: rslt
+
+  - debug:
+      var: rslt.result.jobId
+
+  - name: Check import_dict value
+    set_fact:
+     mod_import_dict: "{{ import_dict | combine( {'jobId' : rslt.result.jobId }) }}"
+
+  - name: Post Job for import file to repository of osimages
+    pylxca_module:
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      osimages_dict: "{{ mod_import_dict }}"
+      command_options: osimages
+    register: rslt
+  tags:
+    import_osimages
