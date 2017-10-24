@@ -383,6 +383,47 @@ def _update_firmware_query_comp(module, kwargs):
     return result
 
 
+def _get_managementserver(module, kwargs):
+    result = None
+    try:
+        result =  managementserver(_get_connect_lxca(module,kwargs),
+                             kwargs.get('update_key'),
+                             kwargs.get('fixids'),
+                             kwargs.get('type')
+                             )
+    except Exception:
+        module.fail_json(msg = "Error retriving managementserver info.")
+    return result
+
+def _update_managementserver(module, kwargs):
+    result = None
+    try:
+        result =  managementserver(_get_connect_lxca(module,kwargs),
+                             kwargs.get('update_key'),
+                             kwargs.get('fixids'),
+                             kwargs.get('type'),
+                             kwargs.get('action'),
+                       )
+    except Exception:
+        module.fail_json(msg = "Error retriving update managementserver.")
+    return result
+
+def _import_managementserver(module, kwargs):
+    result = None
+    try:
+        result =  managementserver(_get_connect_lxca(module,kwargs),
+                             kwargs.get('update_key'),
+                             kwargs.get('fixids'),
+                             kwargs.get('type'),
+                             kwargs.get('action'),
+                             kwargs.get('files'),
+                             kwargs.get('jobid')
+                             )
+    except Exception:
+        module.fail_json(msg = "Error import managementserver .")
+    return result
+
+
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
@@ -530,6 +571,9 @@ func_dict = {
                 'update_firmware': _update_firmware,
                 'update_firmware_query_status':_update_firmware_query_status,
                 'update_firmware_query_comp':_update_firmware_query_comp,
+                'get_managementserver': _get_managementserver,
+                'update_managementserver': _update_managementserver,
+                'import_managementserver': _import_managementserver,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
                 'gather_server_facts': _gather_server_facts,
@@ -597,9 +641,11 @@ def main():
             inv_data        = dict(default=None,type=('dict')),
             comp_rule       = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
-            includeSettings  = dict(default=None),
+            includeSettings = dict(default=None),
             osimages_info   = dict(default=None),
             osimages_dict   = dict(default=None, type=('dict')),
+            update_key      = dict(default=None),
+            files           = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,
