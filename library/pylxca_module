@@ -92,6 +92,8 @@ def _get_connect_lxca ( module, kwargs ):
             _conn_lxca = connect(kwargs.get('auth_url'),kwargs.get('login_user'),kwargs.get('login_password'),"True")
         ip_map.update({kwargs.get('auth_url'): _conn_lxca})
 #        ip_map = { kwargs.get('auth_url'): _conn_lxca }
+        if _conn_lxca is None: 
+        	module.fail_json(msg = "Error connecting with: %s" % kwargs.get('auth_url'))
     except Exception:
         module.fail_json(msg = "Error authenticating with provided credentials: %s" % kwargs.get('auth_url'))
     return _conn_lxca
