@@ -241,4 +241,10 @@ ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_ur
 
 
 
+unittest
+--------
 
+It uses mock and nose modules
+run unittest from root folder of this repo 
+
+nosetests -v -s  test/test_pylxca_module.py

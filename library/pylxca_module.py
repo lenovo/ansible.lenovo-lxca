@@ -648,6 +648,7 @@ def main():
             osimages_dict   = dict(default=None, type=('dict')),
             update_key      = dict(default=None),
             files           = dict(default=None),
+            unittest        = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,
@@ -659,6 +660,8 @@ def main():
     global ip_map
 
     rslt = func_dict[command_options](module,module.params)
+    if module.params['unittest']:
+        return rslt
     if not rslt:
         module.exit_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
     else:
@@ -666,6 +669,8 @@ def main():
 
 # import module snippets
 from ansible.module_utils.basic import *
-main()
+if __name__ == '__main__':
+	main()
+
 
 
