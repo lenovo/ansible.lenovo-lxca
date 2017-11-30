@@ -272,7 +272,7 @@
       auth_url: "{{ lxca_url }}"
       action: "{{ action }}"
       files: "{{ files }}"
-      command_options: import_managementserver
+      command_options: import_managementserver_pkg
     register: rslt
 
   - debug:
@@ -286,10 +286,10 @@
       action: "{{ action }}"
       files: "{{ files }}"
       jobid: "{{ rslt.result.jobid }}"
-      command_options: import_managementserver
+      command_options: import_managementserver_pkg
     register: rslt
   tags:
-    import_managementserver
+    import_managementserver_pkg
 
 - name: get managementserver updates on LXCA
   pylxca_module:
@@ -297,9 +297,9 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     update_key: "{{ update_key }}"
-    command_options: get_managementserver
+    command_options: get_managementserver_pkg
   register: rslt
-  tags: get_managementserver
+  tags: get_managementserver_pkg
 
 - name: get managementserver updates on LXCA
   pylxca_module:
@@ -309,9 +309,9 @@
     update_key: "{{ update_key }}"
     fixids: "{{ fixids }}"
     type: "{{ type }}"
-    command_options: get_managementserver
+    command_options: get_managementserver_pkg
   register: rslt
-  tags: get_particular_managementserver
+  tags: get_particular_managementserver_pkg
 
 - name: update managementserver on LXCA
   pylxca_module:
@@ -320,6 +320,6 @@
     auth_url: "{{ lxca_url }}"
     action: "{{ action }}"
     fixids: "{{ fixids }}"
-    command_options: update_managementserver
+    command_options: update_managementserver_pkg
   register: rslt
-  tags: update_managementserver
+  tags: update_managementserver_pkg

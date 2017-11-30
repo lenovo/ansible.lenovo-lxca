@@ -71,8 +71,8 @@ def load_compliance_plugin( location, name ):
     return plugin
 
 def find_conn_obj ( kwargs ):
-    if ip_map.get(kwargs.get('auth_url')) is not None:
-       return ip_map.get(kwargs.get('auth_url'))
+    if ip_map.get(kwargs.get('url')) is not None:
+       return ip_map.get(kwargs.get('url'))
     return None
   
 def _get_connect_lxca ( module, kwargs ):
@@ -385,7 +385,7 @@ def _update_firmware_query_comp(module, kwargs):
     return result
 
 
-def _get_managementserver(module, kwargs):
+def _get_managementserver_pkg(module, kwargs):
     result = None
     try:
         result =  managementserver(_get_connect_lxca(module,kwargs),
@@ -397,7 +397,7 @@ def _get_managementserver(module, kwargs):
         module.fail_json(msg = "Error retriving managementserver info.")
     return result
 
-def _update_managementserver(module, kwargs):
+def _update_managementserver_pkg(module, kwargs):
     result = None
     try:
         result =  managementserver(_get_connect_lxca(module,kwargs),
@@ -410,7 +410,7 @@ def _update_managementserver(module, kwargs):
         module.fail_json(msg = "Error retriving update managementserver.")
     return result
 
-def _import_managementserver(module, kwargs):
+def _import_managementserver_pkg(module, kwargs):
     result = None
     try:
         result =  managementserver(_get_connect_lxca(module,kwargs),
@@ -573,9 +573,9 @@ func_dict = {
                 'update_firmware': _update_firmware,
                 'update_firmware_query_status':_update_firmware_query_status,
                 'update_firmware_query_comp':_update_firmware_query_comp,
-                'get_managementserver': _get_managementserver,
-                'update_managementserver': _update_managementserver,
-                'import_managementserver': _import_managementserver,
+                'get_managementserver_pkg': _get_managementserver_pkg,
+                'update_managementserver_pkg': _update_managementserver_pkg,
+                'import_managementserver_pkg': _import_managementserver_pkg,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
                 'gather_server_facts': _gather_server_facts,
@@ -662,6 +662,10 @@ def main():
     rslt = func_dict[command_options](module,module.params)
     if module.params['unittest']:
         return rslt
+
+    if command_options == "connect":
+        if rslt:
+            module.exit_json(changed=False, msg="Success %s result" % command_options, result="Connected successfully")
     if not rslt:
         module.exit_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
     else:
