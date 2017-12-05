@@ -190,7 +190,7 @@ def _get_configprofiles(module, kwargs):
 def _get_configtargets(module, kwargs):
     result = None
     try:
-        result =  configtargets(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+        result =  configtargets(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting configtargets" + str(e))
     return result

@@ -244,9 +244,10 @@ ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_ur
 unittest
 --------
 
-It uses mock and nose modules
+It uses mock and nose modules. For coverage it uses coverage module.
 run unittest from root folder of this repo 
 
 nosetests -v -s  test/test_pylxca_module.py
 nosetests -v -s  test/test_pylxca_module.py --with-coverage
+nosetests -v -s  test/test_pylxca_module.py --with-coverage --cover-package=pylxca
 
