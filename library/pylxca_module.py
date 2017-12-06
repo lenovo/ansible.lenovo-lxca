@@ -354,8 +354,8 @@ def _get_updaterepo_info(module, kwargs):
                              kwargs.get('scope'),
                              kwargs.get('fixids'),
                              kwargs.get('file_type'))
-    except Exception:
-        module.fail_json(msg = "Error retriving firmware info.")
+    except Exception as e:
+        module.fail_json(msg = "Error retriving firmware info." + str(e) )
     return result
 
 def _update_firmware(module, kwargs):
@@ -363,8 +363,8 @@ def _update_firmware(module, kwargs):
     try:
         result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'),cmm=kwargs.get('cmm'),switch=kwargs.get('switch'),server=kwargs.get('server'),storage=kwargs.get('storage'))
 #        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
-    except Exception:
-        module.fail_json(msg = "Error updating firmware ")
+    except Exception as e:
+        module.fail_json(msg = "Error updating firmware " + str(e))
     return result
 
 def _update_firmware_query_status(module, kwargs):
@@ -372,16 +372,16 @@ def _update_firmware_query_status(module, kwargs):
     try:
         result =  updatecomp(_get_connect_lxca(module,kwargs),query='status')
 #        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
-    except Exception:
-        module.fail_json(msg = "Error updating firmware ")
+    except Exception as e:
+        module.fail_json(msg = "Error updating firmware " + str(e))
     return result
 
 def _update_firmware_query_comp(module, kwargs):
     result = None
     try:
         result =  updatecomp(_get_connect_lxca(module,kwargs),query='components')
-    except Exception:
-        module.fail_json(msg = "Error updating firmware ")
+    except Exception as e:
+        module.fail_json(msg = "Error updating firmware " + str(e))
     return result
 
 
@@ -393,8 +393,8 @@ def _get_managementserver_pkg(module, kwargs):
                              kwargs.get('fixids'),
                              kwargs.get('type')
                              )
-    except Exception:
-        module.fail_json(msg = "Error retriving managementserver info.")
+    except Exception as e:
+        module.fail_json(msg = "Error retriving managementserver info." + str(e))
     return result
 
 def _update_managementserver_pkg(module, kwargs):
@@ -406,8 +406,8 @@ def _update_managementserver_pkg(module, kwargs):
                              kwargs.get('type'),
                              kwargs.get('action'),
                        )
-    except Exception:
-        module.fail_json(msg = "Error retriving update managementserver.")
+    except Exception as e:
+        module.fail_json(msg = "Error retriving update managementserver." + str(e))
     return result
 
 def _import_managementserver_pkg(module, kwargs):
@@ -421,8 +421,8 @@ def _import_managementserver_pkg(module, kwargs):
                              kwargs.get('files'),
                              kwargs.get('jobid')
                              )
-    except Exception:
-        module.fail_json(msg = "Error import managementserver .")
+    except Exception as e:
+        module.fail_json(msg = "Error import managementserver ." + str(e))
     return result
 
 
@@ -436,8 +436,8 @@ def _get_updatepolicy(module, kwargs):
                                kwargs.get('policy_name'),
                                kwargs.get('policy_type')
                                )
-    except Exception:
-        module.fail_json(msg = "Error getting updatepolicy ")
+    except Exception as e:
+        module.fail_json(msg = "Error getting updatepolicy " + str(e))
     return result
 
 def _get_osimages(module, kwargs):
@@ -462,16 +462,16 @@ def _get_osimages(module, kwargs):
         else:
             result = osimages(_get_connect_lxca(module,kwargs))
 
-    except Exception:
-        module.fail_json(msg = "Error processing osimages ")
+    except Exception as e:
+        module.fail_json(msg = "Error processing osimages " + str(e))
     return result
 
 def _get_users(module, kwargs):
     result = None
     try:
         result =  users(_get_connect_lxca(module,kwargs), kwargs.get('name'))
-    except Exception:
-        module.fail_json(msg = "Error getting users ")
+    except Exception as e:
+        module.fail_json(msg = "Error getting users " + str(e))
     return result
 
 def _gather_server_facts(module, kwargs):
@@ -518,24 +518,24 @@ def _create_resourcegroups(module, kwargs):
                     'criteria':kwargs.get('criteria')}
     try:
         result =  resourcegroups(_get_connect_lxca(module,kwargs),**param_dict)
-    except Exception:
-        module.fail_json(msg = "Error Creating Resource Group ")
+    except Exception as e:
+        module.fail_json(msg = "Error Creating Resource Group " + str(e))
     return result
 
 def _add_resourcegroup_member(module, kwargs):
     result = None
     try:
         result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('name'))
-    except Exception:
-        module.fail_json(msg = "Error getting users ")
+    except Exception as e:
+        module.fail_json(msg = "Error getting users " + str(e))
     return result
 
 def _get_resourcegroups(module, kwargs):
     result = None
     try:
         result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
-    except Exception:
-        module.fail_json(msg = "Error getting users ")
+    except Exception as e:
+        module.fail_json(msg = "Error getting users " + str(e))
     return result
 
 def _compliance_engine(module, kwargs):
