@@ -115,11 +115,18 @@
       jobid: "{{ rslt_job.result }}"
     register: result
     until: result.result.progress == 100.0
-    retries: 20
+    retries: 40
     delay: 15
 
   - debug:
       var: result.result.progress
+      var: result.result.status
+
+  - name: Check manage job completion
+    assert:
+      that:
+       -  " 'DONE' in result.result.status"
+
   tags:
     manage
 
