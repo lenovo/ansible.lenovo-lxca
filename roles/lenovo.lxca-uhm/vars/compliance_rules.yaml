@@ -1,0 +1,16 @@
+{
+'rules':[
+{
+      "name": "ServerIsOnline",
+      "targetResourceType": ["Server"],
+      "targetGroup": ["/groups/25"],
+      "content": [{"property": "accessState","ref_value": "online"}]
+      },
+      {
+                "name": "ServerPowerIsOn",
+                "targetResourceType": ["Server"],
+                "targetGroup": ["/groups/25"],
+                "content": [{"property": "powerStatus","ref_value": 8}]
+      }
+    ]
+}

@@ -542,6 +542,24 @@ def _compliance_engine(module, kwargs):
     # TODO Stub for compliance engine REST API
     return True
 
+def _rules(module, kwargs):
+    result = None
+    try:
+        result =  rules(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('name'), kwargs.get('targetResourceType')
+                        , kwargs.get('targetGroup'), kwargs.get('content'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting rules " + str(e))
+    return result
+
+def _compositeResults(module, kwargs):
+    result = None
+    try:
+        result =  compositeResults(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('solutionGroup'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting compositeResults " + str(e))
+    return result
+
+
 func_dict = {
                 'connect': _get_connect_lxca,
                 'chassis': _get_chassis_inventory,
@@ -584,7 +602,10 @@ func_dict = {
                 'get_resourcegroups':_get_resourcegroups,
                 'create_resourcegroups':_create_resourcegroups,
                 'add_resourcegroup_member':_add_resourcegroup_member,
-                'compliance_engine':_compliance_engine
+                'compliance_engine':_compliance_engine,
+                'rules': _rules,
+                'compositeResults': _compositeResults,
+
 }
 
 
@@ -649,6 +670,10 @@ def main():
             update_key      = dict(default=None),
             files           = dict(default=None),
             unittest        = dict(default=None),
+            targetGroup     =dict(default=None, type=('list')),
+            targetResourceType =dict(default=None, type=('list')),
+            content         = dict(default=None,type=('list')),
+            solutionGroup   = dict(default=None),
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

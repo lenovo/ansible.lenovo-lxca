@@ -52,3 +52,60 @@
   tags:
     manifest
 
+- name: Reading rules from file
+  include_vars:
+    file: compliance_rules.yaml
+    name: rules
+  tags: import_compliance_rules
+
+- name: Show variables read
+  debug:
+    var: rules.rules[1]
+  tags: import_compliance_rules
+
+
+- name: Importing compliance rules on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    name: "{{ item.name }}"
+    targetResourceType: "{{ item.targetResourceType }}"
+    targetGroup: "{{ item.targetGroup }}"
+    content: "{{ item.content }}"
+    command_options: rules
+  register: rslt
+  with_items: "{{ rules.rules }}"
+  tags: import_compliance_rules
+
+
+- name: get compliance rules from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: rules
+  register: rslt
+  tags: get_compliance_rules
+
+
+- name: Updating composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    solutionGroup: "{{ solutionGroup }}"
+    command_options: compositeResults
+  register: rslt
+  tags: update_compositeResults
+
+- name: Updating composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: compositeResults
+  register: rslt
+  tags: get_compositeResults

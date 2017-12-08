@@ -239,6 +239,27 @@ files specified with relative to playbook file
 ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','action':'import', 'files':'../../files/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
 
 
+compliance rules
+-----------------
+get all compliance rules
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+get specific rule
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a2a2d8df9a2f31486aa8b83" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+import compliance rules from files of compliance_rules.yaml at uhm roles vars folder
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag import_compliance_rules
+
+Get compositeResults
+--------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeResults
+
+get specific compositeResults
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeResults
+
+update composit results
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 solutionGroup=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag update_compositeResults
+
 
 
 unittest

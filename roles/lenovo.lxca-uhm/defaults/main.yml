@@ -10,3 +10,8 @@ members: null
 criteria: null
 sol_id: null
 manifest_path: null
+targetGroup: null
+targetResourceType: null
+content: null
+id: null
+solutionGroup: null
