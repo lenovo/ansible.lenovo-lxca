@@ -1,7 +1,7 @@
 - name: Validating Compliance Rules for given Server
   pylxca_module:
-    comp_rule: "{{ item }}"
-    inv_data: "{{ ansible_local[item['UUID']] }}"
+    BASIC_RULES: "{{ BASIC_RULES }}"
+    inv_data: "{{ ansible_local[ UUID }}"
     command_options: validate_basic_rules
   register: result
   tags: validate_basic_server_facts
@@ -9,7 +9,7 @@
 
 - name: Storing Results of the compliance
   vars:
-    uuid: "{{ item['UUID'] }}"
+    uuid: "{{ UUID }}"
     compliance_status: "{{  result['result'] }}"
   template: src=myfacts2.txt.j2 dest=/etc/ansible/facts.d/{{uuid}}_comp_results.fact
   tags: validate_basic_server_facts
