@@ -47,7 +47,10 @@ func_dict = {
                 'get_resourcegroups':pylxca_module._get_resourcegroups,
                 'create_resourcegroups':pylxca_module._create_resourcegroups,
                 'add_resourcegroup_member':pylxca_module._add_resourcegroup_member,
-                'compliance_engine':pylxca_module._compliance_engine
+                'compliance_engine':pylxca_module._compliance_engine,
+                'rules': pylxca_module._rules,
+                'compositeResults': pylxca_module._compositeResults,
+
 }
 
 expected_arguments_spec = dict(
@@ -105,6 +108,10 @@ expected_arguments_spec = dict(
     update_key=dict(default=None),
     files=dict(default=None),
     unittest=dict(default=None),
+    targetGroup=dict(default=None, type=('list')),
+    targetResourceType=dict(default=None, type=('list')),
+    content=dict(default=None, type=('list')),
+    solutionGroup=dict(default=None),
 )
 
 
