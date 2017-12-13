@@ -1,6 +1,6 @@
 ---
 - include: validate_basic_compliance.yml
-- include: validate_plugin_compliance.yml
+#- include: validate_plugin_compliance.yml
 
 #- name: Call Compliance Engine
 #  pylxca_module:

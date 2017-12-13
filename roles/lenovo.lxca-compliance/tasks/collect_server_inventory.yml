@@ -3,7 +3,7 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    uuid: "{{ item['UUID'] }}"
+    uuid: "{{ UUID ] }}"
     command_options: nodes
   register: nodes_data
   tags: gather_server_facts
@@ -13,5 +13,5 @@
   tags: gather_server_facts
 
 - name: Update custom facts
-  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{item['UUID']}}.fact
+  template: src=myfacts.txt.j2 dest=/etc/ansible/facts.d/{{ UUID }}.fact
   tags: gather_server_facts

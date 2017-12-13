@@ -482,7 +482,7 @@ def _gather_server_facts(module, kwargs):
         module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
 
 def _validate_basic_rules(module, kwargs):
-    rule_list = kwargs.get("comp_rule")["BASIC_RULES"]
+    rule_list = kwargs.get("BASIC_RULES")
     inv_data_dict = kwargs.get("inv_data")
     compliance_status = True
 

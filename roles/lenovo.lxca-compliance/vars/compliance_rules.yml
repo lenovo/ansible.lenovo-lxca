@@ -2,7 +2,7 @@
 "Servers":
  [
   {
-    "UUID": "EADEBE8316174750A27FEC2E8226AC48",
+    "UUID": "DUMMY-792812BA57B24337-CHASSIS[1]-BLADE[1]",
     "BASIC_RULES": [
                     {
                       property: machineType,
@@ -26,12 +26,8 @@
 "Switches":
  [
   {
-    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a3",
-    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
-  },
-  {
-    "UUID": "909145e6dc9411e4a97b6eae8b4bd9a4",
-    "BASIC_RULES": [{ property: machineType, ref_value: 6241},{ property: model, ref_value: 'AC2'}]
+    "UUID": "DUMMY-792812BA57B24337-CHASSIS[1]-IO_MODULE[1]",
+    "COMPOUND_RULES": "FOREACH switch.port; IF port.type = storage; CHECK MTU > 30000;"
   }
  ]
 }
