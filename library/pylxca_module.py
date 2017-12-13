@@ -114,6 +114,15 @@ def _get_cmms_inventory(module, kwargs):
         module.fail_json(msg = "Error getting cmms inventory" + str(e))
     return result
 
+def _get_configstatus(module, kwargs):
+    result = None
+    try:
+        result =  configpatterns(_get_connect_lxca(module,kwargs), endpoint= kwargs.get('endpoint'), status = kwargs.get('status'))
+    except Exception as e:
+        module.fail_json(msg = "Error in configstatus " + str(e))
+    return result
+
+
 def _get_configpatterns(module, kwargs):
     result = None
     try:
@@ -568,6 +577,7 @@ func_dict = {
                 'get_particular_configpattern': _get_particular_configpattern,
                 'import_configpatterns': _import_configpatterns,
                 'apply_configpatterns': _apply_configpatterns,
+                'get_configstatus': _get_configstatus,
                 'configprofiles': _get_configprofiles,
                 'configtargets': _get_configtargets,
                 'discover': _get_discover,

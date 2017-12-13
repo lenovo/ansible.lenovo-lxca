@@ -15,6 +15,7 @@ func_dict = {
                 'apply_configpatterns': pylxca_module._apply_configpatterns,
                 'configprofiles': pylxca_module._get_configprofiles,
                 'configtargets': pylxca_module._get_configtargets,
+                'get_configstatus': pylxca_module._get_configstatus,
                 'discover': pylxca_module._get_discover,
                 'fans': pylxca_module._get_fans,
                 'fanmuxes': pylxca_module._get_fanmuxes,

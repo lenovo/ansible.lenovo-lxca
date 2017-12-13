@@ -14,7 +14,6 @@ Example Collect inventory in LXCA
 ----------------
 
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220" site.yml -vvvv
-
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220" site.yml -vvvv --tag users
 
 Example Manage / Unmanage endpoint in LXCA
@@ -151,6 +150,11 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 Import Pattern from file
 ------------------------
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 pattern_from_file=true" playbooks/config/config.yml -vvvv --tag import_configpatterns
+
+config status
+------------
+get config status
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.217 endpoint=B918EDCA1B5F11E2803EBECB82710ADE status=True" playbooks/config/config.yml -vvvv --tag get_configstatus
 
 Create Resource Groups
 ----------------------
