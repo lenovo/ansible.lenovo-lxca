@@ -469,7 +469,7 @@ def _get_osimages(module, kwargs):
 def _get_users(module, kwargs):
     result = None
     try:
-        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('name'))
+        result =  users(_get_connect_lxca(module,kwargs), kwargs.get('id'))
     except Exception as e:
         module.fail_json(msg = "Error getting users " + str(e))
     return result
@@ -692,7 +692,7 @@ def main():
         if rslt:
             module.exit_json(changed=False, msg="Success %s result" % command_options, result="Connected successfully")
     if not rslt:
-        module.exit_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
+        module.fail_json(changed=False, msg="Fail to get %s result" %command_options, result=rslt)
     else:
         module.exit_json(changed=False, msg="Success %s result" %command_options, result=rslt)
 

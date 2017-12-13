@@ -120,12 +120,12 @@
 
   - debug:
       var: result.result.progress
-      var: result.result.status
+      var: result.result.results[0].result
 
   - name: Check manage job completion
     assert:
       that:
-       -  " 'DONE' in result.result.status"
+       -  " 'SUCCESS' in result.result.results[0].result"
 
   tags:
     manage
