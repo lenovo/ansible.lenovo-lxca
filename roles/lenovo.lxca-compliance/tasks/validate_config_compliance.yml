@@ -54,5 +54,5 @@
 - name: Return result to callee
   assert:
     that:
-       -  " True== result.result"
+       -  "True==result.result"
   tags: validate_basic_server_facts
