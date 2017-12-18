@@ -118,7 +118,7 @@ def _get_configstatus(module, kwargs):
     result = None
     try:
         result =  configpatterns(_get_connect_lxca(module,kwargs), endpoint= kwargs.get('endpoint'), status = kwargs.get('status'))
-        if result.has_key('items')  and result['items'][0]:
+        if result.has_key('items')  and len(result['items']) and result['items'][0]:
             result = result['items'][0]
     except Exception as e:
         module.fail_json(msg = "Error in configstatus " + str(e))

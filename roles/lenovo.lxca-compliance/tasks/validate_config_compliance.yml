@@ -45,3 +45,14 @@
     command_options: validate_basic_rules
   register: result
   tags: validate_basic_config_facts
+
+- name: Check Validate result
+  debug:
+    var: result.result
+  tags: validate_basic_server_facts
+
+- name: Return result to callee
+  assert:
+    that:
+       -  " True== result.result"
+  tags: validate_basic_server_facts
