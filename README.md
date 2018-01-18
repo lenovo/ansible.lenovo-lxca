@@ -9,6 +9,7 @@ Example Executung Compliance Validation in LXCA
 ----------------
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
 ansible-playbook -e "plugin_name=test_plugin plugin_location=/home/prashant/git/ansible.lenovo-lxca/files/compliance_plugins" playbooks/uhm/compliance.yml  --tag validate_plugin_compliance -vvvv
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.215 RESOURCE_UUID=AB6C2B0F827811E29C8B3440B5EAB968 RESOURCE_TYPE=Server BASIC_RULES=[{'property':'powerStatus','ref_value':8}]" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
 
 Example Collect inventory in LXCA
 ----------------
