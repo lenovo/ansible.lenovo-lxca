@@ -674,6 +674,7 @@ def main():
             powerdown       = dict(default=None),
             resetimm        = dict(default=None),
             inv_data        = dict(default=None,type=('dict')),
+            BASIC_RULES      = dict(default=None, type=('list')),
             comp_rule       = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
             includeSettings = dict(default=None),
