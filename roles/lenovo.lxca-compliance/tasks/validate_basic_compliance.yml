@@ -9,6 +9,9 @@
 #    msg: "Resource value = {{ RESOURCE_TYPE }}"
 #  tags: validate_basic_server_facts
 
+
+#===========================================
+#TODO Read Rule content and pull out source and execute gatherer code for each source
 #===========================================
 
 - name: Pulling Server inventory Data for given server
