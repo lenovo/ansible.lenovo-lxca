@@ -378,6 +378,14 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware " + str(e))
     return result
 
+def _update_firmware_all(module, kwargs):
+    result = None
+    try:
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), updateall="True")
+    except Exception as e:
+        module.fail_json(msg = "Error updating all device firmware " + str(e))
+    return result
+
 def _update_firmware_query_status(module, kwargs):
     result = None
     try:
@@ -601,6 +609,7 @@ func_dict = {
                 'tasks': _get_tasks,
                 'updaterepo': _get_updaterepo_info,
                 'update_firmware': _update_firmware,
+                'update_firmware_all': _update_firmware_all,
                 'update_firmware_query_status':_update_firmware_query_status,
                 'update_firmware_query_comp':_update_firmware_query_comp,
                 'get_managementserver_pkg': _get_managementserver_pkg,
