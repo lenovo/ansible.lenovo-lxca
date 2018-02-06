@@ -1,0 +1,12 @@
+- name: Updating Firmware of all updateable components from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    mode: "{{ mode}}"
+    action: "{{ action }}"
+    dev_list: "{{ dev_list }}"
+    command_options: update_firmware_all
+  register: rslt
+  tags:
+     update_firmware_all

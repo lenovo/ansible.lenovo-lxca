@@ -1,5 +1,7 @@
 ---
 # tasks file for lenovo.lxca-config
+- import_tasks: query_update_comp.yml
+- import_tasks: update_firmware_all.yml
 
 - name: Checking for pattern from file
   include_vars:
@@ -208,19 +210,6 @@
   tags:
      update_firmware
 
-- name: Updating Firmware of all updateable components from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    mode: "{{ mode}}"
-    action: "{{ action }}"
-    command_options: update_firmware_all
-  register: rslt
-  tags:
-     update_firmware_all
-
-
 - name: Getting Firmware Update Status from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
@@ -230,16 +219,6 @@
   register: rslt
   tags:
      query_update_status
-
-- name: Getting Updatable Components from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: update_firmware_query_comp
-  register: rslt
-  tags:
-     query_update_comp
 
 - name: Get or Apply updatepolicy to device from LXCA
   pylxca_module:

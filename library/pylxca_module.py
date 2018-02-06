@@ -381,7 +381,7 @@ def _update_firmware(module, kwargs):
 def _update_firmware_all(module, kwargs):
     result = None
     try:
-        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), updateall="True")
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), dev_list=kwargs.get('dev_list'))
     except Exception as e:
         module.fail_json(msg = "Error updating all device firmware " + str(e))
     return result
@@ -695,6 +695,7 @@ def main():
             targetGroup     =dict(default=None, type=('list')),
             targetResourceType =dict(default=None, type=('list')),
             content         = dict(default=None,type=('list')),
+            dev_list=dict(default=None, type=('list')),
             solutionGroup   = dict(default=None),
         ),
         check_invalid_arguments=False,

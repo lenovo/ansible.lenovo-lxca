@@ -1,0 +1,23 @@
+- name: Firmware update of all devices
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: calling role main
+      include_role:
+        name: lenovo.lxca-config
+        tasks_from: query_update_comp
+
+    - name: Doing something else
+      include_role:
+        name: lenovo.lxca-config
+        tasks_from: update_firmware_all
+      vars:
+        dev_list: [{'CMMList':[{'UUID':'37C7341F6C5111E480C08D031750448E','Components': [{'Component': 'MM40F2E9BF5A1A'}]}]}]
+        action: 'apply'
+        mode: 'immediate'
+
+#  post_tasks:
+#    - debug:
+#      msg: 'goodbye'
+#      tags: post_tasks
