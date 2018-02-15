@@ -31,7 +31,6 @@
     delay: 15
 
   - debug:
-      var: result.result.progress
       var: result.result.results[0].result
 
   - name: Check manage job completion
