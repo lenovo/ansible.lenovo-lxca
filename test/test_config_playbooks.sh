@@ -1,5 +1,17 @@
 rm -rf  playbooks/config/pylxca.log
-ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=importDir" playbooks/config/config.yml --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=importDir" playbooks/config/config.yml -v --tag query_update_comp
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=lastRefreshed" playbooks/config/config.yml -v --tag query_update_status
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=publicKeys update_policy_info=RESULTS" playbooks/config/config.yml -v --tag updatepolicy
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=importDir" playbooks/config/config.yml -v --tag updatepolicy
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=lastRefreshed policy_info=FIRMWARE" playbooks/config/config.yml -v --tag updatepolicy
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=publicKeys update_policy_info=RESULTS" playbooks/config/config.yml -v --tag updatepolicy
+
+ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=importDir" playbooks/config/config.yml -v --tag updaterepo
 
 ansible-playbook -e "lxca_user=TEST lxca_password=Passw0rd lxca_url=https://10.240.29.217 repo_key=lastRefreshed" playbooks/config/config.yml -v --tag updaterepo
 
