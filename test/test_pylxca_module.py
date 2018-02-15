@@ -35,6 +35,7 @@ func_dict = {
                 'tasks': pylxca_module._get_tasks,
                 'updaterepo': pylxca_module._get_updaterepo_info,
                 'update_firmware': pylxca_module._update_firmware,
+                'update_firmware_all': pylxca_module._update_firmware_all,
                 'update_firmware_query_status':pylxca_module._update_firmware_query_status,
                 'update_firmware_query_comp':pylxca_module._update_firmware_query_comp,
                 'get_managementserver_pkg': pylxca_module._get_managementserver_pkg,
@@ -101,6 +102,7 @@ expected_arguments_spec = dict(
     powerdown=dict(default=None),
     resetimm=dict(default=None),
     inv_data=dict(default=None, type=('dict')),
+    BASIC_RULES=dict(default=None, type=('list')),
     comp_rule=dict(default=None, type=('dict')),
     pattern_update_dict=dict(default=None, type=('dict')),
     includeSettings=dict(default=None),
@@ -112,6 +114,7 @@ expected_arguments_spec = dict(
     targetGroup=dict(default=None, type=('list')),
     targetResourceType=dict(default=None, type=('list')),
     content=dict(default=None, type=('list')),
+    dev_list=dict(default=None, type=('list')),
     solutionGroup=dict(default=None),
 )
 

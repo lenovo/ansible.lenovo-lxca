@@ -1,0 +1,10 @@
+- name: update managementserver on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    action: "{{ action }}"
+    fixids: "{{ fixids }}"
+    command_options: update_managementserver_pkg
+  register: rslt
+  tags: update_managementserver_pkg

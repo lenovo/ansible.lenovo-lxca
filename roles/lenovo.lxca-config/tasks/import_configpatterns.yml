@@ -1,0 +1,17 @@
+- name: Checking for pattern from file
+  include_vars:
+    file: config_pattern_import.yml
+    name: pattern_update_dict
+  when: pattern_from_file == 'true'
+  tags: import_configpatterns
+
+
+- name: Importing configpatterns on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    pattern_update_dict: "{{ pattern_update_dict }}"
+    command_options: import_configpatterns
+  register: rslt
+  tags: import_configpatterns

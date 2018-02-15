@@ -1,0 +1,14 @@
+- name: get apply configpatterns on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    name: "{{ name }}"
+    endpoint: "{{ endpoint }}"
+    restart: "{{ restart }}"
+    type: "{{ type }}"
+    command_options: apply_configpatterns
+  register: rslt
+  tags:
+     apply_configpatterns

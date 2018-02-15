@@ -1,0 +1,9 @@
+- name: get managementserver updates on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    update_key: "{{ update_key }}"
+    command_options: get_managementserver_pkg
+  register: rslt
+  tags: get_managementserver_pkg

@@ -1,10 +1,10 @@
-- name: Getting Updatable Components from LXCA
+- name: get configtargets data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    command_options: update_firmware_query_comp
+    id: "{{ id }}"
+    command_options: configtargets
   register: rslt
   tags:
-     query_update_comp
-
+     configtargets
