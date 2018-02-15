@@ -2,7 +2,7 @@
 # tasks file for lenovo.lxca-config
 - import_tasks: updatepolicy.yml
 - import_tasks: query_update_comp.yml
-#- import_tasks: query_update_status.yml
+- import_tasks: query_update_status.yml
 - import_tasks: update_firmware_all.yml
 - import_tasks: import_configpatterns.yml
 - import_tasks: apply_configpatterns.yml
