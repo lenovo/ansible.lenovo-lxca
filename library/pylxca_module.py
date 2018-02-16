@@ -378,10 +378,52 @@ def _update_firmware(module, kwargs):
         module.fail_json(msg = "Error updating firmware " + str(e))
     return result
 
+def transform_devicelist( devicelist, uuid_list):
+    ret_device_list = []
+    for dev in devicelist:
+        new_dict = {}
+        for dev_type in dev.keys(): #SwitchList
+            new_list = []
+            for sw in dev[dev_type]:
+                if not sw['UUID'] in uuid_list:
+                    continue
+                cm_list = []
+                for cm in sw['Components']:
+                    cm_list.append({'Component': cm})
+                sw['Components'] = cm_list
+                new_list.append(sw)
+            if len(new_list) > 0:
+                new_dict[dev_type] = new_list
+        if len(new_dict) > 0:
+            ret_device_list.append(new_dict)
+    return ret_device_list
+
+def valid_compliance_policies( policy_list):
+    uuid_list = []
+    for cp in policy_list:
+        if 'uuid' in cp.keys():
+            if 'currentPolicy' in cp.keys() and  len(cp['currentPolicy']) > 0:
+                uuid_list.append(cp['uuid'])
+
+    return uuid_list
+
+
 def _update_firmware_all(module, kwargs):
     result = None
     try:
-        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), dev_list=kwargs.get('dev_list'))
+        rep = updatepolicy(_get_connect_lxca(module,kwargs), info="NAMELIST")
+        uuid_list = valid_compliance_policies(rep['policies'])
+        if len(uuid_list) == 0:
+            module.fail_json(msg="No policy assigned to any device")
+            return result
+        rep = updatecomp(_get_connect_lxca(module,kwargs), query='components')
+        ret_dev_list = rep['DeviceList']
+        mod_dev_list = transform_devicelist(ret_dev_list, uuid_list)
+        if len(mod_dev_list) == 0:
+            module.fail_json(msg="No updateable component with assigned policy found")
+            return result
+
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), dev_list=mod_dev_list)
     except Exception as e:
         module.fail_json(msg = "Error updating all device firmware " + str(e))
     return result

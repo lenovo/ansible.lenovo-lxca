@@ -5,8 +5,7 @@
     auth_url: "{{ lxca_url }}"
     mode: "{{ mode}}"
     action: "{{ action }}"
-    dev_list: "{{ dev_list }}"
     command_options: update_firmware_all
   register: rslt
   tags:
-     update_firmware_all
+     update_all_firmware_withpolicy_assigned

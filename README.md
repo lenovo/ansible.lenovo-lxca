@@ -59,7 +59,7 @@ Applying Firmware with policy
 ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 mode=immediate action=apply server='7C5E041E3CCA11E18B715CF3FC112D8A,IMM2 (Primary)'" playbooks/config/config.yml -vvvv --tag update_firmware
 
 Applying Firmware with policy for all updateable components
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 mode=immediate action=apply" playbooks/config/config.yml -vvvv --tag update_firmware_all
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 mode=immediate action=apply" playbooks/config/config.yml -vvvv --tag update_all_firmware_withpolicy_assigned
 
 Update Repostory commands
 ============
