@@ -416,6 +416,14 @@ def _update_firmware_all(module, kwargs):
         if len(uuid_list) == 0:
             module.fail_json(msg="No policy assigned to any device")
             return result
+
+        dev_uuid_list = []
+        if 'uuid_list' in kwargs:
+            dev_uuid_list = kwargs.get('uuid_list')
+            if len(dev_uuid_list) > 0:
+                # getting common uuid of two list
+                uuid_list = list(set(dev_uuid_list).intersection(uuid_list))
+
         rep = updatecomp(_get_connect_lxca(module,kwargs), query='components')
         ret_dev_list = rep['DeviceList']
         mod_dev_list = transform_devicelist(ret_dev_list, uuid_list)
@@ -737,7 +745,7 @@ def main():
             targetGroup     =dict(default=None, type=('list')),
             targetResourceType =dict(default=None, type=('list')),
             content         = dict(default=None,type=('list')),
-            dev_list=dict(default=None, type=('list')),
+            uuid_list       = dict(default=None, type=('list')),
             solutionGroup   = dict(default=None),
         ),
         check_invalid_arguments=False,

@@ -114,7 +114,7 @@ expected_arguments_spec = dict(
     targetGroup=dict(default=None, type=('list')),
     targetResourceType=dict(default=None, type=('list')),
     content=dict(default=None, type=('list')),
-    dev_list=dict(default=None, type=('list')),
+    uuid_list=dict(default=None, type=('list')),
     solutionGroup=dict(default=None),
 )
 
