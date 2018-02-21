@@ -136,7 +136,7 @@ Import Pattern from file
 ------------------------
 Read config pattern data from config_pattern_import.yml file in vars folder of config
 roles
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 pattern_from_file=true" playbooks/config/config.yml -vvvv --tag import_configpatterns
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 pattern_file=config_pattern_import.yml pattern_from_file=true" playbooks/config/config.yml -vvvv --tag import_configpatterns
 
 config status
 ------------

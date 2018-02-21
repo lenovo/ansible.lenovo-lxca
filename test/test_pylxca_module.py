@@ -111,9 +111,6 @@ expected_arguments_spec = dict(
     update_key=dict(default=None),
     files=dict(default=None),
     unittest=dict(default=None),
-    targetGroup=dict(default=None, type=('list')),
-    targetResourceType=dict(default=None, type=('list')),
-    content=dict(default=None, type=('list')),
     uuid_list=dict(default=None, type=('list')),
     solutionGroup=dict(default=None),
 )

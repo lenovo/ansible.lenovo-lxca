@@ -614,8 +614,7 @@ def _compliance_engine(module, kwargs):
 def _rules(module, kwargs):
     result = None
     try:
-        result =  rules(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('name'), kwargs.get('targetResourceType')
-                        , kwargs.get('targetGroup'), kwargs.get('content'))
+        result =  rules(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('comp_rule'))
     except Exception as e:
         module.fail_json(msg = "Error getting rules " + str(e))
     return result
@@ -742,9 +741,6 @@ def main():
             update_key      = dict(default=None),
             files           = dict(default=None),
             unittest        = dict(default=None),
-            targetGroup     =dict(default=None, type=('list')),
-            targetResourceType =dict(default=None, type=('list')),
-            content         = dict(default=None,type=('list')),
             uuid_list       = dict(default=None, type=('list')),
             solutionGroup   = dict(default=None),
         ),

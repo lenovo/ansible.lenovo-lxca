@@ -69,10 +69,7 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    name: "{{ item.name }}"
-    targetResourceType: "{{ item.targetResourceType }}"
-    targetGroup: "{{ item.targetGroup }}"
-    content: "{{ item.content }}"
+    comp_rule: "{{ item }}"
     command_options: rules
   register: rslt
   with_items: "{{ rules.rules }}"

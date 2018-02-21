@@ -1,16 +1,27 @@
 {
 'rules':[
 {
-      "name": "ServerIsOnline",
-      "targetResourceType": ["Server"],
-      "targetGroup": ["/groups/25"],
-      "content": [{"property": "accessState","ref_value": "online"}]
-      },
-      {
-                "name": "ServerPowerIsOn",
-                "targetResourceType": ["Server"],
-                "targetGroup": ["/groups/25"],
-                "content": [{"property": "powerStatus","ref_value": 8}]
-      }
+		'content': [{
+				'property': 'accessState',
+				'ref_value': 'Offline'
+			}
+		],
+		'name': 'validate_node_access_state',
+		'source': 'server',
+		'targetGroups': ['/resourceGroups/59A54997C18DCF0594B8CCD0'],
+		'targetResourceType': [],
+		'targetResources': []
+	}, {
+		'content': [{
+				'property': 'accessState',
+				'ref_value': 'Offline'
+			}
+		],
+		'name': 'validate_node_access_state',
+		'source': 'server',
+		'targetGroups': [],
+		'targetResourceType': [],
+		'targetResources': ['nodes/1B247BCC918311E2B0703440B5EFBAB8', 'nodes/4C7D5FD237D411E2875EE4C686742121']
+	}
     ]
 }

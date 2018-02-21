@@ -1,8 +1,8 @@
 - name: Checking for pattern from file
   include_vars:
-    file: config_pattern_import.yml
+    file: "{{pattern_file}}"
     name: pattern_update_dict
-  when: pattern_from_file == 'true'
+  when: "{{pattern_from_file}}"
   tags: import_configpatterns
 
 
