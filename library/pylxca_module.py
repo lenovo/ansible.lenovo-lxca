@@ -350,7 +350,7 @@ def _get_tasks(module, kwargs):
     else:
         tasks_dict['jobUID'] = jobUID
     try:
-        result = tasks(_get_connect_lxca(module,kwargs),tasks_dict)
+        result = tasks(_get_connect_lxca(module,kwargs),**tasks_dict)
     except Exception as e:
         module.fail_json(msg = "Error getting tasks " + str(e))
     return result
