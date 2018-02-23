@@ -11,5 +11,9 @@ criteria: null
 sol_id: null
 manifest_path: null
 id: null
-solutionGroup: null
+solutionGroups: null
 comp_rule: null
+query_solutionGroups: null
+targetResources: null
+all_rules: null
+

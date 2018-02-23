@@ -622,7 +622,11 @@ def _rules(module, kwargs):
 def _compositeResults(module, kwargs):
     result = None
     try:
-        result =  compositeResults(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('solutionGroup'))
+        result =  compositeResults(_get_connect_lxca(module,kwargs), kwargs.get('id'),
+                                   kwargs.get('query_solutionGroups'),
+                                   kwargs.get('solutionGroups'),
+                                   kwargs.get('targetResources'),
+                                   kwargs.get('all_rules'),)
     except Exception as e:
         module.fail_json(msg = "Error getting compositeResults " + str(e))
     return result
@@ -742,7 +746,11 @@ def main():
             files           = dict(default=None),
             unittest        = dict(default=None),
             uuid_list       = dict(default=None, type=('list')),
-            solutionGroup   = dict(default=None),
+            solutionGroups   = dict(default=None, type=('list')),
+            query_solutionGroups = dict(default=None),
+            targetResources = dict(default=None, type=('list')),
+            all_rules = dict(default=None)
+
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

@@ -112,7 +112,10 @@ expected_arguments_spec = dict(
     files=dict(default=None),
     unittest=dict(default=None),
     uuid_list=dict(default=None, type=('list')),
-    solutionGroup=dict(default=None),
+    solutionGroups=dict(default=None, type=('list')),
+    query_solutionGroups=dict(default=None),
+    targetResources=dict(default=None, type=('list')),
+    all_rules=dict(default=None)
 )
 
 

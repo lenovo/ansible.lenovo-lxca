@@ -92,12 +92,32 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    solutionGroup: "{{ solutionGroup }}"
+    solutionGroups: "{{ solutionGroups }}"
     command_options: compositeResults
   register: rslt
-  tags: update_compositeResults
+  tags: update_solutionGroup_compositeResults
 
 - name: Updating composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    targetResources: "{{ targetResources }}"
+    command_options: compositeResults
+  register: rslt
+  tags: update_targetResources_compositeResults
+
+- name: Updating composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    all_rules: true
+    command_options: compositeResults
+  register: rslt
+  tags: process_all_rules_compositeResults
+
+- name: get composite results on LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
@@ -106,3 +126,13 @@
     command_options: compositeResults
   register: rslt
   tags: get_compositeResults
+
+- name: query solution group composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    query_solutionGroups: "{{ query_solutionGroups }}"
+    command_options: compositeResults
+  register: rslt
+  tags: query_solutionGroup_compositeResults
