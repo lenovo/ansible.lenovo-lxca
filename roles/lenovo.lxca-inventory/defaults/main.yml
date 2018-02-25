@@ -3,7 +3,7 @@
 lxca-inventory_version: "0.1"
 uuid: null
 id: null
-action: null
+lxca_action: null
 percentage: null
 state: null
 update_list: null

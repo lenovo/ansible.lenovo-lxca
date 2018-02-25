@@ -3,7 +3,7 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    action: "{{ action }}"
+    lxca_action: "{{ lxca_action }}"
     fixids: "{{ fixids }}"
     command_options: update_managementserver_pkg
   register: rslt

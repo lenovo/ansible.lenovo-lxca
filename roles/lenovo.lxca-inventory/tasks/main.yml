@@ -126,7 +126,7 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     id: "{{ id }}"
-    action: "{{ action }}"
+    lxca_action: "{{ lxca_action }}"
     percentage: "{{ percentage}}"
     state: "{{ state }}"
     update_list: "{{ update_list }}"

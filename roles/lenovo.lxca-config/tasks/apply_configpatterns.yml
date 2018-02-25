@@ -4,7 +4,7 @@
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
     id: "{{ id }}"
-    name: "{{ name }}"
+    config_pattern_name: "{{ config_pattern_name }}"
     endpoint: "{{ endpoint }}"
     restart: "{{ restart }}"
     type: "{{ type }}"

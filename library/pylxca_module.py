@@ -149,7 +149,7 @@ def _apply_configpatterns(module, kwargs):
     try:
         pattern_dict = {}
         pattern_dict['id'] = kwargs.get('id')
-        pattern_dict['name'] = kwargs.get('name')
+        pattern_dict['name'] = kwargs.get('config_pattern_name')
         pattern_dict['endpoint'] = kwargs.get('endpoint')
         pattern_dict['restart'] = kwargs.get('restart')
         pattern_dict['type'] = kwargs.get('type')
@@ -177,7 +177,7 @@ def _get_configprofiles(module, kwargs):
     delete_profile = None
     unassign_profile = None
     try:
-        action = kwargs.get("action")
+        action = kwargs.get("lxca_action")
         if action:
             if action.lower() in ['delete']:
                 delete_profile = 'True'
@@ -185,7 +185,7 @@ def _get_configprofiles(module, kwargs):
                unassign_profile = 'True'
         result = configprofiles( _get_connect_lxca(module,kwargs),
                                  kwargs.get('id'),
-                                 kwargs.get('name'),
+                                 kwargs.get('config_profile_name'),
                                  kwargs.get('endpoint'),
                                  kwargs.get('restart'),
                                  delete_profile,
@@ -339,7 +339,7 @@ def _get_tasks(module, kwargs):
     result = None
     tasks_dict = {}
     jobUID = kwargs.get("id")
-    action = kwargs.get("action")
+    action = kwargs.get("lxca_action")
     if action in ['cancel', 'delete']:
         tasks_dict['jobUID'] = jobUID
         tasks_dict['action'] = action
@@ -360,7 +360,7 @@ def _get_updaterepo_info(module, kwargs):
     try:
         result =  updaterepo(_get_connect_lxca(module,kwargs),
                              kwargs.get('repo_key'),
-                             kwargs.get('action'),
+                             kwargs.get('lxca_action'),
                              kwargs.get('machine_type'),
                              kwargs.get('scope'),
                              kwargs.get('fixids'),
@@ -372,7 +372,7 @@ def _get_updaterepo_info(module, kwargs):
 def _update_firmware(module, kwargs):
     result = None
     try:
-        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'),cmm=kwargs.get('cmm'),switch=kwargs.get('switch'),server=kwargs.get('server'),storage=kwargs.get('storage'))
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('lxca_action'),cmm=kwargs.get('cmm'),switch=kwargs.get('switch'),server=kwargs.get('server'),storage=kwargs.get('storage'))
 #        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
     except Exception as e:
         module.fail_json(msg = "Error updating firmware " + str(e))
@@ -431,7 +431,7 @@ def _update_firmware_all(module, kwargs):
             module.fail_json(msg="No updateable component with assigned policy found")
             return result
 
-        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('action'), dev_list=mod_dev_list)
+        result =  updatecomp(_get_connect_lxca(module,kwargs),mode=kwargs.get('mode'),action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
     except Exception as e:
         module.fail_json(msg = "Error updating all device firmware " + str(e))
     return result
@@ -473,7 +473,7 @@ def _update_managementserver_pkg(module, kwargs):
                              kwargs.get('update_key'),
                              kwargs.get('fixids'),
                              kwargs.get('type'),
-                             kwargs.get('action'),
+                             kwargs.get('lxca_action'),
                        )
     except Exception as e:
         module.fail_json(msg = "Error retriving update managementserver." + str(e))
@@ -486,7 +486,7 @@ def _import_managementserver_pkg(module, kwargs):
                              kwargs.get('update_key'),
                              kwargs.get('fixids'),
                              kwargs.get('type'),
-                             kwargs.get('action'),
+                             kwargs.get('lxca_action'),
                              kwargs.get('files'),
                              kwargs.get('jobid')
                              )
@@ -579,7 +579,7 @@ def _validate_plugin_rules(module, kwargs):
 
 def _create_resourcegroups(module, kwargs):
     result = None
-    param_dict = {  'name': kwargs.get('name'),
+    param_dict = {  'name': kwargs.get('resource_group_name'),
                     'description':kwargs.get('description'),
                     'type':kwargs.get('type'),
                     'solutionVPD':kwargs.get('solutionVPD'),
@@ -594,7 +594,7 @@ def _create_resourcegroups(module, kwargs):
 def _add_resourcegroup_member(module, kwargs):
     result = None
     try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('name'))
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('resource_group_name'))
     except Exception as e:
         module.fail_json(msg = "Error getting users " + str(e))
     return result
@@ -694,7 +694,7 @@ def main():
             login_password  = dict(default=None, required=False),
             connobject      = dict(default=None),
             command_options = dict( choises=list(func_dict) ),
-            action          = dict(default=None),
+            lxca_action          = dict(default=None),
             auth_url        = dict(default=None),
             uuid            = dict(default=None),
             id              = dict(default=None),
@@ -730,7 +730,9 @@ def main():
             endpoint        = dict(default=None),
             restart         = dict(default=None),
             type            = dict(default=None),
-            name            = dict(default=None),
+            config_pattern_name = dict(default=None),
+            config_profile_name=dict(default=None),
+            resource_group_name=dict(default=None),
             delete_profile  = dict(default=None),
             unassign        = dict(default=None),
             powerdown       = dict(default=None),

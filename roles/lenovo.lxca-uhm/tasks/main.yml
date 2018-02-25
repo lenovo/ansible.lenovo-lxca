@@ -7,7 +7,7 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    name: "{{ name }}"
+    resource_group_name: "{{ resource_group_name }}"
     description: "{{ description }}"
     type: "{{ type }}"
     solutionVPD: "{{ solutionVPD }}"
@@ -34,7 +34,7 @@
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
     auth_url: "{{ lxca_url }}"
-    name: "{{ name }}"
+    resource_group_name: "{{ resource_group_name }}"
     members: "{{ members }}"
   register: rslt
   tags:

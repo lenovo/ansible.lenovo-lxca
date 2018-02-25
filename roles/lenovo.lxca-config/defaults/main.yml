@@ -9,7 +9,7 @@ password: null
 recovery_password: null
 jobid: null
 mode: null
-action: null
+lxca_action: null
 server: null
 switch: null
 storage: null
@@ -26,7 +26,8 @@ file_type: null
 endpoint: null
 restart: null
 type: null
-name: null
+config_pattern_name: null
+config_profile_name: null
 powerdown: null
 resetimm: null
 pattern_update_dict: null

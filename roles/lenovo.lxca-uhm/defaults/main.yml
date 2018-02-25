@@ -2,7 +2,7 @@
 # defaults file for lenovo.lxca-config
 manage_user: null
 manage_password: null
-name: null
+resource_group_name: null
 description: null
 type: null
 solutionVPD: null

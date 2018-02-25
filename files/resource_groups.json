@@ -2,7 +2,7 @@
 	'lxca_user': 'USERID',
 	'lxca_password': 'Passw0rd',
 	'lxca_url': 'https://10.240.29.217',
-	'name': 'TEST4',
+	'resource_group_name': 'TEST4',
 	'description': 'TestGroup',
 	'type': 'solution',
 	'solutionVPD': {
