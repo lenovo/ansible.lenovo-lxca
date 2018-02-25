@@ -1,0 +1,11 @@
+- name: get switches data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: ffdc
+    uuid: "{{uuid}}"
+  register: rslt
+  tags:
+     ffdc
+

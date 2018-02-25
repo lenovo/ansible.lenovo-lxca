@@ -1,0 +1,20 @@
+  - name: Polling for Status of task completion
+    pylxca_module:
+      command_options: tasks
+      login_user: "{{ lxca_user }}"
+      login_password: "{{ lxca_password }}"
+      auth_url: "{{ lxca_url }}"
+      id: "{{ id }}"
+    register: result
+    until: result.result.TaskList[0].percentage == 100.0
+    retries: 40
+    delay: 15
+
+  - debug:
+      var: result.result.TaskList[0]
+
+  - name: Check firmware update job completion status
+    assert:
+      that:
+       -  " 'Complete' in result.result.TaskList[0].status"
+       -  " 'CompleteWithErrors' not in result.result.TaskList[0].status"

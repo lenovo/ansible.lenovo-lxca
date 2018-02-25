@@ -1,148 +1,17 @@
 ---
 # tasks file for lenovo.lxca-inventory
-- name: get chassis data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: chassis
-  register: rslt
-  tags:
-    chassis
-
-- name: get cmms data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: cmms
-  register: rslt
-  tags:
-    cmms
-
-- name: get nodes data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: nodes
-  register: rslt
-  tags:
-     nodes
-
-- name: get fans data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: fans
-  register: rslt
-  tags:
-     fans
-
-- name: get fanmuxes data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: fanmuxes
-  register: rslt
-  tags:
-     fanmuxes
-
-- name: get powersupplies data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: powersupplies
-  register: rslt
-  tags:
-     powersupplies
-
-- name: get scalablesystem data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: scalablesystem
-  register: rslt
-  tags:
-     scalablesystem
-
-- name: get switches data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: switches
-  register: rslt
-  tags:
-     switches
-
-- name: get switches data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: ffdc
-    uuid: "{{uuid}}"
-  register: rslt
-  tags:
-     ffdc
-
-- name: get users data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: users
-    id: "{{id}}"
-  register: rslt
-  tags:
-     users
-
-
-- assert:
-       that:
-         - " 'Success' in rslt.msg"
-  tags:
-     users
-
-
-- name: get lxcalog data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: lxcalog
-  register: rslt
-  tags:
-     lxcalog
-
-- name: get tasks data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    id: "{{ id }}"
-    lxca_action: "{{ lxca_action }}"
-    percentage: "{{ percentage}}"
-    state: "{{ state }}"
-    update_list: "{{ update_list }}"
-    command_options: tasks
-  register: rslt
-  tags:
-     tasks
-
-- name: get jobs data from LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    command_options: jobs
-  register: rslt
-  tags:
-     jobs
+- import_tasks: chassis.yml
+- import_tasks: cmms.yml
+- import_tasks: nodes.yml
+- import_tasks: fans.yml
+- import_tasks: fanmuxes.yml
+- import_tasks: powersupplies.yml
+- import_tasks: scalablesystem.yml
+- import_tasks: switches.yml
+- import_tasks: ffdc.yml
+- import_tasks: users.yml
+- import_tasks: lxcalog.yml
+- import_tasks: tasks.yml
+- import_tasks: jobs.yml
 
 
