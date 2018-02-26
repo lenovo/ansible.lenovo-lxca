@@ -235,8 +235,18 @@ ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_ur
 Create Resource Groups extra_vars as JSON file
 ---------------------------
 ansible-playbook -e "@files/resource_groups.json" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
-```
 
+Add Resource Groups members
+---------------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0 members=['nodes/9C4D0000B22E44F1A0000A1D85B4ECD0','switches/38D9D7DBCB713C12A210E60C74A0E931']" playbooks/uhm/thinkagile.yml -vvvv --tag add_group_members
+
+Get all Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 " playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+Get specific Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0" playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+```
 ###### compliance rules operations
 ```
 get all compliance rules

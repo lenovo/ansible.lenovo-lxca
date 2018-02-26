@@ -594,15 +594,15 @@ def _create_resourcegroups(module, kwargs):
 def _add_resourcegroup_member(module, kwargs):
     result = None
     try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('resource_group_name'))
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), uuid = kwargs.get('uuid'), members = kwargs.get('members') )
     except Exception as e:
-        module.fail_json(msg = "Error getting users " + str(e))
+        module.fail_json(msg = "Error adding resource group member " + str(e))
     return result
 
 def _get_resourcegroups(module, kwargs):
     result = None
     try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), kwargs.get('uuid'))
+        result =  resourcegroups(_get_connect_lxca(module,kwargs), uuid = kwargs.get('uuid'))
     except Exception as e:
         module.fail_json(msg = "Error getting users " + str(e))
     return result
