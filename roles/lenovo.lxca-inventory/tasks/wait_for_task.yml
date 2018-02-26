@@ -13,7 +13,7 @@
   - debug:
       var: result.result.TaskList[0]
 
-  - name: Check firmware update job completion status
+  - name: Check task completion status
     assert:
       that:
        -  " 'Complete' in result.result.TaskList[0].status"
