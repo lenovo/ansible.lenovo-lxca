@@ -1,0 +1,9 @@
+- name: get compliance rules from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    command_options: rules
+  register: rslt
+  tags: get_compliance_rules

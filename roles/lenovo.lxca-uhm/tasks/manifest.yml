@@ -1,0 +1,11 @@
+- name: send solution manifest to LXCA
+  pylxca_module:
+    command_options: manifests
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    sol_id: "{{ sol_id }}"
+    manifest_path: "{{ manifest_path }}"
+  register: rslt
+  tags:
+    manifest

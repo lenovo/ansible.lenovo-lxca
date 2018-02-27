@@ -1,0 +1,22 @@
+- name: Reading rules from file
+  include_vars:
+    file: compliance_rules.yaml
+    name: rules
+  tags: import_compliance_rules
+
+- name: Show variables read
+  debug:
+    var: rules.rules[1]
+  tags: import_compliance_rules
+
+- name: Importing compliance rules on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    comp_rule: "{{ item }}"
+    command_options: rules
+  register: rslt
+  with_items: "{{ rules.rules }}"
+  tags: import_compliance_rules
+

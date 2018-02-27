@@ -263,17 +263,17 @@ ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10
 
 Get compositeResults
 -------------------
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeResults
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
 
 get specific compositeResults
 -------------------
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeResults
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
 
 update composit results
 -------------------
-ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 solutionGroups=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag update_solutionGroup_compositeResults
-ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 targetResources=[u'nodes/4C7D5FD237D411E2875EE4C686742121', u'nodes/1B247BCC918311E2B0703440B5EFBAB8' ]" playbooks/uhm/thinkagile.yml -vvvv --tag update_targetResources_compositeResults
-ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 all_rules=True" playbooks/uhm/thinkagile.yml -vvvv --tag process_all_rules_compositeResults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 solutionGroups=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag update_solutiongroup_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 targetResources=[u'nodes/4C7D5FD237D411E2875EE4C686742121', u'nodes/1B247BCC918311E2B0703440B5EFBAB8' ]" playbooks/uhm/thinkagile.yml -vvvv --tag update_targetresources_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 all_rules=True" playbooks/uhm/thinkagile.yml -vvvv --tag process_all_rules_compositeresults
 
 Executing Compliance Validation in LXCA
 -------------------
