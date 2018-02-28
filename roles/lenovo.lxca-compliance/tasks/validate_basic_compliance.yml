@@ -27,7 +27,7 @@
 - name: dumping data in to fact file
   copy:
     content: "{{ nodes_data.result }}"
-    dest: /etc/ansible/facts.d/{{RESOURCE_UUID}}.fact
+    dest: /etc/ansible/facts.d/{{resource_uuid}}.fact
   tags: gather_server_facts
 
 #============================================
