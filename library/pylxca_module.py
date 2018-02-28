@@ -45,6 +45,7 @@ import imp
 import json
 import logging
 import logging.handlers
+from jsonpath_ng.ext import parse
 #from pylxca.pylxca_cmd.lxca_pyshell import *
 from pylxca import *
 
@@ -551,17 +552,18 @@ def _gather_server_facts(module, kwargs):
         module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
 
 def _validate_basic_rules(module, kwargs):
-    rule_list = kwargs.get("BASIC_RULES")
-    inv_data_dict = kwargs.get("inv_data")
+    rule_list = kwargs.get("rule_content")
+    inv_data = kwargs.get("inv_data")
     compliance_status = True
 
-    for each_rule in rule_list:
-        if inv_data_dict[each_rule["property"]] == str(each_rule["ref_value"]):
-            compliance_status = True
-        else:
-            compliance_status = False
-            break
+    for rule_expr in rule_list:
+        regex_expr = "$[?" + rule_expr + "]"
+        jsonpath_expr = parse(regex_expr)
+        matches = [match.value for match in jsonpath_expr.find([inv_data])]
+        compliance_status = True if len(matches)>0 else False
 
+        if  not compliance_status:
+            break
     module.exit_json(changed=True, msg="Executed Compliance Validation", result=compliance_status)
 
 def _validate_plugin_rules(module, kwargs):

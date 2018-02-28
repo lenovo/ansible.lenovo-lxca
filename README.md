@@ -1,23 +1,36 @@
-# TODO  Documentation
+Lenovo Ansible 
+--------------
+This project contains Ansible Playbooks, Roles and Modules for LXCA and can be used collectively to implement various use cases.
+Project cotains following Ansible Roles
+- Inventory : Role to get all inventory from LXCA. 
+- Configuration i: Role to do config operation, firmware update, apply patterns, os deploy.
+
+Installation
+------------
+ansible-galaxy install lenovo.lxca-inventory
+ansible-galaxy install lenovo.lxca-config
+
+Pre-requisite
+Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
 
 ### Example for calling LXCA Playbook
 
 ###### Manage / Unmanage endpoint
 ```
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172 user=USERID password=CME44ibm recovery_password=CME55ibm force=True" playbooks/config/config.yml -vvvv --tag manage
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 endpoint_ip=10.240.72.172;46920C143355486F97C19A34ABC7D746;Chassis force=True" playbooks/config/config.yml -vvvv --tag unmanage
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172 user=USERID password=CME44ibm recovery_password=CME55ibm force=True" playbooks/config/config.yml -vvvv --tag manage
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172;46920C143355486F97C19A34ABC7D746;Chassis force=True" playbooks/config/config.yml -v --tag unmanage
 ```
 
 ###### Collect inventory in LXCA
 ```
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220" site.yml -vvvv
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" site.yml -vvvv
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220" site.yml -vvvv --tag users
 ```
 ###### Update Firmware
 ```
 List all  policy  
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Get List of Applicable Frimware policies
 ----------------
@@ -42,7 +55,7 @@ Update endpoint Firmware
 
 Query Updatable components
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220" playbooks/config/config.yml -vvvv --tag query_update_comp
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/config/config.yml -v --tag query_update_comp
 
 Query Firmware Update Status
 ----------------
@@ -85,7 +98,7 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 ```
 get all profiles
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 " playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 " playbooks/config/config.yml -v --tag configprofiles
 
 get specified profile with id
 ----------------
@@ -148,7 +161,7 @@ ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10
 ```
 get all osimages
 -----------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217'}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217'}" playbooks/config/config.yml -v --tag osimages
 
 get globalSetting for osimages
 -----------------
