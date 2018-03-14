@@ -1,4 +1,4 @@
-Role Name
+Ansible Role: Lenovo LXCA Inventory
 =========
 
 Ansible Role to collect get inventory data of managed elements from Lenovo xClarity Administratr.
