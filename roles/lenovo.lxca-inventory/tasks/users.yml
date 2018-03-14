@@ -1,0 +1,18 @@
+- name: get users data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    command_options: users
+    id: "{{id}}"
+  register: rslt
+  tags:
+     users
+
+
+- assert:
+       that:
+         - " 'Success' in rslt.msg"
+  tags:
+     users
+

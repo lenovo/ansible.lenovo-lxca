@@ -1,0 +1,17 @@
+---
+# tasks file for lenovo.lxca-inventory
+- import_tasks: chassis.yml
+- import_tasks: cmms.yml
+- import_tasks: nodes.yml
+- import_tasks: fans.yml
+- import_tasks: fanmuxes.yml
+- import_tasks: powersupplies.yml
+- import_tasks: scalablesystem.yml
+- import_tasks: switches.yml
+- import_tasks: ffdc.yml
+- import_tasks: users.yml
+- import_tasks: lxcalog.yml
+- import_tasks: tasks.yml
+- import_tasks: jobs.yml
+
+

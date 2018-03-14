@@ -1,0 +1,55 @@
+- name: Firmware update of all devices
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: calling role main
+      include_role:
+        name: lenovo.lxca-config
+        tasks_from: query_update_comp
+      register: rslt
+
+    - debug:
+        var: rslt
+
+    - name: Doing something else
+      include_role:
+        name: lenovo.lxca-inventory
+        tasks_from: wait_for_task
+      vars:
+        id: 677
+
+#    - name: Polling for Status of firmware update  Operation
+#      pylxca_module:
+#        command_options: tasks
+#        login_user: "{{ lxca_user }}"
+#        login_password: "{{ lxca_password }}"
+#        auth_url: "{{ lxca_url }}"
+#        id: 677
+#      register: result
+#      until: result.result.TaskList[0].percentage == 100.0
+#      retries: 40
+#      delay: 15
+#
+#    - debug:
+#        var: result.result.TaskList[0]
+#
+#    - name: Check firmware update job completion status
+#      assert:
+#        that:
+#         -  " 'Complete' in result.result.TaskList[0].status"
+#         -  " 'CompleteWithErrors' not in result.result.TaskList[0].status"
+
+#    - name: Doing something else
+#      include_role:
+#        name: lenovo.lxca-config
+#        tasks_from: update_firmware_all
+#      vars:
+#        dev_list: [{'CMMList':[{'UUID':'37C7341F6C5111E480C08D031750448E','Components': [{'Component': 'MM40F2E9BF5A1A'}]}]}]
+#        action: 'apply'
+#        mode: 'immediate'
+
+#  post_tasks:
+#    - debug:
+#      msg: 'goodbye'
+#      tags: post_tasks

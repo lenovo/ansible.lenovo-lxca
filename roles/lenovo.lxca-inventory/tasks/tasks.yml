@@ -1,0 +1,15 @@
+- name: get tasks data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    id: "{{ id }}"
+    lxca_action: "{{ lxca_action }}"
+    percentage: "{{ percentage}}"
+    state: "{{ state }}"
+    update_list: "{{ update_list }}"
+    command_options: tasks
+  register: rslt
+  tags:
+     tasks
+

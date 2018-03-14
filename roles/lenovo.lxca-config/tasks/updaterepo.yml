@@ -1,0 +1,15 @@
+- name: get updaterepo data from LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    repo_key: "{{ repo_key }}"
+    lxca_action: "{{ lxca_action }}"
+    machine_type: "{{ machine_type }}"
+    scope: "{{ scope }}"
+    fixids: "{{ fixids }}"
+    file_type: "{{ file_type }}"
+    command_options: updaterepo
+  register: rslt
+  tags:
+     updaterepo
