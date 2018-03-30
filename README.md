@@ -14,10 +14,22 @@ Pre-requisite
 Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
 
 ### Example for calling LXCA Playbook
+###### Stored Credentials
+```
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 " playbooks/config/config.yml -vvvv --tag get_all_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 storedcredential_id=402" playbooks/config/config.yml -vvvv --tag get_particular_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.12.139 description='desc of user' user=admin password=admin1" playbooks/config/config.yml -vvvv --tag create_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.12.139 storedcredential_id=412 user=admin password=admin1" playbooks/config/config.yml -vvvv --tag update_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 storedcredential_id=407" playbooks/config/config.yml -vvvv --tag delete_particular_storedcredentials
+
+```
+
 
 ###### Manage / Unmanage endpoint
 ```
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172 user=USERID password=CME44ibm recovery_password=CME55ibm force=True" playbooks/config/config.yml -vvvv --tag manage
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.31.39 endpoint_ip=10.240.157.111 storedcredential_id=3652 force=True" playbooks/config/config.yml -vvvv --tag
+manage
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172;46920C143355486F97C19A34ABC7D746;Chassis force=True" playbooks/config/config.yml -v --tag unmanage
 ```
 

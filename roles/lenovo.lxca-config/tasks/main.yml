@@ -22,3 +22,4 @@
 - import_tasks: get_managementserver_pkg.yml
 - import_tasks: get_particular_managementserver_pkg.yml
 - import_tasks: update_managementserver_pkg.yml
+- import_tasks: storedcredentials.yml

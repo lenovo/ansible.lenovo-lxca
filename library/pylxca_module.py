@@ -261,7 +261,10 @@ def _manage_endpoint(module, kwargs):
     result = None
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'),kwargs.get('user'),kwargs.get('password'),kwargs.get('recovery_password'), None, kwargs.get('force'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'),
+                       kwargs.get('user'),kwargs.get('password'),
+                       kwargs.get('recovery_password'), None, kwargs.get('force'),
+                       kwargs.get('storedcredential_id'))
     except Exception as e:
         module.fail_json(msg = " Fail to manage the endpoint" + str(e))
     return result
@@ -633,6 +636,45 @@ def _compositeResults(module, kwargs):
         module.fail_json(msg = "Error getting compositeResults " + str(e))
     return result
 
+def _get_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs), kwargs.get('storedcredential_id'))
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
+
+def _create_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   user_name = kwargs.get('user'),
+                                   password = kwargs.get('password'),
+                                   description = kwargs.get('description'),)
+    except Exception as e:
+        module.fail_json(msg="Error create stored credential " + str(e))
+    return result
+
+def _update_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   id = kwargs.get('storedcredential_id'),
+                                   user_name = kwargs.get('user'),
+                                   password = kwargs.get('password'),
+                                   description = kwargs.get('description'),)
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
+
+def _delete_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   delete_id = kwargs.get('storedcredential_id'))
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
 
 func_dict = {
                 'connect': _get_connect_lxca,
@@ -681,6 +723,10 @@ func_dict = {
                 'compliance_engine':_compliance_engine,
                 'rules': _rules,
                 'compositeResults': _compositeResults,
+                'get_storedcredentials': _get_storedcredentials,
+                'create_storedcredentials': _create_storedcredentials,
+                'update_storedcredentials': _update_storedcredentials,
+                'delete_storedcredentials': _delete_storedcredentials
 
 }
 
@@ -753,8 +799,8 @@ def main():
             solutionGroups   = dict(default=None, type=('list')),
             query_solutionGroups = dict(default=None),
             targetResources = dict(default=None, type=('list')),
-            all_rules = dict(default=None)
-
+            all_rules = dict(default=None),
+            storedcredential_id = dict(default=None)
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

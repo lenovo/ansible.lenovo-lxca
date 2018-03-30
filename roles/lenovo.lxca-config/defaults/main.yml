@@ -39,3 +39,5 @@ files: null
 update_key: null
 status: null
 uuid_list: null
+storedcredential_id: null
+description: null

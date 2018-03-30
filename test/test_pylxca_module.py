@@ -60,7 +60,7 @@ expected_arguments_spec = dict(
     login_password=dict(default=None, required=False),
     connobject=dict(default=None),
     command_options=dict(choises=list(func_dict)),
-    action=dict(default=None),
+    lxca_action=dict(default=None),
     auth_url=dict(default=None),
     uuid=dict(default=None),
     id=dict(default=None),
@@ -117,7 +117,8 @@ expected_arguments_spec = dict(
     solutionGroups=dict(default=None, type=('list')),
     query_solutionGroups=dict(default=None),
     targetResources=dict(default=None, type=('list')),
-    all_rules=dict(default=None)
+    all_rules=dict(default=None),
+    storedcredential_id=dict(default=None)
 )
 
 
@@ -131,9 +132,9 @@ class TestPylxcaMod:
     def test__main__success(self, ansible_mod_cls):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.240.29.217",
+                "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "connect",
                  "unittest": None,
                }
@@ -155,9 +156,9 @@ class TestPylxcaMod:
     def test__main_nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.240.29.217",
+                "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "nodes",
                  "unittest": "True",
                }
@@ -185,9 +186,9 @@ class TestPylxcaMod:
     def test__nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.240.29.217",
+                "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "nodes",
                }
         mod_obj.params = args
