@@ -8,10 +8,10 @@
 - import_tasks: powersupplies.yml
 - import_tasks: scalablesystem.yml
 - import_tasks: switches.yml
-- import_tasks: ffdc.yml
+- import_tasks: discover.yml
 - import_tasks: users.yml
 - import_tasks: lxcalog.yml
 - import_tasks: tasks.yml
 - import_tasks: jobs.yml
-
+- import_tasks: ffdc.yml
 
