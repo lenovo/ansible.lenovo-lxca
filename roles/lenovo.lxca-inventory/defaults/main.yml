@@ -7,6 +7,7 @@ lxca_action: null
 percentage: null
 state: null
 update_list: null
+discover_ip: null
 
 chassis_inv_args:
   - {  

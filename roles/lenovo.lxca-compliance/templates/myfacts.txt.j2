@@ -1,0 +1,14 @@
+{
+  "machineType": "{{ _raw_params.machineType | default("") }}",
+  "accessState": "{{ _raw_params.accessState | default("") }}",
+  "powerStatus": "{{ _raw_params.powerStatus | default("") }}",
+  "model": "{{ _raw_params.model | default("") }}",
+  "type": "{{ _raw_params.type | default("") }}",
+  "configStatus": "{{ _raw_params.configStatus | default("") }}",
+  {% for f in _raw_params.firmware %}
+    {% if f.type == "UEFI" %}
+      "UEFI_firmware_status": "{{ f.status | default("") }}",
+    {% endif %}
+  {% endfor %}
+  "status.name": "{{ _raw_params.status.name | default("") }}"
+}

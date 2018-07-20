@@ -11,7 +11,10 @@ ANSIBLE_METADATA = {
 DOCUMENTATION = '''
 ---
 version_added: "1.0"
+author: Mahesh Kalge
+=======
 author: Prashant Bhosale, Naval Patel
+>>>>>>> github_ansi/master
 module: pylxca_module
 short_description: custom module for pylxca utility
 description:
@@ -45,6 +48,7 @@ import imp
 import json
 import logging
 import logging.handlers
+from jsonpath_ng.ext import parse
 from pylxca import *
 
 ip_map = dict()
@@ -259,7 +263,10 @@ def _manage_endpoint(module, kwargs):
     result = None
 
     try:
-       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'),kwargs.get('user'),kwargs.get('password'),kwargs.get('recovery_password'), None, kwargs.get('force'))
+       result = manage(_get_connect_lxca(module,kwargs),kwargs.get('endpoint_ip'),
+                       kwargs.get('user'),kwargs.get('password'),
+                       kwargs.get('recovery_password'), None, kwargs.get('force'),
+                       kwargs.get('storedcredential_id'))
     except Exception as e:
         module.fail_json(msg = " Fail to manage the endpoint" + str(e))
     return result
@@ -532,6 +539,41 @@ def _get_users(module, kwargs):
         module.fail_json(msg = "Error getting users " + str(e))
     return result
 
+def _gather_server_facts(module, kwargs):
+    rslt = _get_nodes(module, kwargs)
+    if not rslt:
+        module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
+    else:
+        module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
+
+def _validate_basic_rules(module, kwargs):
+    rule_list = kwargs.get("rule_content")
+    inv_data = kwargs.get("inv_data")
+    compliance_status = True
+
+    for rule_expr in rule_list:
+        regex_expr = "$[?" + rule_expr + "]"
+        jsonpath_expr = parse(regex_expr)
+        matches = [match.value for match in jsonpath_expr.find([inv_data])]
+        compliance_status = True if len(matches)>0 else False
+
+        if  not compliance_status:
+            break
+    module.exit_json(changed=True, msg="Executed Compliance Validation", result=compliance_status)
+
+def _validate_plugin_rules(module, kwargs):
+    location = kwargs.get("plugin_location")
+    name = kwargs.get("plugin_name")
+
+    try:
+        compliance_status = False
+        plugin = load_compliance_plugin( location, name )
+        if plugin:
+            compliance_status = plugin.validate_compliance()
+    except Exception as err:
+        module.fail_json(msg = err.__str__())
+    module.exit_json(changed=True, msg="Executed Compliance Validation through Plugin", result=compliance_status)
+
 def _create_resourcegroups(module, kwargs):
     result = None
     param_dict = {  'name': kwargs.get('resource_group_name'),
@@ -562,6 +604,69 @@ def _get_resourcegroups(module, kwargs):
         module.fail_json(msg = "Error getting users " + str(e))
     return result
 
+def _compliance_engine(module, kwargs):
+    # TODO Stub for compliance engine REST API
+    return True
+
+def _rules(module, kwargs):
+    result = None
+    try:
+        result =  rules(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('comp_rule'))
+    except Exception as e:
+        module.fail_json(msg = "Error getting rules " + str(e))
+    return result
+
+def _compositeResults(module, kwargs):
+    result = None
+    try:
+        result =  compositeResults(_get_connect_lxca(module,kwargs), kwargs.get('id'),
+                                   kwargs.get('query_solutionGroups'),
+                                   kwargs.get('solutionGroups'),
+                                   kwargs.get('targetResources'),
+                                   kwargs.get('all_rules'),)
+    except Exception as e:
+        module.fail_json(msg = "Error getting compositeResults " + str(e))
+    return result
+
+def _get_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs), kwargs.get('storedcredential_id'))
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
+
+def _create_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   user_name = kwargs.get('user'),
+                                   password = kwargs.get('password'),
+                                   description = kwargs.get('description'),)
+    except Exception as e:
+        module.fail_json(msg="Error create stored credential " + str(e))
+    return result
+
+def _update_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   id = kwargs.get('storedcredential_id'),
+                                   user_name = kwargs.get('user'),
+                                   password = kwargs.get('password'),
+                                   description = kwargs.get('description'),)
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
+
+def _delete_storedcredentials( module, kwargs):
+    result = None
+    try:
+        result = storedcredentials(_get_connect_lxca(module,kwargs),
+                                   delete_id = kwargs.get('storedcredential_id'))
+    except Exception as e:
+        module.fail_json(msg="Error getting stored credential " + str(e))
+    return result
 
 func_dict = {
                 'connect': _get_connect_lxca,
@@ -600,9 +705,20 @@ func_dict = {
                 'import_managementserver_pkg': _import_managementserver_pkg,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
+                'gather_server_facts': _gather_server_facts,
+                'validate_basic_rules': _validate_basic_rules,
+                'validate_plugin_rules': _validate_plugin_rules,
                 'get_resourcegroups':_get_resourcegroups,
                 'create_resourcegroups':_create_resourcegroups,
-                'add_resourcegroup_member':_add_resourcegroup_member
+                'add_resourcegroup_member':_add_resourcegroup_member,
+                'compliance_engine':_compliance_engine,
+                'rules': _rules,
+                'compositeResults': _compositeResults,
+                'get_storedcredentials': _get_storedcredentials,
+                'create_storedcredentials': _create_storedcredentials,
+                'update_storedcredentials': _update_storedcredentials,
+                'delete_storedcredentials': _delete_storedcredentials
+
 }
 
 
@@ -660,6 +776,9 @@ def main():
             unassign        = dict(default=None),
             powerdown       = dict(default=None),
             resetimm        = dict(default=None),
+            inv_data        = dict(default=None,type=('dict')),
+            BASIC_RULES      = dict(default=None, type=('list')),
+            comp_rule       = dict(default=None,type=('dict')),
             pattern_update_dict = dict(default=None, type=('dict')),
             includeSettings = dict(default=None),
             osimages_info   = dict(default=None),
@@ -670,8 +789,9 @@ def main():
             uuid_list       = dict(default=None, type=('list')),
             solutionGroups   = dict(default=None, type=('list')),
             query_solutionGroups = dict(default=None),
-            targetResources = dict(default=None, type=('list'))
-
+            targetResources = dict(default=None, type=('list')),
+            all_rules = dict(default=None),
+            storedcredential_id = dict(default=None)
         ),
         check_invalid_arguments=False,
 	    supports_check_mode = False,

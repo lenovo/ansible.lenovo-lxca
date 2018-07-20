@@ -14,10 +14,22 @@ Pre-requisite
 Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
 
 ### Example for calling LXCA Playbook
+###### Stored Credentials
+```
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 " playbooks/config/config.yml -vvvv --tag get_all_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 storedcredential_id=402" playbooks/config/config.yml -vvvv --tag get_particular_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.12.139 description='desc of user' user=admin password=admin1" playbooks/config/config.yml -vvvv --tag create_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.12.139 storedcredential_id=412 user=admin password=admin1" playbooks/config/config.yml -vvvv --tag update_storedcredentials
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.243.12.139 storedcredential_id=407" playbooks/config/config.yml -vvvv --tag delete_particular_storedcredentials
+
+```
+
 
 ###### Manage / Unmanage endpoint
 ```
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172 user=USERID password=CME44ibm recovery_password=CME55ibm force=True" playbooks/config/config.yml -vvvv --tag manage
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.31.39 endpoint_ip=10.240.157.111 storedcredential_id=3652 force=True" playbooks/config/config.yml -vvvv --tag
+manage
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 endpoint_ip=10.240.72.172;46920C143355486F97C19A34ABC7D746;Chassis force=True" playbooks/config/config.yml -v --tag unmanage
 ```
 
@@ -227,6 +239,72 @@ ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_ur
 files specified with relative to playbook file
 ----------------------------------------------
 ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','lxca_action':'import', 'files':'../../files/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
+
+```
+
+###### Resource Group operations
+```
+Sending Solution Manifest to LXCA
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220 sol_id=1 manifest_path=/tmp/test.manifest" playbooks/uhm/manifests.yml -vvvv
+
+Create Resource Groups
+----------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 resource_group_name='TEST2' description='TestGroup' type='solution' solutionVPD={'id':'59A54997C18DCF0594A8CCD0','machineType':'TESTMTM','model':'TESTMODEL','serialNumber':'TESTSERIAL','manufacturer':'LENOVO'} members=[] criteria=[]" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+Create Resource Groups extra_vars as JSON
+---------------------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'resource_group_name':'TEST3', 'description':'TestGroup', 'type':'solution', 'solutionVPD':{'id':'59A54997C18DCF0594A8CCD1','machineType':'TESTMTM','model':'TESTMODEL','serialNumber':'TESTSERIAL','manufacturer':'LENOVO'}, 'members':[], 'criteria':[]}" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+
+Create Resource Groups extra_vars as JSON file
+---------------------------
+ansible-playbook -e "@files/resource_groups.json" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+Add Resource Groups members
+---------------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0 members=['nodes/9C4D0000B22E44F1A0000A1D85B4ECD0','switches/38D9D7DBCB713C12A210E60C74A0E931']" playbooks/uhm/thinkagile.yml -vvvv --tag add_group_members
+
+Get all Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 " playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+Get specific Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0" playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+```
+###### compliance rules operations
+```
+get all compliance rules
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+get specific rule
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a2a2d8df9a2f31486aa8b83" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+import compliance rules from files of compliance_rules.yaml at uhm roles vars folder
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag import_compliance_rules
+
+Get compositeResults
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
+
+get specific compositeResults
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
+
+update composit results
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 solutionGroups=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag update_solutiongroup_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 targetResources=[u'nodes/4C7D5FD237D411E2875EE4C686742121', u'nodes/1B247BCC918311E2B0703440B5EFBAB8' ]" playbooks/uhm/thinkagile.yml -vvvv --tag update_targetresources_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 all_rules=True" playbooks/uhm/thinkagile.yml -vvvv --tag process_all_rules_compositeresults
+
+Executing Compliance Validation in LXCA
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
+ansible-playbook -e "plugin_name=test_plugin plugin_location=/home/prashant/git/ansible.lenovo-lxca/files/compliance_plugins" playbooks/uhm/compliance.yml  --tag validate_plugin_compliance -vvvv
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.215 RESOURCE_UUID=AB6C2B0F827811E29C8B3440B5EAB968 RESOURCE_TYPE=Server BASIC_RULES=[{'property':'powerStatus','ref_value':8}]" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
 
 ```
 

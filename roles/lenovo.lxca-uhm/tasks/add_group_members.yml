@@ -1,0 +1,11 @@
+- name: Add a member to resource group for ThingAgile Solution
+  pylxca_module:
+    command_options: add_resourcegroup_member
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    uuid: "{{ uuid }}"
+    members: "{{ members }}"
+  register: rslt
+  tags:
+    add_group_members

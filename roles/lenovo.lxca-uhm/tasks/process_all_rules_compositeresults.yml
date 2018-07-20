@@ -1,0 +1,10 @@
+- name: Updating composite results on LXCA
+  pylxca_module:
+    login_user: "{{ lxca_user }}"
+    login_password: "{{ lxca_password }}"
+    auth_url: "{{ lxca_url }}"
+    all_rules: true
+    command_options: compositeResults
+  register: rslt
+  tags: process_all_rules_compositeresults
+

@@ -1,0 +1,5 @@
+- name: Do Firmware update
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: lenovo.lxca-config }

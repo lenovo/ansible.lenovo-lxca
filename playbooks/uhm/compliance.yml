@@ -1,0 +1,7 @@
+- name: Executing Compliance Engine
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - { role: lenovo.lxca-compliance  }

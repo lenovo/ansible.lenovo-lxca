@@ -1,0 +1,13 @@
+# Task file for lenovo.lxca-compliance role
+# This task will invoke compliance plugin to validate the compliance rule
+
+#Gatherer code for Complance Engine for Basic Rule Validation
+#This code is responsible for gathering inventory data for given Endpoint
+- name: Validate Compliance Rules using Plugin
+  pylxca_module:
+    plugin_name: "{{ plugin_name }}"
+    plugin_location: "{{ plugin_location }}"
+    command_options: validate_plugin_rules
+  register: rslt
+  tags:
+     validate_plugin_compliance

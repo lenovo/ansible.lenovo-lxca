@@ -9,6 +9,7 @@
       password: "{{ password }}"
       recovery_password: "{{ recovery_password }}"
       force: "{{ force }}"
+      storedcredential_id: "{{ storedcredential_id }}"
       command_options: manage
     register: rslt_job
   - debug:
