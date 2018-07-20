@@ -17,7 +17,7 @@ ANSIBLE_METADATA = {
 DOCUMENTATION = '''
 ---
 version_added: "1.0"
-author: Mahesh Kalge
+author: Prashant Bhosale, Naval Patel
 module: pylxca_module
 short_description: custom module for pylxca utility
 description:
@@ -402,9 +402,6 @@ options:
     description:
       name of config profile
 
-  resource_group_name:
-    description:
-      name of resource group
 
   update_key:
     description:
@@ -453,22 +450,6 @@ options:
       Used with osimage it is used for setting osimage and os deployment parameters.
 
 
-  solutionVPD:
-    type:
-      dict
-    description:
-         Used with command create_resourcegroups.
-
-  members:
-    type:
-      list
-    description:
-      - Used with command create_resourcegroups and add_group_members. members of resource group.
-      - Example ['nodes/9C4D0000B22E44F1A0000A1D85B4ECD0','switches/38D9D7DBCB713C12A210E60C74A0E931']
-
-  criteria:
-    description:
-      Used with command create_resourcegroups.
 
 requirements:
   - pylxca
@@ -490,30 +471,10 @@ import imp
 import json
 import logging
 import logging.handlers
-from jsonpath_ng.ext import parse
-#from pylxca.pylxca_cmd.lxca_pyshell import *
 from pylxca import *
 
 ip_map = dict()
 
-def load_compliance_plugin( location, name ):
-    plugin = None
-    plugins_list = os.listdir(location)
-
-    try:
-        # Find the specified plugin in plugins folder
-        for plugin_name in plugins_list:
-            if str(plugin_name).lower() == str(name).lower():
-                plugin_dir = os.path.join(location, plugin_name)
-
-                if not os.path.isdir(plugin_dir) or not "__init__.py" in os.listdir(plugin_dir):
-                    raise Exception("Invalid Compliance Plugin")
-
-                info = imp.find_module(name, [location])
-                plugin = imp.load_module(name, *info)
-    except Exception as err:
-        raise err
-    return plugin
 
 def find_conn_obj ( kwargs ):
     if ip_map.get(kwargs.get('url')) is not None:
@@ -736,16 +697,6 @@ def _unmanage_status(module, kwargs):
        result = unmanage(_get_connect_lxca(module,kwargs), None,None, kwargs.get('jobid'))
     except Exception as e:
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
-    return result
-
-def _get_manifests(module, kwargs):
-    result = None
-    try:
-        dict = {'id':kwargs.get('sol_id'),'file':kwargs.get('manifest_path')}
-        conn = _get_connect_lxca(module,kwargs)
-        result =  manifests(conn,dict)
-    except Exception as e:
-        module.fail_json(msg = "Error getting manifest " + str(e))
     return result
 
 #TODO chassis , status
@@ -991,94 +942,6 @@ def _get_users(module, kwargs):
         module.fail_json(msg = "Error getting users " + str(e))
     return result
 
-def _gather_server_facts(module, kwargs):
-    rslt = _get_nodes(module, kwargs)
-    if not rslt:
-        module.exit_json(changed=False, msg="Fail to retrieve information", result=rslt)
-    else:
-        module.exit_json(changed=True, msg="Success retrieving information", ansible_facts=rslt)
-
-def _validate_basic_rules(module, kwargs):
-    rule_list = kwargs.get("rule_content")
-    inv_data = kwargs.get("inv_data")
-    compliance_status = True
-
-    for rule_expr in rule_list:
-        regex_expr = "$[?" + rule_expr + "]"
-        jsonpath_expr = parse(regex_expr)
-        matches = [match.value for match in jsonpath_expr.find([inv_data])]
-        compliance_status = True if len(matches)>0 else False
-
-        if  not compliance_status:
-            break
-    module.exit_json(changed=True, msg="Executed Compliance Validation", result=compliance_status)
-
-def _validate_plugin_rules(module, kwargs):
-    location = kwargs.get("plugin_location")
-    name = kwargs.get("plugin_name")
-
-    try:
-        compliance_status = False
-        plugin = load_compliance_plugin( location, name )
-        if plugin:
-            compliance_status = plugin.validate_compliance()
-    except Exception as err:
-        module.fail_json(msg = err.__str__())
-    module.exit_json(changed=True, msg="Executed Compliance Validation through Plugin", result=compliance_status)
-
-def _create_resourcegroups(module, kwargs):
-    result = None
-    param_dict = {  'name': kwargs.get('resource_group_name'),
-                    'description':kwargs.get('description'),
-                    'type':kwargs.get('type'),
-                    'solutionVPD':kwargs.get('solutionVPD'),
-                    'members':kwargs.get('members'),
-                    'criteria':kwargs.get('criteria')}
-    try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs),**param_dict)
-    except Exception as e:
-        module.fail_json(msg = "Error Creating Resource Group " + str(e))
-    return result
-
-def _add_resourcegroup_member(module, kwargs):
-    result = None
-    try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), uuid = kwargs.get('uuid'), members = kwargs.get('members') )
-    except Exception as e:
-        module.fail_json(msg = "Error adding resource group member " + str(e))
-    return result
-
-def _get_resourcegroups(module, kwargs):
-    result = None
-    try:
-        result =  resourcegroups(_get_connect_lxca(module,kwargs), uuid = kwargs.get('uuid'))
-    except Exception as e:
-        module.fail_json(msg = "Error getting users " + str(e))
-    return result
-
-def _compliance_engine(module, kwargs):
-    # TODO Stub for compliance engine REST API
-    return True
-
-def _rules(module, kwargs):
-    result = None
-    try:
-        result =  rules(_get_connect_lxca(module,kwargs), kwargs.get('id'), kwargs.get('comp_rule'))
-    except Exception as e:
-        module.fail_json(msg = "Error getting rules " + str(e))
-    return result
-
-def _compositeResults(module, kwargs):
-    result = None
-    try:
-        result =  compositeResults(_get_connect_lxca(module,kwargs), kwargs.get('id'),
-                                   kwargs.get('query_solutionGroups'),
-                                   kwargs.get('solutionGroups'),
-                                   kwargs.get('targetResources'),
-                                   kwargs.get('all_rules'),)
-    except Exception as e:
-        module.fail_json(msg = "Error getting compositeResults " + str(e))
-    return result
 
 def _get_storedcredentials( module, kwargs):
     result = None
@@ -1141,7 +1004,6 @@ func_dict = {
                 'unmanage': _unmanage_endpoint,
                 'manage_status': _manage_status,
                 'unmanage_status': _unmanage_status,
-                'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'osimages': _get_osimages,
                 'powersupplies': _get_powersupplies,
@@ -1158,15 +1020,6 @@ func_dict = {
                 'import_managementserver_pkg': _import_managementserver_pkg,
                 'updatepolicy': _get_updatepolicy,
                 'users': _get_users,
-                'gather_server_facts': _gather_server_facts,
-                'validate_basic_rules': _validate_basic_rules,
-                'validate_plugin_rules': _validate_plugin_rules,
-                'get_resourcegroups':_get_resourcegroups,
-                'create_resourcegroups':_create_resourcegroups,
-                'add_resourcegroup_member':_add_resourcegroup_member,
-                'compliance_engine':_compliance_engine,
-                'rules': _rules,
-                'compositeResults': _compositeResults,
                 'get_storedcredentials': _get_storedcredentials,
                 'create_storedcredentials': _create_storedcredentials,
                 'update_storedcredentials': _update_storedcredentials,

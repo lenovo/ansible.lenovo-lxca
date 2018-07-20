@@ -1,9 +1,8 @@
+
 Ansible Role: Lenovo LXCA Configuration
 =========
 
-Ansible Role for various configuration operation (like manage, update firmware,
-config policy, os deploy) on managed elements from Lenovo xClarity
-Administratr.
+Ansible Role for various configuration operation (like manage, update firmware, config policy, os deploy) on managed elements from Lenovo xClarity Administratr.
 
 Requirements
 ------------
@@ -103,6 +102,7 @@ get_storedcredentials | get stored credentials
 create_storedcredentials | create new stored credentials
 update_storedcredentials | update existing stored credentials
 delete_storedcredentials | delete stored credentails
+
 
 
 Dependencies

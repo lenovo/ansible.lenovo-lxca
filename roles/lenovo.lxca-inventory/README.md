@@ -11,7 +11,7 @@ Requirements
   documentation](http://docs.ansible.com/ansible/intro_installation.html))
 
 - Python Client for Lenovo xClarity Administratr.([LXCA Python Client
-  v2.0.0](https://github.com/lenovo/pylxca))
+  v2.1.0](https://github.com/lenovo/pylxca))
 
    pip install pylxca
 
@@ -48,6 +48,47 @@ tasks | task details and update
 users | user details
 ffdc | ffdc for uuid
 
+=======
+
+Variable | Description
+--- | ---
+uuid| UUID of a managed element
+id| ID of a resource
+endpoint_ip| IP address of Endpoint
+user| user name
+password| password
+recovery_password| recovery password for resource
+jobid| job id of background job
+mode| operation mode for config action
+lxca_action| operation for config
+server| compute node details
+switch| switch details
+storage| storage details
+cmm| cmm details
+force| force flag for config action
+policy_info| policy detail
+policy_name| policy name
+policy_type| policy type
+repo_key| repository key
+machine_type| machine type
+scope| operation scope
+fixids| firmware image id
+file_type| type of file in config action
+endpoint| target managed endpoint for config action
+restart| config action
+config_pattern_name| name of config patteren
+config_profile_name| name of config profile
+powerdown| power operation
+resetimm| action reset imm
+pattern_update_dict| dictionary of category pattern information
+pattern_from_file| file path for pattern data
+includeSettings| flag for reading config data
+osimages_info| information about os images
+osimages_dict| dictionary of information about os images
+files| files location
+update_key| key for firmware update
+status| status of managed element
+uuid_list| list of UUID
 
 Dependencies
 ------------
