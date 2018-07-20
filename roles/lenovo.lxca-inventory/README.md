@@ -1,38 +1,92 @@
-Role Name
+Ansible Role: Lenovo LXCA Inventory
 =========
 
-A brief description of the role goes here.
+Ansible Role to collect get inventory data of managed elements from Lenovo
+xClarity Administratr.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ansible version 2.4.2 or later ([Ansible installation
+  documentation](http://docs.ansible.com/ansible/intro_installation.html))
+
+- Python Client for Lenovo xClarity Administratr.([LXCA Python Client
+  v2.0.0](https://github.com/lenovo/pylxca))
+
+   pip install pylxca
+
 
 Role Variables
 --------------
+Available variables are listed below, along with description:
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Variable | Description
+--- | ---
+uuid | uuid of device
+id |  id of job 
+update_list | update list for tasks
+discover_ip | discover specific ip
+
+Supported Tags
+--------------
+Supported tags are listed below, along with description:
+
+tags | Description
+--- | ---
+chassis | chassis details
+cmms | cmms details
+nodes | nodes details
+discover | discover using slp
+fans | fans details
+fanmuxes | fanmux details
+jobs | job details
+lxcalog | lxca log
+powersupplies | powersupply details
+scalablesystem | scalablesystem details
+switches | switch details
+tasks | task details and update 
+users | user details
+ffdc | ffdc for uuid
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Connectivity with Lenovo xClarity Administrator.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+To execute an Ansible playbook, use the following command:
+```
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd
+lxca_url=https://10.240.29.217" inventory.yml -vvvv
+```
+-vvv is an optional verbos command that helps identify what is happening during
+playbook execution.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+    - name: get nodes data from LXCA
+      pylxca_module:
+        login_user: "{{ lxca_user }}"
+        login_password: "{{ lxca_password }}"
+        auth_url: "{{ lxca_url }}"
+        command_options: nodes
+      register: rslt
+      tags:
+         nodes
 
 License
 -------
 
-BSD
+Copyright (C) 2018 Lenovo, Inc.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at
+http://www.apache.org/licenses/LICENSE-2.0
 
-Author Information
-------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+

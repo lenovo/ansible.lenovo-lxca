@@ -1,3 +1,4 @@
+
 Lenovo Ansible 
 --------------
 This project contains Ansible Playbooks, Roles and Modules for LXCA and can be used collectively to implement various use cases.
@@ -85,6 +86,7 @@ Applying Firmware with policy for all updateable components
 ----------------
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 mode=immediate lxca_action=apply uuid_list=[]" playbooks/config/config.yml -vvvv --tag update_all_firmware_withpolicy
 ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 mode=immediate lxca_action=apply" playbooks/config/config.yml -vvvv --tag update_all_firmware_withpolicy
+
 Update Repostory commands
 ================
 Queries
