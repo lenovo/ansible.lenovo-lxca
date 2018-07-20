@@ -12,6 +12,9 @@ DOCUMENTATION = '''
 ---
 version_added: "1.0"
 author: Mahesh Kalge
+=======
+author: Prashant Bhosale, Naval Patel
+>>>>>>> github_ansi/master
 module: pylxca_module
 short_description: custom module for pylxca utility
 description:
@@ -46,7 +49,6 @@ import json
 import logging
 import logging.handlers
 from jsonpath_ng.ext import parse
-#from pylxca.pylxca_cmd.lxca_pyshell import *
 from pylxca import *
 
 ip_map = dict()
@@ -292,16 +294,6 @@ def _unmanage_status(module, kwargs):
        result = unmanage(_get_connect_lxca(module,kwargs), None,None, kwargs.get('jobid'))
     except Exception as e:
         module.fail_json(msg = "Error getting info abt jobid" + str(e))
-    return result
-
-def _get_manifests(module, kwargs):
-    result = None
-    try:
-        dict = {'id':kwargs.get('sol_id'),'file':kwargs.get('manifest_path')}
-        conn = _get_connect_lxca(module,kwargs)
-        result =  manifests(conn,dict)
-    except Exception as e:
-        module.fail_json(msg = "Error getting manifest " + str(e))
     return result
 
 #TODO chassis , status
@@ -697,7 +689,6 @@ func_dict = {
                 'unmanage': _unmanage_endpoint,
                 'manage_status': _manage_status,
                 'unmanage_status': _unmanage_status,
-                'manifests': _get_manifests,
                 'nodes': _get_nodes,
                 'osimages': _get_osimages,
                 'powersupplies': _get_powersupplies,

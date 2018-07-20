@@ -1,4 +1,4 @@
-Lenovo Ansible 
+Lenovo xClarity Ansible  
 --------------
 This project contains Ansible Playbooks, Roles and Modules for LXCA and can be used collectively to implement various use cases.
 Project cotains following Ansible Roles

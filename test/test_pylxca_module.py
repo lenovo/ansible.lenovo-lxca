@@ -134,7 +134,7 @@ class TestPylxcaMod:
         args = {
                 "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                 "login_password": "Passw0rd",
                  "command_options": "connect",
                  "unittest": None,
                }
@@ -156,9 +156,9 @@ class TestPylxcaMod:
     def test__main_nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.243.12.139",
+                "auth_url": "https://10.240.29.217",
                  "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                 "login_password": "Passw0rd",
                  "command_options": "nodes",
                  "unittest": "True",
                }
@@ -186,9 +186,9 @@ class TestPylxcaMod:
     def test__nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.243.12.139",
+                "auth_url": "https://10.240.29.217",
                  "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                 "login_password": "Passw0rd",
                  "command_options": "nodes",
                }
         mod_obj.params = args
