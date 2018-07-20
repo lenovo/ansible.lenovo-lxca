@@ -1,9 +1,0 @@
-- name: get composite results on LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    id: "{{ id }}"
-    command_options: compositeResults
-  register: rslt
-  tags: get_compositeresults

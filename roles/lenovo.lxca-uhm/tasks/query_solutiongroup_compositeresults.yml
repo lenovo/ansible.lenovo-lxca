@@ -1,9 +1,0 @@
-- name: query solution group composite results on LXCA
-  pylxca_module:
-    login_user: "{{ lxca_user }}"
-    login_password: "{{ lxca_password }}"
-    auth_url: "{{ lxca_url }}"
-    query_solutionGroups: "{{ query_solutionGroups }}"
-    command_options: compositeResults
-  register: rslt
-  tags: query_solutiongroup_compositeresults
