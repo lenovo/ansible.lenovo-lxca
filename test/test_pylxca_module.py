@@ -51,7 +51,7 @@ func_dict = {
                 'add_resourcegroup_member':pylxca_module._add_resourcegroup_member,
                 'compliance_engine':pylxca_module._compliance_engine,
                 'rules': pylxca_module._rules,
-                'compositeResults': pylxca_module._compositeResults,
+                'compositeResults': pylxca_module._composite_results,
 
 }
 
