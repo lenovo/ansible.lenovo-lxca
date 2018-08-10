@@ -1263,7 +1263,7 @@ def main():
             endpoint_ip=dict(default=None),
             jobid=dict(default=None),
             user=dict(default=None, required=False),
-            password=dict(default=None, required=False),
+            password=dict(default=None, required=False, no_log=True),
             force=dict(default=None),
             percentage=dict(default=None),  # not used
             state=dict(default=None),  # not used
@@ -1273,7 +1273,7 @@ def main():
             solutionVPD=dict(default=None, type=('dict')),
             members=dict(default=None, type=('list')),
             criteria=dict(default=None, type=('list')),
-            recovery_password=dict(default=None),
+            recovery_password=dict(default=None, no_log=True),
             repo_key=dict(default=None),
             mode=dict(default=None),
             server=dict(default=None),
