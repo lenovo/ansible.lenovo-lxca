@@ -1,12 +1,53 @@
 #!/usr/bin/python
-
 #---- Documentation Start ----------------------------------------------------#
-
 # Licensed under the Apache License, Version 2.0 (the "License");
 # You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
 # http://www.apache.org/licenses/LICENSE-2.0
+import os
+import imp
+from jsonpath_ng.ext import parse
+
+try:
+    from pylxca import chassis
+    from pylxca import cmms
+    from pylxca import nodes
+    from pylxca import discover
+    from pylxca import fans
+    from pylxca import fanmuxes
+    from pylxca import ffdc
+    from pylxca import jobs
+    from pylxca import lxcalog
+    from pylxca import powersupplies
+    from pylxca import scalablesystem
+    from pylxca import switches
+    from pylxca import tasks
+    from pylxca import users
+    from pylxca import configpatterns
+    from pylxca import configprofiles
+    from pylxca import configtargets
+    from pylxca import manage
+    from pylxca import unmanage
+    from pylxca import manifests
+    from pylxca import osimages
+    from pylxca import updaterepo
+    from pylxca import updatecomp
+    from pylxca import managementserver
+    from pylxca import updatepolicy
+    from pylxca import storedcredentials
+    from pylxca import connect
+    from pylxca import resourcegroups
+    from pylxca import rules
+    from pylxca import compositeResults
+    #from pylxca import *
+    HAS_PYLXCA = True
+except Exception:
+    HAS_PYLXCA = False
+
+from ansible.module_utils.basic import AnsibleModule
+
+
 ANSIBLE_METADATA = {
     'metadata_version': '1.0',
     'supported_by': 'community',
@@ -481,25 +522,15 @@ for Inventory operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/ma
 
 for config operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/master/roles/lenovo.lxca-config/tasks)
 # get cmms info
-- pylxca_module: command_options=connect login_user=USERID login_password=CME44ibm auth_url=https://10.243.15.168
+- pylxca_module: command_options=cmms login_user=USERID login_password=CME44ibm auth_url=https://10.243.15.168
 '''
 
 
-import os
-import imp
-from jsonpath_ng.ext import parse
-from ansible.module_utils.basic import AnsibleModule
-
-try:
-    from pylxca import *
-    HAS_PYLXCA = True
-except Exception:
-    HAS_PYLXCA = False
 
 __ip_map__ = dict()
+__changed__ = False
 
-
-def load_compliance_plugin(location, name):
+def _load_compliance_plugin(location, name):
     plugin = None
     plugins_list = os.listdir(location)
 
@@ -521,13 +552,21 @@ def load_compliance_plugin(location, name):
 
 
 def find_conn_obj(kwargs):
+    """
+    Find connection object in map and return if its already there for url
+    :param kwargs: uses url from this dict
+    :return: connection if already exist.
+    """
+    global __ip_map__
+
     if __ip_map__.get(kwargs.get('url')) is not None:
         return __ip_map__.get(kwargs.get('url'))
     return None
 
 
 def _get_connect_lxca(module, kwargs):
-    #global _conn_lxca
+    global __ip_map__
+
     _conn_lxca = None
 
     try:
@@ -599,6 +638,7 @@ def _get_particular_configpattern(module, kwargs):
 
 
 def _apply_configpatterns(module, kwargs):
+    global __changed__
     result = None
     try:
         pattern_dict = {}
@@ -609,24 +649,28 @@ def _apply_configpatterns(module, kwargs):
         pattern_dict['type'] = kwargs.get('type')
         result = configpatterns(_get_connect_lxca(module, kwargs),
                                 **pattern_dict)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error in applying configpatterns" + str(err))
     return result
 
 
 def _import_configpatterns(module, kwargs):
+    global __changed__
     result = None
     try:
         pattern_dict = {}
         pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
         result = configpatterns(_get_connect_lxca(module, kwargs),
                                 **pattern_dict)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error in import configpatterns" + str(err))
     return result
 
 
 def _get_configprofiles(module, kwargs):
+    global __changed__
     result = None
     delete_profile = None
     unassign_profile = None
@@ -635,8 +679,10 @@ def _get_configprofiles(module, kwargs):
         if action:
             if action.lower() in ['delete']:
                 delete_profile = 'True'
+                __changed__ = True
             elif action.lower() in ['unassign']:
                 unassign_profile = 'True'
+                __changed__ = True
         result = configprofiles(_get_connect_lxca(module, kwargs),
                                 kwargs.get('id'),
                                 kwargs.get('config_profile_name'),
@@ -720,6 +766,7 @@ def _get_lxcalog(module, kwargs):
 
 
 def _manage_endpoint(module, kwargs):
+    global __changed__
     result = None
 
     try:
@@ -728,6 +775,7 @@ def _manage_endpoint(module, kwargs):
                         kwargs.get('recovery_password'), None, kwargs.get(
                             'force'),
                         kwargs.get('storedcredential_id'))
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg=" Fail to manage the endpoint" + str(err))
     return result
@@ -744,11 +792,13 @@ def _manage_status(module, kwargs):
 
 
 def _unmanage_endpoint(module, kwargs):
+    global  __changed__
     result = None
 
     try:
         result = unmanage(_get_connect_lxca(module, kwargs), kwargs.get(
             'endpoint_ip'), kwargs.get('force'), None)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg=" Fail to unmanage the endpoint" + str(err))
     return result
@@ -823,6 +873,7 @@ def _get_switches_inventory(module, kwargs):
 
 
 def _get_tasks(module, kwargs):
+    global __changed__
     result = None
     tasks_dict = {}
     job_uid = kwargs.get("id")
@@ -830,10 +881,12 @@ def _get_tasks(module, kwargs):
     if action in ['cancel', 'delete']:
         tasks_dict['jobUID'] = job_uid
         tasks_dict['action'] = action
+        __changed__ = True
     elif action in ['update']:
         tasks_dict['action'] = action
         update_list = kwargs.get("update_list")
         tasks_dict['updateList'] = update_list
+        __changed__ = True
     else:
         tasks_dict['jobUID'] = job_uid
     try:
@@ -859,18 +912,20 @@ def _get_updaterepo_info(module, kwargs):
 
 
 def _update_firmware(module, kwargs):
+    global __changed__
     result = None
     try:
         result = updatecomp(_get_connect_lxca(module, kwargs), mode=kwargs.get('mode'),
                             action=kwargs.get('lxca_action'), cmm=kwargs.get('cmm'),
                             switch=kwargs.get('switch'), server=kwargs.get('server'),
                             storage=kwargs.get('storage'))
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error updating firmware " + str(err))
     return result
 
 
-def transform_devicelist(devicelist, uuid_list):
+def _transform_devicelist(devicelist, uuid_list):
     ret_device_list = []
     for dev in devicelist:
         new_dict = {}
@@ -891,7 +946,7 @@ def transform_devicelist(devicelist, uuid_list):
     return ret_device_list
 
 
-def valid_compliance_policies(policy_list):
+def _valid_compliance_policies(policy_list):
     uuid_list = []
     for comp_policy in policy_list:
         if 'uuid' in comp_policy.keys():
@@ -902,10 +957,11 @@ def valid_compliance_policies(policy_list):
 
 
 def _update_firmware_all(module, kwargs):
+    global __changed__
     result = None
     try:
         rep = updatepolicy(_get_connect_lxca(module, kwargs), info="NAMELIST")
-        uuid_list = valid_compliance_policies(rep['policies'])
+        uuid_list = _valid_compliance_policies(rep['policies'])
         if len(uuid_list) == 0:
             module.fail_json(msg="No policy assigned to any device")
             return result
@@ -919,7 +975,7 @@ def _update_firmware_all(module, kwargs):
 
         rep = updatecomp(_get_connect_lxca(module, kwargs), query='components')
         ret_dev_list = rep['DeviceList']
-        mod_dev_list = transform_devicelist(ret_dev_list, uuid_list)
+        mod_dev_list = _transform_devicelist(ret_dev_list, uuid_list)
         if len(mod_dev_list) == 0:
             module.fail_json(
                 msg="No updateable component with assigned policy found")
@@ -927,6 +983,7 @@ def _update_firmware_all(module, kwargs):
 
         result = updatecomp(_get_connect_lxca(module, kwargs), mode=kwargs.get(
             'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error updating all device firmware " + str(err))
     return result
@@ -936,7 +993,6 @@ def _update_firmware_query_status(module, kwargs):
     result = None
     try:
         result = updatecomp(_get_connect_lxca(module, kwargs), query='status')
-#        result =  updatecomp(_get_connect_lxca(module,kwargs),"immediate","apply","A155A9581FB711E397C2000AF72569C4,lnvgy_fw_imm2_tcoo18q-3.20_anyos_noarch,IMM2")
     except Exception as err:
         module.fail_json(msg="Error updating firmware " + str(err))
     return result
@@ -965,6 +1021,7 @@ def _get_managementserver_pkg(module, kwargs):
 
 
 def _update_managementserver_pkg(module, kwargs):
+    global __changed__
     result = None
     try:
         result = managementserver(_get_connect_lxca(module, kwargs),
@@ -972,6 +1029,7 @@ def _update_managementserver_pkg(module, kwargs):
                                   kwargs.get('fixids'),
                                   kwargs.get('type'),
                                   kwargs.get('lxca_action'),)
+        __changed__ = True
     except Exception as err:
         module.fail_json(
             msg="Error retriving update managementserver." + str(err))
@@ -979,6 +1037,7 @@ def _update_managementserver_pkg(module, kwargs):
 
 
 def _import_managementserver_pkg(module, kwargs):
+    global __changed__
     result = None
     try:
         result = managementserver(_get_connect_lxca(module, kwargs),
@@ -988,6 +1047,7 @@ def _import_managementserver_pkg(module, kwargs):
                                   kwargs.get('lxca_action'),
                                   kwargs.get('files'),
                                   kwargs.get('jobid'))
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error import managementserver ." + str(err))
     return result
@@ -1073,7 +1133,7 @@ def _validate_plugin_rules(module, kwargs):
 
     try:
         compliance_status = False
-        plugin = load_compliance_plugin(location, name)
+        plugin = _load_compliance_plugin(location, name)
         if plugin:
             compliance_status = plugin.validate_compliance()
     except Exception as err:
@@ -1083,6 +1143,7 @@ def _validate_plugin_rules(module, kwargs):
 
 
 def _create_resourcegroups(module, kwargs):
+    global __changed__
     result = None
     param_dict = {'name': kwargs.get('resource_group_name'),
                   'description': kwargs.get('description'),
@@ -1093,16 +1154,19 @@ def _create_resourcegroups(module, kwargs):
     try:
         result = resourcegroups(
             _get_connect_lxca(module, kwargs), **param_dict)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error Creating Resource Group " + str(err))
     return result
 
 
 def _add_resourcegroup_member(module, kwargs):
+    global __changed__
     result = None
     try:
         result = resourcegroups(_get_connect_lxca(module, kwargs), uuid=kwargs.get(
             'uuid'), members=kwargs.get('members'))
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error adding resource group member " + str(err))
     return result
@@ -1157,18 +1221,21 @@ def _get_storedcredentials(module, kwargs):
 
 
 def _create_storedcredentials(module, kwargs):
+    global __changed__
     result = None
     try:
         result = storedcredentials(_get_connect_lxca(module, kwargs),
                                    user_name=kwargs.get('user'),
                                    password=kwargs.get('password'),
                                    description=kwargs.get('description'),)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error create stored credential " + str(err))
     return result
 
 
 def _update_storedcredentials(module, kwargs):
+    global __changed__
     result = None
     try:
         result = storedcredentials(_get_connect_lxca(module, kwargs),
@@ -1176,16 +1243,19 @@ def _update_storedcredentials(module, kwargs):
                                    user_name=kwargs.get('user'),
                                    password=kwargs.get('password'),
                                    description=kwargs.get('description'),)
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error getting stored credential " + str(err))
     return result
 
 
 def _delete_storedcredentials(module, kwargs):
+    global __changed__
     result = None
     try:
         result = storedcredentials(_get_connect_lxca(module, kwargs),
                                    delete_id=kwargs.get('storedcredential_id'))
+        __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error getting stored credential " + str(err))
     return result
@@ -1251,6 +1321,10 @@ FUNC_DICT = {
 #
 
 def main():
+    """
+    Main entry point for this module
+    :return:
+    """
     module = AnsibleModule(
         argument_spec=dict(
             login_user=dict(default=None, required=False),
@@ -1325,7 +1399,6 @@ def main():
 
     rslt = None
     command_options = module.params['command_options']
-    global __ip_map__
 
     rslt = FUNC_DICT[command_options](module, module.params)
     if module.params['unittest']:
@@ -1339,7 +1412,7 @@ def main():
         module.fail_json(changed=False, msg="Fail to get %s result" %
                          command_options, result=rslt)
     else:
-        module.exit_json(changed=False, msg="Success %s result" %
+        module.exit_json(changed=__changed__, msg="Success %s result" %
                          command_options, result=rslt)
 
 
