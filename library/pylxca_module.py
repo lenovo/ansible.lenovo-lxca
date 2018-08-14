@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#---- Documentation Start ----------------------------------------------------#
+# ---- Documentation Start ----------------------------------------------------#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -526,7 +526,6 @@ for config operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/maste
 '''
 
 
-
 __ip_map__ = dict()
 __changed__ = False
 
@@ -568,7 +567,7 @@ def _get_connect_lxca(module, kwargs):
     global __ip_map__
 
     _conn_lxca = None
-
+    print os.getpid()
     try:
         _conn_lxca = find_conn_obj(kwargs)
         if _conn_lxca is None:
@@ -792,7 +791,7 @@ def _manage_status(module, kwargs):
 
 
 def _unmanage_endpoint(module, kwargs):
-    global  __changed__
+    global __changed__
     result = None
 
     try:
@@ -1394,8 +1393,8 @@ def main():
         supports_check_mode=False,
     )
 
-    #if !HAS_PYLXCA:
-    #    module.fail_json(changed=False, msg="Install pylxca"
+    if not HAS_PYLXCA:
+        module.fail_json(changed=False, msg="Install pylxca")
 
     rslt = None
     command_options = module.params['command_options']
