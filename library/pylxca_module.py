@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#---- Documentation Start ----------------------------------------------------#
+# ---- Documentation Start ----------------------------------------------------#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # You may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -489,7 +489,6 @@ for config operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/maste
 '''
 
 
-
 __ip_map__ = dict()
 __changed__ = False
 
@@ -698,6 +697,7 @@ def _get_jobs(module, kwargs):
         module.fail_json(msg="Error getting jobs inventory " + str(err))
     return result
 
+
 def _get_lxcalog(module, kwargs):
     result = None
     try:
@@ -734,7 +734,7 @@ def _manage_status(module, kwargs):
 
 
 def _unmanage_endpoint(module, kwargs):
-    global  __changed__
+    global __changed__
     result = None
 
     try:
@@ -1199,8 +1199,8 @@ def main():
         supports_check_mode=False,
     )
 
-    #if !HAS_PYLXCA:
-    #    module.fail_json(changed=False, msg="Install pylxca"
+    if not HAS_PYLXCA:
+        module.fail_json(changed=False, msg="Install pylxca")
 
     rslt = None
     command_options = module.params['command_options']
@@ -1221,7 +1221,5 @@ def main():
                          command_options, result=rslt)
 
 
-# import module snippets
-#from ansible.module_utils.basic import module
 if __name__ == '__main__':
     main()
