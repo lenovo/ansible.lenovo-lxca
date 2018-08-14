@@ -567,7 +567,6 @@ def _get_connect_lxca(module, kwargs):
     global __ip_map__
 
     _conn_lxca = None
-    print os.getpid()
     try:
         _conn_lxca = find_conn_obj(kwargs)
         if _conn_lxca is None:
