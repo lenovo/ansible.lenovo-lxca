@@ -1,55 +1,13 @@
-#!/usr/bin/python
-# ---- Documentation Start ----------------------------------------------------#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# You may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-import os
-import imp
-from jsonpath_ng.ext import parse
+# GNU General Public License v3.0+ (see COPYING or
+# # https://www.gnu.org/licenses/gpl-3.0.txt)
+# #
 
-try:
-    from pylxca import chassis
-    from pylxca import cmms
-    from pylxca import nodes
-    from pylxca import discover
-    from pylxca import fans
-    from pylxca import fanmuxes
-    from pylxca import ffdc
-    from pylxca import jobs
-    from pylxca import lxcalog
-    from pylxca import powersupplies
-    from pylxca import scalablesystem
-    from pylxca import switches
-    from pylxca import tasks
-    from pylxca import users
-    from pylxca import configpatterns
-    from pylxca import configprofiles
-    from pylxca import configtargets
-    from pylxca import manage
-    from pylxca import unmanage
-    from pylxca import manifests
-    from pylxca import osimages
-    from pylxca import updaterepo
-    from pylxca import updatecomp
-    from pylxca import managementserver
-    from pylxca import updatepolicy
-    from pylxca import storedcredentials
-    from pylxca import connect
-    from pylxca import resourcegroups
-    from pylxca import rules
-    from pylxca import compositeResults
-    #from pylxca import *
-    HAS_PYLXCA = True
-except Exception:
-    HAS_PYLXCA = False
-
-from ansible.module_utils.basic import AnsibleModule
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
 
 
 ANSIBLE_METADATA = {
-    'metadata_version': '1.0',
+    'metadata_version': '1.1',
     'supported_by': 'community',
     'status': ['preview']
 }
@@ -57,8 +15,10 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = '''
 ---
-version_added: "1.0"
-author: Prashant Bhosale, Naval Patel
+version_added: "1.1"
+author:
+  - Prashant Bhosale
+  - Naval Patel (@navalkp)
 module: pylxca_module
 short_description: custom module for pylxca utility
 description:
@@ -89,7 +49,6 @@ options:
     description:
       there are three types of commands inventory, config and others
     required: true
-    type: string
     choices:
         - chassis
         - cmms
@@ -175,6 +134,7 @@ options:
 
 
     choices:
+        - None
         - apply
         - power
         - cancelApply
@@ -227,6 +187,10 @@ options:
     description:
         Perform force operation. set to 'True'.
 
+  description:
+    description:
+      detail about storedcredential.
+
   storedcredential_id:
     description:
         stored credential id to be used for operation
@@ -246,6 +210,7 @@ options:
       - "updatesByMtByComp - Returns the update component names for the specified
                        machine type"
     choices:
+      - None
       - supportedMts
       - size
       - lastRefreshed
@@ -265,6 +230,7 @@ options:
                                selected endpoints."
 
     choices:
+      - None
       - immediate
       - delayed
 
@@ -327,6 +293,7 @@ options:
       - "NAMELIST -  Returns the available compliance policies"
 
     choices:
+      - None
       - FIRMWARE
       - RESULTS
       - COMPARE_RESULTS
@@ -345,6 +312,7 @@ options:
       - STORAGE - Lenovo Storage system
       - SERVER - Compute node or rack server
     choices:
+      - None
       - CMM
       - IOSwitch
       - RACKSWITCH
@@ -377,6 +345,7 @@ options:
       - payloads - When lxca_action=acquire is specified, this parameter returns information about specific
                 firmware updates.
     choices:
+      - None
       - all
       - latest
       - payloads
@@ -388,8 +357,9 @@ options:
       - all - Deletes selected update-package files (payload, change history, readme, and metadata files)
       - payloads - Deletes only the selected payload image files
     choices:
-      -all
-      -payloads
+      - None
+      - all
+      - payloads
 
   endpoint:
     description:
@@ -406,6 +376,7 @@ options:
       - pending - Manually activate the server profile and restart the server. this can be used
                        with apply_configpatterns only.
     choices:
+      - None
       - defer
       - immediate
       - pending
@@ -414,6 +385,7 @@ options:
     description:
       - used with apply_configpatterns valid values are
     choices:
+      - None
       - node
       - rack
       - tower
@@ -443,10 +415,6 @@ options:
     description:
       name of config profile
 
-  resource_group_name:
-    description:
-      name of resource group
-
   update_key:
     description:
       - Used with managementserver commands following are valid options
@@ -460,6 +428,7 @@ options:
       - C(updatedDate) - Returns the date when the last update was performed.
 
     choices:
+      - None
       - all
       - currentVersion
       - history
@@ -483,6 +452,7 @@ options:
       - hostPlatforms - Used for deploying os images
       - remoteFileServers - Used for remote ftp, http server operations
     choices:
+      - None
       - globalSettings
       - hostPlatforms
       - remoteFileServers
@@ -493,6 +463,9 @@ options:
     description:
       Used with osimage it is used for setting osimage and os deployment parameters.
 
+  resource_group_name:
+    description:
+      name of resource group
 
   solutionVPD:
     type:
@@ -516,38 +489,65 @@ requirements:
 '''
 
 EXAMPLES = '''
+# Following links have example tasks using this module
+# for Inventory operations
+# U(https://github.com/lenovo/ansible.lenovo-lxca/tree/master/roles/lenovo.lxca-inventory/tasks)
 
-Following links have example tasks using this module
-for Inventory operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/master/roles/lenovo.lxca-inventory/tasks)
-
-for config operations U(https://github.com/lenovo/ansible.lenovo-lxca/tree/master/roles/lenovo.lxca-config/tasks)
+# for config operations
+# U(https://github.com/lenovo/ansible.lenovo-lxca/tree/master/roles/lenovo.lxca-config/tasks)
 # get cmms info
-- pylxca_module: command_options=cmms login_user=USERID login_password=CME44ibm auth_url=https://10.243.15.168
+- name: get cmms data from LXCA
+  pylxca_module:
+    command_options: cmms
+    login_userr: USERID
+    login_password: CME44ibm
+    auth_url: "https://10.243.15.168"
 '''
+
+import os
+import imp
+from jsonpath_ng.ext import parse
+
+try:
+    from pylxca import chassis
+    from pylxca import cmms
+    from pylxca import nodes
+    from pylxca import discover
+    from pylxca import fans
+    from pylxca import fanmuxes
+    from pylxca import ffdc
+    from pylxca import jobs
+    from pylxca import lxcalog
+    from pylxca import powersupplies
+    from pylxca import scalablesystem
+    from pylxca import switches
+    from pylxca import tasks
+    from pylxca import users
+    from pylxca import configpatterns
+    from pylxca import configprofiles
+    from pylxca import configtargets
+    from pylxca import manage
+    from pylxca import unmanage
+    from pylxca import manifests
+    from pylxca import osimages
+    from pylxca import updaterepo
+    from pylxca import updatecomp
+    from pylxca import managementserver
+    from pylxca import updatepolicy
+    from pylxca import storedcredentials
+    from pylxca import connect
+    from pylxca import resourcegroups
+    from pylxca import rules
+    from pylxca import compositeResults
+    HAS_PYLXCA = True
+except Exception:
+    HAS_PYLXCA = False
+
+from ansible.module_utils.basic import AnsibleModule
 
 
 __ip_map__ = dict()
 __changed__ = False
-
-def _load_compliance_plugin(location, name):
-    plugin = None
-    plugins_list = os.listdir(location)
-
-    try:
-        # Find the specified plugin in plugins folder
-        for plugin_name in plugins_list:
-            if str(plugin_name).lower() == str(name).lower():
-                plugin_dir = os.path.join(location, plugin_name)
-
-                if not os.path.isdir(
-                        plugin_dir) or not "__init__.py" in os.listdir(plugin_dir):
-                    raise Exception("Invalid Compliance Plugin")
-
-                info = imp.find_module(name, [location])
-                plugin = imp.load_module(name, *info)
-    except Exception as err:
-        raise err
-    return plugin
 
 
 def find_conn_obj(kwargs):
@@ -752,6 +752,7 @@ def _get_jobs(module, kwargs):
     except Exception as err:
         module.fail_json(msg="Error getting jobs inventory " + str(err))
     return result
+
 
 # TODO filter
 def _get_lxcalog(module, kwargs):
@@ -1098,6 +1099,27 @@ def _get_users(module, kwargs):
     return result
 
 
+def _load_compliance_plugin(location, name):
+    plugin = None
+    plugins_list = os.listdir(location)
+
+    try:
+        # Find the specified plugin in plugins folder
+        for plugin_name in plugins_list:
+            if str(plugin_name).lower() == str(name).lower():
+                plugin_dir = os.path.join(location, plugin_name)
+
+                if not os.path.isdir(
+                        plugin_dir) or not "__init__.py" in os.listdir(plugin_dir):
+                    raise Exception("Invalid Compliance Plugin")
+
+                info = imp.find_module(name, [location])
+                plugin = imp.load_module(name, *info)
+    except Exception as err:
+        raise err
+    return plugin
+
+
 def _gather_server_facts(module, kwargs):
     rslt = _get_nodes(module, kwargs)
     if not rslt:
@@ -1297,6 +1319,10 @@ FUNC_DICT = {
     'import_managementserver_pkg': _import_managementserver_pkg,
     'updatepolicy': _get_updatepolicy,
     'users': _get_users,
+    'get_storedcredentials': _get_storedcredentials,
+    'create_storedcredentials': _create_storedcredentials,
+    'update_storedcredentials': _update_storedcredentials,
+    'delete_storedcredentials': _delete_storedcredentials,
     'gather_server_facts': _gather_server_facts,
     'validate_basic_rules': _validate_basic_rules,
     'validate_plugin_rules': _validate_plugin_rules,
@@ -1306,10 +1332,6 @@ FUNC_DICT = {
     'compliance_engine': _compliance_engine,
     'rules': _rules,
     'compositeResults': _composite_results,
-    'get_storedcredentials': _get_storedcredentials,
-    'create_storedcredentials': _create_storedcredentials,
-    'update_storedcredentials': _update_storedcredentials,
-    'delete_storedcredentials': _delete_storedcredentials
 
 }
 
@@ -1327,8 +1349,11 @@ def main():
         argument_spec=dict(
             login_user=dict(default=None, required=False),
             login_password=dict(default=None, required=False, no_log=True),
-            command_options=dict(choises=list(FUNC_DICT)),
-            lxca_action=dict(default=None),
+            command_options=dict(choices=list(FUNC_DICT)),
+            lxca_action=dict(
+                default=None,
+                choices=['apply', 'power', 'cancelApply', 'read', 'refresh',
+                         'acquire', 'delete', 'unassign', 'import', None]),
             auth_url=dict(default=None),
             uuid=dict(default=None),
             id=dict(default=None),
@@ -1337,56 +1362,67 @@ def main():
             user=dict(default=None, required=False),
             password=dict(default=None, required=False, no_log=True),
             force=dict(default=None),
-            percentage=dict(default=None),  # not used
-            state=dict(default=None),  # not used
-            sol_id=dict(default=None),
-            manifest_path=dict(default=None),
             description=dict(default=None),
-            solutionVPD=dict(default=None, type=('dict')),
-            members=dict(default=None, type=('list')),
-            criteria=dict(default=None, type=('list')),
             recovery_password=dict(default=None, no_log=True),
-            repo_key=dict(default=None),
-            mode=dict(default=None),
+            repo_key=dict(default=None,
+                          choices=[None, 'supportedMts', 'size', 'lastRefreshed',
+                                   'importDir', 'publicKeys', 'updates',
+                                   'updatesByMt', 'updatesByMtByComp']),
+            mode=dict(default=None, choices=[None, 'immediate', 'delayed']),
             server=dict(default=None),
             storage=dict(default=None),
             switch=dict(default=None),
             cmm=dict(default=None),
-            policy_info=dict(default=None),
+            policy_info=dict(default=None,
+                             choices=[None, 'FIRMWARE', 'RESULTS',
+                                      'COMPARE_RESULTS', 'NAMELIST']),
             policy_name=dict(default=None),
-            policy_type=dict(default=None),
+            policy_type=dict(default=None,
+                             choices=['CMM', 'IOSwitch', 'RACKSWITCH',
+                                      'STORAGE', 'SERVER', None]),
             update_list=dict(default=None, type=('list')),
-            fact_dict=dict(default=None, type=('dict')),
             machine_type=dict(default=None),
             fixids=dict(default=None),
-            scope=dict(default=None),
-            file_type=dict(default=None),
+            scope=dict(default=None,
+                       choices=['all', 'latest', 'payloads', None]),
+            file_type=dict(default=None, choices=[None, 'all', 'payloads']),
             endpoint=dict(default=None),
-            restart=dict(default=None),
-            type=dict(default=None),
+            restart=dict(default=None,
+                         choices=[None, 'defer', 'immediate', 'pending']),
+            type=dict(default=None,
+                      choices=[None, 'node', 'rack', 'tower', 'flex']),
             config_pattern_name=dict(default=None),
             config_profile_name=dict(default=None),
             resource_group_name=dict(default=None),
-            delete_profile=dict(default=None),  # not used
-            unassign=dict(default=None),  # not used
             powerdown=dict(default=None),
             resetimm=dict(default=None),
+            pattern_update_dict=dict(default=None, type=('dict')),
+            includeSettings=dict(default=None),
+            osimages_info=dict(default=None,
+                               choices=[None, 'globalSettings', 'hostPlatforms',
+                                        'remoteFileServers']),
+            osimages_dict=dict(default=None, type=('dict')),
+            update_key=dict(default=None,
+                            choices=['all', 'currentVersion', 'history', 'importDir',
+                                     'size', 'updates', 'updatedDate', None]),
+            files=dict(default=None),
+            storedcredential_id=dict(default=None),
+            uuid_list=dict(default=None, type=('list')),
+            unittest=dict(default=None),
+
             inv_data=dict(default=None, type=('dict')),
             BASIC_RULES=dict(default=None, type=('list')),
             comp_rule=dict(default=None, type=('dict')),
-            pattern_update_dict=dict(default=None, type=('dict')),
-            includeSettings=dict(default=None),
-            osimages_info=dict(default=None),
-            osimages_dict=dict(default=None, type=('dict')),
-            update_key=dict(default=None),
-            files=dict(default=None),
-            unittest=dict(default=None),
-            uuid_list=dict(default=None, type=('list')),
+            solutionVPD=dict(default=None, type=('dict')),
+            members=dict(default=None, type=('list')),
+            criteria=dict(default=None, type=('list')),
+            fact_dict=dict(default=None, type=('dict')),
+            sol_id=dict(default=None),
+            manifest_path=dict(default=None),
             solutionGroups=dict(default=None, type=('list')),
             query_solutionGroups=dict(default=None),
             targetResources=dict(default=None, type=('list')),
             all_rules=dict(default=None),
-            storedcredential_id=dict(default=None)
         ),
         check_invalid_arguments=False,
         supports_check_mode=False,
@@ -1414,7 +1450,5 @@ def main():
                          command_options, result=rslt)
 
 
-# import module snippets
-#from ansible.module_utils.basic import module
 if __name__ == '__main__':
     main()
