@@ -476,7 +476,6 @@ EXAMPLES = '''
 
 import os
 import imp
-from jsonpath_ng.ext import parse
 
 try:
     from pylxca import chassis
