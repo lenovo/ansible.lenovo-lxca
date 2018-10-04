@@ -1013,8 +1013,9 @@ def _update_firmware_all(module, kwargs):
             'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
         __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error updating all device firmware " + str(err))
+    finally:
+        disconnect()
     return result
 
 
@@ -1495,6 +1496,7 @@ def main():
 
     if command_options == "connect":
         if rslt:
+            disconnect()
             module.exit_json(changed=False, msg="Success %s result" %
                              command_options, result="Connected successfully")
 
