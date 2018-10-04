@@ -987,7 +987,8 @@ def _update_firmware_all(module, kwargs):
     global __changed__
     result = None
     try:
-        rep = updatepolicy(_get_connect_lxca(module, kwargs), info="NAMELIST")
+        con = _get_connect_lxca(module, kwargs)
+        rep = updatepolicy(con, info="NAMELIST")
         uuid_list = _valid_compliance_policies(rep['policies'])
         if len(uuid_list) == 0:
             module.fail_json(msg="No policy assigned to any device")
@@ -1000,7 +1001,7 @@ def _update_firmware_all(module, kwargs):
                 # getting common uuid of two list
                 uuid_list = list(set(dev_uuid_list).intersection(uuid_list))
 
-        rep = updatecomp(_get_connect_lxca(module, kwargs), query='components')
+        rep = updatecomp(con, query='components')
         ret_dev_list = rep['DeviceList']
         mod_dev_list = _transform_devicelist(ret_dev_list, uuid_list)
         if len(mod_dev_list) == 0:
@@ -1008,7 +1009,7 @@ def _update_firmware_all(module, kwargs):
                 msg="No updateable component with assigned policy found")
             return result
 
-        result = updatecomp(_get_connect_lxca(module, kwargs), mode=kwargs.get(
+        result = updatecomp(con, mode=kwargs.get(
             'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
         __changed__ = True
     except Exception as err:
