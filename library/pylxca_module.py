@@ -1142,7 +1142,9 @@ def _disconnect_session(module, kwargs):
     try:
         result = disconnect()
     except Exception as err:
-        module.fail_json(msg="Disconnect failed" + str(err))
+        #module.fail_json(msg="Disconnect failed" + str(err))
+        #ignore disconnect error for now this will throw on multiple disconnect call
+        pass
     return result
 
 
