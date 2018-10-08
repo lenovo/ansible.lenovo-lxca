@@ -517,6 +517,17 @@ __ip_map__ = dict()
 __changed__ = False
 
 
+class connection_object:
+    def __init__(self, module, kwargs):
+        self.module = module
+        self.kwargs = kwargs
+    def __enter__(self):
+        return _get_connect_lxca(self.module, self.kwargs)
+
+    def __exit__(self, type, value, traceback):
+        disconnect()
+
+
 def find_conn_obj(kwargs):
     """
     Find connection object in map and return if its already there for url
@@ -552,9 +563,9 @@ def _get_connect_lxca(module, kwargs):
 def _get_chassis_inventory(module, kwargs):
     result = None
     try:
-        result = chassis(_get_connect_lxca(module, kwargs))
+        with connection_object(module, kwargs) as con:
+            result = chassis(con)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting chassis inventory" + str(err))
     return result
 
@@ -562,9 +573,9 @@ def _get_chassis_inventory(module, kwargs):
 def _get_cmms_inventory(module, kwargs):
     result = None
     try:
-        result = cmms(_get_connect_lxca(module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = cmms(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting cmms inventory" + str(err))
     return result
 
@@ -572,12 +583,12 @@ def _get_cmms_inventory(module, kwargs):
 def _get_configstatus(module, kwargs):
     result = None
     try:
-        result = configpatterns(_get_connect_lxca(module, kwargs), endpoint=kwargs.get(
-            'endpoint'), status=kwargs.get('status'))
-        if 'items' in result and len(result['items']) and result['items'][0]:
-            result = result['items'][0]
+        with connection_object(module, kwargs) as con:
+            result = configpatterns(con, endpoint=kwargs.get(
+                'endpoint'), status=kwargs.get('status'))
+            if 'items' in result and len(result['items']) and result['items'][0]:
+                result = result['items'][0]
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error in configstatus " + str(err))
     return result
 
@@ -585,9 +596,9 @@ def _get_configstatus(module, kwargs):
 def _get_configpatterns(module, kwargs):
     result = None
     try:
-        result = configpatterns(_get_connect_lxca(module, kwargs))
+        with connection_object(module, kwargs) as con:
+            result = configpatterns(con)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error in configpatterns " + str(err))
     return result
 
@@ -595,13 +606,12 @@ def _get_configpatterns(module, kwargs):
 def _get_particular_configpattern(module, kwargs):
     result = None
     try:
-        pattern_dict = {}
-        pattern_dict['id'] = kwargs.get('id')
-        pattern_dict['includeSettings'] = kwargs.get('includeSettings')
-        result = configpatterns(_get_connect_lxca(
-            module, kwargs), **pattern_dict)
+        with connection_object(module, kwargs) as con:
+            pattern_dict = {}
+            pattern_dict['id'] = kwargs.get('id')
+            pattern_dict['includeSettings'] = kwargs.get('includeSettings')
+            result = configpatterns(con, **pattern_dict)
     except Exception as err:
-        disconnect()
         module.fail_json(
             msg="Error in getting particular configpattern " + str(err))
     return result
@@ -611,17 +621,16 @@ def _apply_configpatterns(module, kwargs):
     global __changed__
     result = None
     try:
-        pattern_dict = {}
-        pattern_dict['id'] = kwargs.get('id')
-        pattern_dict['name'] = kwargs.get('config_pattern_name')
-        pattern_dict['endpoint'] = kwargs.get('endpoint')
-        pattern_dict['restart'] = kwargs.get('restart')
-        pattern_dict['type'] = kwargs.get('type')
-        result = configpatterns(_get_connect_lxca(module, kwargs),
-                                **pattern_dict)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            pattern_dict = {}
+            pattern_dict['id'] = kwargs.get('id')
+            pattern_dict['name'] = kwargs.get('config_pattern_name')
+            pattern_dict['endpoint'] = kwargs.get('endpoint')
+            pattern_dict['restart'] = kwargs.get('restart')
+            pattern_dict['type'] = kwargs.get('type')
+            result = configpatterns(con, **pattern_dict)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error in applying configpatterns" + str(err))
     return result
 
@@ -630,13 +639,12 @@ def _import_configpatterns(module, kwargs):
     global __changed__
     result = None
     try:
-        pattern_dict = {}
-        pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
-        result = configpatterns(_get_connect_lxca(module, kwargs),
-                                **pattern_dict)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            pattern_dict = {}
+            pattern_dict['pattern_update_dict'] = kwargs.get('pattern_update_dict')
+            result = configpatterns(con, **pattern_dict)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error in import configpatterns" + str(err))
     return result
 
@@ -647,27 +655,26 @@ def _get_configprofiles(module, kwargs):
     delete_profile = None
     unassign_profile = None
     try:
-        action = kwargs.get("lxca_action")
-        if action:
-            if action.lower() in ['delete']:
-                delete_profile = 'True'
-                __changed__ = True
-            elif action.lower() in ['unassign']:
-                unassign_profile = 'True'
-                __changed__ = True
-        result = configprofiles(_get_connect_lxca(module, kwargs),
-                                kwargs.get('id'),
-                                kwargs.get('config_profile_name'),
-                                kwargs.get('endpoint'),
-                                kwargs.get('restart'),
-                                delete_profile,
-                                unassign_profile,
-                                kwargs.get('powerdown'),
-                                kwargs.get('resetimm'),
-                                kwargs.get('force'),)
-# kwargs.get('delete_profile'), kwargs.get('unassign') )
+        with connection_object(module, kwargs) as con:
+            action = kwargs.get("lxca_action")
+            if action:
+                if action.lower() in ['delete']:
+                    delete_profile = 'True'
+                    __changed__ = True
+                elif action.lower() in ['unassign']:
+                    unassign_profile = 'True'
+                    __changed__ = True
+            result = configprofiles(con,
+                                    kwargs.get('id'),
+                                    kwargs.get('config_profile_name'),
+                                    kwargs.get('endpoint'),
+                                    kwargs.get('restart'),
+                                    delete_profile,
+                                    unassign_profile,
+                                    kwargs.get('powerdown'),
+                                    kwargs.get('resetimm'),
+                                    kwargs.get('force'),)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting configprofiles" + str(err))
     return result
 
@@ -675,10 +682,9 @@ def _get_configprofiles(module, kwargs):
 def _get_configtargets(module, kwargs):
     result = None
     try:
-        result = configtargets(_get_connect_lxca(
-            module, kwargs), kwargs.get('id'))
+        with connection_object(module, kwargs) as con:
+            result = configtargets(con, kwargs.get('id'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting configtargets" + str(err))
     return result
 
@@ -686,10 +692,9 @@ def _get_configtargets(module, kwargs):
 def _get_discover(module, kwargs):
     result = None
     try:
-        result = discover(_get_connect_lxca(module, kwargs),
-                          kwargs.get('discovery_ip'))
+        with connection_object(module, kwargs) as con:
+            result = discover(con, kwargs.get('discovery_ip'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error discovery " + str(err))
     return result
 
@@ -697,9 +702,9 @@ def _get_discover(module, kwargs):
 def _get_fans(module, kwargs):
     result = None
     try:
-        result = fans(_get_connect_lxca(module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = fans(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting fans inventory " + str(err))
     return result
 
@@ -707,10 +712,9 @@ def _get_fans(module, kwargs):
 def _get_fanmuxes(module, kwargs):
     result = None
     try:
-        result = fanmuxes(_get_connect_lxca(
-            module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = fanmuxes(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting fanmuxes inventory " + str(err))
     return result
 
@@ -718,9 +722,9 @@ def _get_fanmuxes(module, kwargs):
 def _get_ffdc(module, kwargs):
     result = None
     try:
-        result = ffdc(_get_connect_lxca(module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = ffdc(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting ffdc inventory " + str(err))
     return result
 
@@ -728,9 +732,9 @@ def _get_ffdc(module, kwargs):
 def _get_jobs(module, kwargs):
     result = None
     try:
-        result = jobs(_get_connect_lxca(module, kwargs), kwargs.get('id'))
+        with connection_object(module, kwargs) as con:
+            result = jobs(con, kwargs.get('id'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting jobs inventory " + str(err))
     return result
 
@@ -739,9 +743,9 @@ def _get_jobs(module, kwargs):
 def _get_lxcalog(module, kwargs):
     result = None
     try:
-        result = lxcalog(_get_connect_lxca(module, kwargs))
+        with connection_object(module, kwargs) as con:
+            result = lxcalog(con)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting lxcalog " + str(err))
     return result
 
@@ -751,14 +755,16 @@ def _manage_endpoint(module, kwargs):
     result = None
 
     try:
-        result = manage(_get_connect_lxca(module, kwargs), kwargs.get('endpoint_ip'),
-                        kwargs.get('user'), kwargs.get('password'),
-                        kwargs.get('recovery_password'), None, kwargs.get(
-                            'force'),
-                        kwargs.get('storedcredential_id'))
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = manage(con,
+                            kwargs.get('endpoint_ip'),
+                            kwargs.get('user'),
+                            kwargs.get('password'),
+                            kwargs.get('recovery_password'),
+                            None, kwargs.get('force'),
+                            kwargs.get('storedcredential_id'))
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg=" Fail to manage the endpoint" + str(err))
     return result
 
@@ -766,10 +772,10 @@ def _manage_endpoint(module, kwargs):
 def _manage_status(module, kwargs):
     result = None
     try:
-        result = manage(_get_connect_lxca(module, kwargs), None,
-                        None, None, None, kwargs.get('jobid'))
+        with connection_object(module, kwargs) as con:
+            result = manage(con, None,
+                            None, None, None, kwargs.get('jobid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting info abt jobid" + str(err))
     return result
 
@@ -779,11 +785,13 @@ def _unmanage_endpoint(module, kwargs):
     result = None
 
     try:
-        result = unmanage(_get_connect_lxca(module, kwargs), kwargs.get(
-            'endpoint_ip'), kwargs.get('force'), None)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = unmanage(con,
+                              kwargs.get('endpoint_ip'),
+                              kwargs.get('force'),
+                              None)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg=" Fail to unmanage the endpoint" + str(err))
     return result
 
@@ -791,10 +799,9 @@ def _unmanage_endpoint(module, kwargs):
 def _unmanage_status(module, kwargs):
     result = None
     try:
-        result = unmanage(_get_connect_lxca(module, kwargs),
-                          None, None, kwargs.get('jobid'))
+        with connection_object(module, kwargs) as con:
+            result = unmanage(con, None, None, kwargs.get('jobid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting info abt jobid" + str(err))
     return result
 
@@ -802,12 +809,11 @@ def _unmanage_status(module, kwargs):
 def _get_manifests(module, kwargs):
     result = None
     try:
-        man_dict = {'id': kwargs.get(
-            'sol_id'), 'file': kwargs.get('manifest_path')}
-        conn = _get_connect_lxca(module, kwargs)
-        result = manifests(conn, man_dict)
+        with connection_object(module, kwargs) as con:
+            man_dict = {'id': kwargs.get(
+                'sol_id'), 'file': kwargs.get('manifest_path')}
+            result = manifests(con, man_dict)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting manifest " + str(err))
     return result
 
@@ -817,9 +823,9 @@ def _get_manifests(module, kwargs):
 def _get_nodes(module, kwargs):
     result = None
     try:
-        result = nodes(_get_connect_lxca(module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = nodes(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting nodes inventory " + str(err))
     return result
 
@@ -827,10 +833,9 @@ def _get_nodes(module, kwargs):
 def _get_powersupplies(module, kwargs):
     result = None
     try:
-        result = powersupplies(_get_connect_lxca(
-            module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = powersupplies(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting powersupplies inventory " + str(err))
     return result
 
@@ -840,10 +845,9 @@ def _get_powersupplies(module, kwargs):
 def _get_scalablesystem(module, kwargs):
     result = None
     try:
-        result = scalablesystem(_get_connect_lxca(
-            module, kwargs), kwargs.get('id'))
+        with connection_object(module, kwargs) as con:
+            result = scalablesystem(con, kwargs.get('id'))
     except Exception as err:
-        disconnect()
         module.fail_json(
             msg="Error getting scalablesystem inventory " + str(err))
     return result
@@ -854,10 +858,9 @@ def _get_scalablesystem(module, kwargs):
 def _get_switches_inventory(module, kwargs):
     result = None
     try:
-        result = switches(_get_connect_lxca(
-            module, kwargs), kwargs.get('uuid'))
+        with connection_object(module, kwargs) as con:
+            result = switches(con, kwargs.get('uuid'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting switches " + str(err))
     return result
 
@@ -880,9 +883,9 @@ def _get_tasks(module, kwargs):
     else:
         tasks_dict['jobUID'] = job_uid
     try:
-        result = tasks(_get_connect_lxca(module, kwargs), **tasks_dict)
+        with connection_object(module, kwargs) as con:
+            result = tasks(con, **tasks_dict)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting tasks " + str(err))
     return result
 
@@ -890,15 +893,15 @@ def _get_tasks(module, kwargs):
 def _get_updaterepo_info(module, kwargs):
     result = None
     try:
-        result = updaterepo(_get_connect_lxca(module, kwargs),
-                            kwargs.get('repo_key'),
-                            kwargs.get('lxca_action'),
-                            kwargs.get('machine_type'),
-                            kwargs.get('scope'),
-                            kwargs.get('fixids'),
-                            kwargs.get('file_type'))
+        with connection_object(module, kwargs) as con:
+            result = updaterepo(con,
+                                kwargs.get('repo_key'),
+                                kwargs.get('lxca_action'),
+                                kwargs.get('machine_type'),
+                                kwargs.get('scope'),
+                                kwargs.get('fixids'),
+                                kwargs.get('file_type'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error retriving firmware info." + str(err))
     return result
 
@@ -907,13 +910,15 @@ def _update_firmware(module, kwargs):
     global __changed__
     result = None
     try:
-        result = updatecomp(_get_connect_lxca(module, kwargs), mode=kwargs.get('mode'),
-                            action=kwargs.get('lxca_action'), cmm=kwargs.get('cmm'),
-                            switch=kwargs.get('switch'), server=kwargs.get('server'),
-                            storage=kwargs.get('storage'))
+        with connection_object(module, kwargs) as con:
+            result = updatecomp(con, mode=kwargs.get('mode'),
+                                action=kwargs.get('lxca_action'),
+                                cmm=kwargs.get('cmm'),
+                                switch=kwargs.get('switch'),
+                                server=kwargs.get('server'),
+                                storage=kwargs.get('storage'))
         __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error updating firmware " + str(err))
     return result
 
@@ -953,44 +958,42 @@ def _update_firmware_all(module, kwargs):
     global __changed__
     result = None
     try:
-        con = _get_connect_lxca(module, kwargs)
-        rep = updatepolicy(con, info="NAMELIST")
-        uuid_list = _valid_compliance_policies(rep['policies'])
-        if len(uuid_list) == 0:
-            module.fail_json(msg="No policy assigned to any device")
-            return result
+        with connection_object(module, kwargs) as con:
+            rep = updatepolicy(con, info="NAMELIST")
+            uuid_list = _valid_compliance_policies(rep['policies'])
+            if len(uuid_list) == 0:
+                module.fail_json(msg="No policy assigned to any device")
+                return result
 
-        dev_uuid_list = []
-        if 'uuid_list' in kwargs:
-            dev_uuid_list = kwargs.get('uuid_list')
-            if len(dev_uuid_list) > 0:
-                # getting common uuid of two list
-                uuid_list = list(set(dev_uuid_list).intersection(uuid_list))
+            dev_uuid_list = []
+            if 'uuid_list' in kwargs:
+                dev_uuid_list = kwargs.get('uuid_list')
+                if len(dev_uuid_list) > 0:
+                    # getting common uuid of two list
+                    uuid_list = list(set(dev_uuid_list).intersection(uuid_list))
 
-        rep = updatecomp(con, query='components')
-        ret_dev_list = rep['DeviceList']
-        mod_dev_list = _transform_devicelist(ret_dev_list, uuid_list)
-        if len(mod_dev_list) == 0:
-            module.fail_json(
-                msg="No updateable component with assigned policy found")
-            return result
+            rep = updatecomp(con, query='components')
+            ret_dev_list = rep['DeviceList']
+            mod_dev_list = _transform_devicelist(ret_dev_list, uuid_list)
+            if len(mod_dev_list) == 0:
+                module.fail_json(
+                    msg="No updateable component with assigned policy found")
+                return result
 
-        result = updatecomp(con, mode=kwargs.get(
-            'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
-        __changed__ = True
+            result = updatecomp(con, mode=kwargs.get(
+                'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
+            __changed__ = True
     except Exception as err:
         module.fail_json(msg="Error updating all device firmware " + str(err))
-    finally:
-        disconnect()
     return result
 
 
 def _update_firmware_query_status(module, kwargs):
     result = None
     try:
-        result = updatecomp(_get_connect_lxca(module, kwargs), query='status')
+        with connection_object(module, kwargs) as con:
+            result = updatecomp(con, query='status')
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error updating firmware " + str(err))
     return result
 
@@ -998,10 +1001,9 @@ def _update_firmware_query_status(module, kwargs):
 def _update_firmware_query_comp(module, kwargs):
     result = None
     try:
-        result = updatecomp(_get_connect_lxca(
-            module, kwargs), query='components')
+        with connection_object(module, kwargs) as con:
+            result = updatecomp(con, query='components')
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error updating firmware " + str(err))
     return result
 
@@ -1009,12 +1011,12 @@ def _update_firmware_query_comp(module, kwargs):
 def _get_managementserver_pkg(module, kwargs):
     result = None
     try:
-        result = managementserver(_get_connect_lxca(module, kwargs),
-                                  kwargs.get('update_key'),
-                                  kwargs.get('fixids'),
-                                  kwargs.get('type'))
+        with connection_object(module, kwargs) as con:
+            result = managementserver(con,
+                                      kwargs.get('update_key'),
+                                      kwargs.get('fixids'),
+                                      kwargs.get('type'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error retriving managementserver info." + str(err))
     return result
 
@@ -1023,14 +1025,14 @@ def _update_managementserver_pkg(module, kwargs):
     global __changed__
     result = None
     try:
-        result = managementserver(_get_connect_lxca(module, kwargs),
-                                  kwargs.get('update_key'),
-                                  kwargs.get('fixids'),
-                                  kwargs.get('type'),
-                                  kwargs.get('lxca_action'),)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = managementserver(con,
+                                      kwargs.get('update_key'),
+                                      kwargs.get('fixids'),
+                                      kwargs.get('type'),
+                                      kwargs.get('lxca_action'),)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(
             msg="Error retriving update managementserver." + str(err))
     return result
@@ -1040,16 +1042,16 @@ def _import_managementserver_pkg(module, kwargs):
     global __changed__
     result = None
     try:
-        result = managementserver(_get_connect_lxca(module, kwargs),
-                                  kwargs.get('update_key'),
-                                  kwargs.get('fixids'),
-                                  kwargs.get('type'),
-                                  kwargs.get('lxca_action'),
-                                  kwargs.get('files'),
-                                  kwargs.get('jobid'))
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = managementserver(con,
+                                      kwargs.get('update_key'),
+                                      kwargs.get('fixids'),
+                                      kwargs.get('type'),
+                                      kwargs.get('lxca_action'),
+                                      kwargs.get('files'),
+                                      kwargs.get('jobid'))
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error import managementserver ." + str(err))
     return result
 
@@ -1057,14 +1059,14 @@ def _import_managementserver_pkg(module, kwargs):
 def _get_updatepolicy(module, kwargs):
     result = None
     try:
-        result = updatepolicy(_get_connect_lxca(module, kwargs),
-                              kwargs.get('policy_info'),
-                              kwargs.get('jobid'),
-                              kwargs.get('uuid'),
-                              kwargs.get('policy_name'),
-                              kwargs.get('policy_type'))
+        with connection_object(module, kwargs) as con:
+            result = updatepolicy(con,
+                                  kwargs.get('policy_info'),
+                                  kwargs.get('jobid'),
+                                  kwargs.get('uuid'),
+                                  kwargs.get('policy_name'),
+                                  kwargs.get('policy_type'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting updatepolicy " + str(err))
     return result
 
@@ -1072,24 +1074,23 @@ def _get_updatepolicy(module, kwargs):
 def _get_osimages(module, kwargs):
     result = None
     try:
-        osimages_info = kwargs.get('osimages_info')
-        osimages_dict = kwargs.get('osimages_dict')
-        if osimages_info and osimages_dict:
-            result = osimages(_get_connect_lxca(module, kwargs),
-                              osimages_info,
-                              **osimages_dict)
-        elif osimages_dict:
-            result = osimages(_get_connect_lxca(module, kwargs),
-                              **osimages_dict)
+        with connection_object(module, kwargs) as con:
+            osimages_info = kwargs.get('osimages_info')
+            osimages_dict = kwargs.get('osimages_dict')
+            if osimages_info and osimages_dict:
+                result = osimages(con,
+                                  osimages_info,
+                                  **osimages_dict)
+            elif osimages_dict:
+                result = osimages(con,
+                                  **osimages_dict)
 
-        elif osimages_info:
-            result = osimages(_get_connect_lxca(module, kwargs),
-                              osimages_info)
-        else:
-            result = osimages(_get_connect_lxca(module, kwargs))
-
+            elif osimages_info:
+                result = osimages(con,
+                                  osimages_info)
+            else:
+                result = osimages(con)
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error processing osimages " + str(err))
     return result
 
@@ -1097,28 +1098,17 @@ def _get_osimages(module, kwargs):
 def _get_users(module, kwargs):
     result = None
     try:
-        result = users(_get_connect_lxca(module, kwargs), kwargs.get('id'))
+        with connection_object(module, kwargs) as con:
+            result = users(con, kwargs.get('id'))
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting users " + str(err))
     return result
-
-def _disconnect_session(module, kwargs):
-    result = None
-    try:
-        result = disconnect()
-    except Exception as err:
-        #module.fail_json(msg="Disconnect failed" + str(err))
-        #ignore disconnect error for now this will throw on multiple disconnect call
-        pass
-    return result
-
 
 def _get_storedcredentials(module, kwargs):
     result = None
     try:
-        result = storedcredentials(_get_connect_lxca(
-            module, kwargs), kwargs.get('storedcredential_id'))
+        with connection_object(module, kwargs) as con:
+            result = storedcredentials(con, kwargs.get('storedcredential_id'))
     except Exception as err:
         disconnect()
         module.fail_json(msg="Error getting stored credential " + str(err))
@@ -1129,13 +1119,13 @@ def _create_storedcredentials(module, kwargs):
     global __changed__
     result = None
     try:
-        result = storedcredentials(_get_connect_lxca(module, kwargs),
-                                   user_name=kwargs.get('user'),
-                                   password=kwargs.get('password'),
-                                   description=kwargs.get('description'),)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = storedcredentials(con,
+                                       user_name=kwargs.get('user'),
+                                       password=kwargs.get('password'),
+                                       description=kwargs.get('description'),)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error create stored credential " + str(err))
     return result
 
@@ -1144,14 +1134,14 @@ def _update_storedcredentials(module, kwargs):
     global __changed__
     result = None
     try:
-        result = storedcredentials(_get_connect_lxca(module, kwargs),
-                                   id=kwargs.get('storedcredential_id'),
-                                   user_name=kwargs.get('user'),
-                                   password=kwargs.get('password'),
-                                   description=kwargs.get('description'),)
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = storedcredentials(con,
+                                       id=kwargs.get('storedcredential_id'),
+                                       user_name=kwargs.get('user'),
+                                       password=kwargs.get('password'),
+                                       description=kwargs.get('description'),)
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting stored credential " + str(err))
     return result
 
@@ -1160,11 +1150,11 @@ def _delete_storedcredentials(module, kwargs):
     global __changed__
     result = None
     try:
-        result = storedcredentials(_get_connect_lxca(module, kwargs),
-                                   delete_id=kwargs.get('storedcredential_id'))
-        __changed__ = True
+        with connection_object(module, kwargs) as con:
+            result = storedcredentials(con,
+                                       delete_id=kwargs.get('storedcredential_id'))
+            __changed__ = True
     except Exception as err:
-        disconnect()
         module.fail_json(msg="Error getting stored credential " + str(err))
     return result
 
@@ -1308,8 +1298,6 @@ def main():
             disconnect()
             module.exit_json(changed=False, msg="Success %s result" %
                              command_options, result="Connected successfully")
-
-    _disconnect_session(module, module.params)
 
     if not rslt:
         module.fail_json(changed=False, msg="Fail to get %s result" %
