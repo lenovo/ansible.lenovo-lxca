@@ -1,4 +1,4 @@
-- name: get switches data from LXCA
+- name: get ffdc data from LXCA
   pylxca_module:
     login_user: "{{ lxca_user }}"
     login_password: "{{ lxca_password }}"
