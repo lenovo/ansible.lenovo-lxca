@@ -180,6 +180,12 @@ get globalSetting for osimages
 -----------------
 ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'globalSettings'}" playbooks/config/config.yml -vvvv --tag osimages
 
+set globalSetting for osimages
+-----------------
+for setting globalSetting get detail from get golbalSetting and change the
+parameter you want to change. This example set LINUX default password.
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'CME44ibm', 'lxca_url':'https://10.243.9.238', 'osimages_info':'globalSettings', 'osimages_dict':{'activeDirectory':{'allDomains': [],'defaultDomain':None}, 'credentials':[{'name': 'root', 'password':'Test1234', 'passwordChanged':True, 'type': 'LINUX'}, {'type': "WINDOWS", 'name': 'Administrator', password: None, 'passwordChanged': False}],'ipAssignment':'dhcpv4', 'isVLANMode': 'false', 'licenseKeys': {'win2012r1': {'dataCenterLicenseKey': '','standardLicenseKey': '',},'win2012r2':{'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2016r1': {'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2019r1': {'dataCenterLicenseKey': '','standardLicenseKey': ''}}}}" playbooks/config/config.yml -vvvv --tag osimages
+
 import osimage file from remote server
 -------------------------------------
 ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'osimages_imagetype_dict':{'imageType':'OS'}, 'import_dict':{'imageType':'OS','os':'rhels','imageName':'fixed','path':'iso/rhel73.iso','serverId':'1'}}" playbooks/config/config.yml -vvvv --tag import_osimages
