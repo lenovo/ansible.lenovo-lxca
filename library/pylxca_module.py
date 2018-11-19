@@ -228,6 +228,8 @@ options:
                                the selected endpoints."
       - "delayed - Uses Delayed Activaton mode when applying firmware updates to the
                                selected endpoints."
+      - "prioritized -  Firmware updates on the baseboard management controller
+                        are activated immediately."
 
     choices:
       - None
@@ -1416,7 +1418,8 @@ def main():
                           choices=[None, 'supportedMts', 'size', 'lastRefreshed',
                                    'importDir', 'publicKeys', 'updates',
                                    'updatesByMt', 'updatesByMtByComp']),
-            mode=dict(default=None, choices=[None, 'immediate', 'delayed']),
+            mode=dict(default=None,
+                      choices=[None, 'immediate', 'delayed', 'prioritized']),
             server=dict(default=None),
             storage=dict(default=None),
             switch=dict(default=None),
