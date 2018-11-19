@@ -43,7 +43,6 @@ func_dict = {
                 'import_managementserver_pkg': pylxca_module._import_managementserver_pkg,
                 'updatepolicy': pylxca_module._get_updatepolicy,
                 'users': pylxca_module._get_users,
-
 }
 
 expected_arguments_spec = dict(
