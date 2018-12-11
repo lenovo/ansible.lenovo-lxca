@@ -15,11 +15,13 @@ Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
 
 downloading code from github
 ----------------------------
+```
 git clone https://github.com/lenovo/ansible.lenovo-lxca
-
+```
 this repository uses submodules, you need to download submodules also
+```
 git submodule update --init
-
+```
 
 ### Example for calling LXCA Playbook
 ###### Stored Credentials
