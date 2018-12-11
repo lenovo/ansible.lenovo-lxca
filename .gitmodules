@@ -1,6 +1,6 @@
 [submodule "roles/lenovo.lxca-inventory"]
 	path = roles/lenovo.lxca-inventory
-	url = git@github.com:lenovo/ansible-role-lxca-inventory.git
+	url = https://github.com/lenovo/ansible-role-lxca-inventory.git
 [submodule "roles/lenovo.lxca-config"]
 	path = roles/lenovo.lxca-config
-	url = git@github.com:lenovo/ansible-role-lxca-config.git
+	url = https://github.com/lenovo/ansible-role-lxca-config.git
