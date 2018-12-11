@@ -3,7 +3,7 @@ Lenovo xClarity Ansible
 This project contains Ansible Playbooks, Roles and Modules for LXCA and can be used collectively to implement various use cases.
 Project cotains following Ansible Roles
 - Inventory : Role to get all inventory from LXCA. 
-- Configuration i: Role to do config operation, firmware update, apply patterns, os deploy.
+- Configuration : Role to do config operation, firmware update, apply patterns, os deploy.
 
 Installation
 ------------
@@ -12,6 +12,16 @@ ansible-galaxy install lenovo.lxca-config
 
 Pre-requisite
 Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
+
+downloading code from github
+----------------------------
+```
+git clone https://github.com/lenovo/ansible.lenovo-lxca
+```
+this repository uses submodules, you need to download submodules also
+```
+git submodule update --init
+```
 
 ### Example for calling LXCA Playbook
 ###### Stored Credentials
