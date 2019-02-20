@@ -955,6 +955,84 @@ def _valid_compliance_policies(policy_list):
 
     return uuid_list
 
+def _get_do_not_update_components(module, policies):
+    skip_components_dict = {}
+    server_list = []
+    cmm_list = []
+    storage_list = []
+    switch_list = []
+
+    # This dict can be updated based as you found type which are not covered here
+    type_to_name_dict = {"XCC-Backup" : "XCC (Backup)",
+                         "UEFI-Backup" : "UEFI (Backup)"}
+    for policy in policies:
+
+        if len(policy['deviceslist']) > 0:
+            uuids = policy['deviceslist']
+            comp_details = policy['details']
+            components_list = []
+
+            for comp in comp_details:
+                for c in comp['components']:
+                    if c['targetVersion'].find('DoNotUpdate') == 0:
+                        if c['type'] not in type_to_name_dict:
+                            module.fail_json( msg="Following type is missing from type_to_name_dict " + c['type'])
+                        else:
+                            comp_dict = {"Component" : type_to_name_dict[c['type']]}
+                            components_list.append(comp_dict)
+
+            if components_list:
+                for uuid_dict in uuids:
+                    skip_dict = {}
+                    skip_dict['uuid'] = uuid_dict['uuid']
+                    skip_dict['Components'] = components_list
+                    if uuid_dict['type'] == 'SERVER':
+                        server_list.append(skip_dict)
+                    elif uuid_dict['type'] == 'CMM':
+                        cmm_list.append(skip_dict)
+                    elif uuid_dict['type'] == 'Storage':
+                        storage_list.append(skip_dict)
+                    elif uuid_dict['type'] == 'Switch':
+                        switch_list.append(skip_dict)
+
+    skip_components_dict['ServerList'] = server_list
+    skip_components_dict['CMMList'] = cmm_list
+    skip_components_dict['StorageList'] = storage_list
+    skip_components_dict['SwitchList'] = switch_list
+
+    return skip_components_dict
+
+
+def _remove_components(device_list, dev_type_list, del_uuid, del_component):
+    del_component_bool = False
+    del_uuid_bool = False
+    for dev_dict in device_list:
+        if dev_type_list in dev_dict:
+            if len(dev_dict[dev_type_list]) > 0:
+                for sev_dict in dev_dict[dev_type_list]:
+                    if del_uuid == sev_dict['UUID']:
+                        len_of_components = len(sev_dict['Components'])
+                        ###
+                        new_Compnents = [x for x in sev_dict['Components'] if not (del_component == x.get('Component'))]
+                        sev_dict['Components'] = new_Compnents
+                        if len(new_Compnents) < len_of_components:
+                            del_component_bool = True
+                        if del_component_bool:
+                            if len(new_Compnents) == 0:
+                                del_uuid_bool = True
+            if del_uuid_bool:
+                new_dev_list = [x for x in dev_dict[dev_type_list] if not (del_uuid == x.get('UUID'))]
+                dev_dict[dev_type_list] = new_dev_list
+
+
+def _call_remove_components(skip_dict, from_device_list):
+    for dev_type_list in ['ServerList', 'CMMList', 'StorageList', 'SwtichList']:
+        if dev_type_list in skip_dict:
+            if len(skip_dict[dev_type_list]) > 0:
+                for sev_dict in skip_dict[dev_type_list]:
+                    for comp_dict in sev_dict['Components']:
+                        _remove_components(from_device_list, dev_type_list, sev_dict['uuid'], comp_dict['Component'])
+
 
 def _update_firmware_all(module, kwargs):
     global __changed__
@@ -981,6 +1059,11 @@ def _update_firmware_all(module, kwargs):
                 module.fail_json(
                     msg="No updateable component with assigned policy found")
                 return result
+
+            # removing component with DoNotUpdate
+            rep = updatepolicy(con, info="RESULT")
+            skip_components = _get_do_not_update_components(module, rep['policies'])
+            _call_remove_components(skip_components, mod_dev_list)
 
             result = updatecomp(con, mode=kwargs.get(
                 'mode'), action=kwargs.get('lxca_action'), dev_list=mod_dev_list)
