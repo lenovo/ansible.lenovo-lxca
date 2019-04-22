@@ -1,9 +1,10 @@
-Lenovo xClarity Ansible  
+
+Lenovo Ansible 
 --------------
 This project contains Ansible Playbooks, Roles and Modules for LXCA and can be used collectively to implement various use cases.
 Project cotains following Ansible Roles
 - Inventory : Role to get all inventory from LXCA. 
-- Configuration : Role to do config operation, firmware update, apply patterns, os deploy.
+- Configuration i: Role to do config operation, firmware update, apply patterns, os deploy.
 
 Installation
 ------------
@@ -12,16 +13,6 @@ ansible-galaxy install lenovo.lxca-config
 
 Pre-requisite
 Ansible Role requires LXCA Python Client and LXCA Ansible module installed.
-
-downloading code from github
-----------------------------
-```
-git clone https://github.com/lenovo/ansible.lenovo-lxca
-```
-this repository uses submodules, you need to download submodules also
-```
-git submodule update --init
-```
 
 ### Example for calling LXCA Playbook
 ###### Stored Credentials
@@ -52,25 +43,25 @@ ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10
 ```
 List all  policy  
 ----------------
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 subcmd=list" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Get List of Applicable Frimware policies
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 policy_info=FIRMWARE" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query policy_info=FIRMWARE" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 List  the persisted compare result for servers to which a policy is assigned
 ----------------
 
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 update_policy_info=RESULTS" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query update_policy_info=RESULTS" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Check compliant with the assigned compliance policy using the job or task ID that was returned when the compliance policy was assigned.  
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 update_policy_info=COMPARE_RESULTS uuid=EF362CF0FB4511E397AB40F2E9AF01D0 jobid=2" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=status uuid=EF362CF0FB4511E397AB40F2E9AF01D0 jobid=2" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Assign policy to Endpoint
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 policy_name=x220_imm2 policy_type=SERVER uuid=7C5E041E3CCA11E18B715CF3FC112D8A" playbooks/config/config.yml -vvvv --tag updatepolicy
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 jobid=16" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=assign policy_name=x220_imm2 policy_type=SERVER uuid=7C5E041E3CCA11E18B715CF3FC112D8A" playbooks/config/config.yml -vvvv --tag updatepolicy
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=status jobid=16" playbooks/config/config.yml -vvvv --tag updatepolicy
 
 Update endpoint Firmware
 ================
@@ -100,48 +91,48 @@ Update Repostory commands
 ================
 Queries
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=importDir" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=lastRefreshed" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=publicKeys" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=size" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=supportedMts" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=updates" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=updatesByMt" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 repo_key=updatesByMtByComp" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=importDir" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=lastRefreshed" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=publicKeys" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=size" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=supportedMts" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=updates" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=updatesByMt" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=query repo_key=updatesByMtByComp" playbooks/config/config.yml -vvvv --tag updaterepo
 
 Action
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 lxca_action=read" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 lxca_action=refresh machine_type=7903" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 lxca_action=delete machine_type=7903 file_type=payloads fixids=ibm_fw_imm2_1aoo78j-6.20_anyos_noarch" playbooks/config/config.yml -vvvv --tag updaterepo
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 lxca_action=acquire machine_type=7903 scope=payloads fixids=ibm_fw_imm2_1aoo78j-6.20_anyos_noarch" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=read lxca_action=read" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=refresh lxca_action=refresh machine_type=7903" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=delete lxca_action=delete machine_type=7903 file_type=payloads fixids=ibm_fw_imm2_1aoo78j-6.20_anyos_noarch" playbooks/config/config.yml -vvvv --tag updaterepo
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=acquire lxca_action=acquire machine_type=7903 scope=payloads fixids=ibm_fw_imm2_1aoo78j-6.20_anyos_noarch" playbooks/config/config.yml -vvvv --tag updaterepo
 ```
 
 ###### Config Profile operations
 ```
 get all profiles
 ----------------
-ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 " playbooks/config/config.yml -v --tag configprofiles
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 subcmd=list" playbooks/config/config.yml -v --tag configprofiles
 
 get specified profile with id
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 " playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220  subcmd=list id=69 " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Change profile name of id
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 config_profile_name='changed name 3' " playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=rename id=69 config_profile_name='changed name 3' " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Activate profile for endpoint
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 endpoint=B918EDCA1B5F11E2803EBECB82710ADE restart=immediate " playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=activate id=69 endpoint=B918EDCA1B5F11E2803EBECB82710ADE restart=immediate " playbooks/config/config.yml -vvvv --tag configprofiles
 
 Unassign profile
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 lxca_action=unassign " playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 subcmd=unassign id=69" playbooks/config/config.yml -vvvv --tag configprofiles
 
 Delete profile
 ----------------
-ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 lxca_action=delete" playbooks/config/config.yml -vvvv --tag configprofiles
+ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.240.29.220 id=69 subcmd=delete" playbooks/config/config.yml -vvvv --tag configprofiles
 ```
 
 ###### Config Patterns operations
@@ -177,88 +168,185 @@ ansible-playbook -e "lxca_user=TEST lxca_password=CME44ibm lxca_url=https://10.2
 config status
 ------------
 get config status
-ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.217 endpoint=B918EDCA1B5F11E2803EBECB82710ADE status=True" playbooks/config/config.yml -vvvv --tag get_configstatus
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.217 endpoint=B918EDCA1B5F11E2803EBECB82710ADE" playbooks/config/config.yml -vvvv --tag get_configstatus
 ```
 
 ###### osimages operations
 ```
 get all osimages
 -----------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217'}" playbooks/config/config.yml -v --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'list'}" playbooks/config/config.yml -v --tag osimages
+
+delete  osimages with id
+-----------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.197.119','subcmd':'delete','id':'20190227190109_trail.py'}" playbooks/config/config.yml -vvvv --tag osimages
 
 get globalSetting for osimages
 -----------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'globalSettings'}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'globalsettings'}" playbooks/config/config.yml -vvvv --tag osimages
 
 set globalSetting for osimages
 -----------------
 for setting globalSetting get detail from get golbalSetting and change the
 parameter you want to change. This example set LINUX default password.
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'CME44ibm', 'lxca_url':'https://10.243.9.238', 'osimages_info':'globalSettings', 'osimages_dict':{'activeDirectory':{'allDomains': [],'defaultDomain':None}, 'credentials':[{'name': 'root', 'password':'Test1234', 'passwordChanged':True, 'type': 'LINUX'}, {'type': "WINDOWS", 'name': 'Administrator', password: None, 'passwordChanged': False}],'ipAssignment':'dhcpv4', 'isVLANMode': 'false', 'licenseKeys': {'win2012r1': {'dataCenterLicenseKey': '','standardLicenseKey': '',},'win2012r2':{'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2016r1': {'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2019r1': {'dataCenterLicenseKey': '','standardLicenseKey': ''}}}}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'CME44ibm', 'lxca_url':'https://10.243.9.238', 'subcmd':'globalsettings', 'osimages_dict':{'activeDirectory':{'allDomains': [],'defaultDomain':None}, 'credentials':[{'name': 'root', 'password':'Test1234', 'passwordChanged':True, 'type': 'LINUX'}, {'type': "WINDOWS", 'name': 'Administrator', password: None, 'passwordChanged': False}],'ipAssignment':'dhcpv4', 'isVLANMode': 'false', 'licenseKeys': {'win2012r1': {'dataCenterLicenseKey': '','standardLicenseKey': '',},'win2012r2':{'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2016r1': {'dataCenterLicenseKey': '', 'standardLicenseKey': ''}, 'win2019r1': {'dataCenterLicenseKey': '','standardLicenseKey': ''}}}}" playbooks/config/config.yml -vvvv --tag osimages
+
+get hostSetting for osimages
+-----------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'hostsettings'}" playbooks/config/config.yml -vvvv --tag osimages
+
+create hostSetting for osimages
+-----------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'hostsettings', 'osimages_dict':{\"action\": \"create\", \"hosts\": [{\"storageSettings\": {\"targetDevice\": \"localdisk\"}, \"uuid\": \"A1445C6FDBAA11E6A87F86E06E3AFFFF\", \"networkSettings\": {\"dns2\": \"\", \"dns1\": \"10.240.0.10\", \"hostname\": \"nodeundefined\", \"vlanId\": 0, \"selectedMAC\": \"AUTO\", \"gateway\": \"10.243.0.1\", \"subnetMask\": \"255.255.240.0\", \"mtu\": 1500, \"prefixLength\": 64, \"ipAddress\": \"10.243.9.79\"}}, {\"storageSettings\": {\"targetDevice\": \"localdisk\"}, \"uuid\": \"A122FB03FF4011E68D9BA32E3A66DDDD\", \"networkSettings\": {\"dns2\": \"\", \"dns1\": \"10.240.0.10\", \"hostname\": \"proton1\", \"vlanId\": 0, \"selectedMAC\": \"AUTO\", \"gateway\": \"10.243.0.1\", \"subnetMask\": \"255.255.240.0\", \"mtu\": 1500, \"prefixLength\": 64, \"ipAddress\": \"10.243.9.87\"}}]}}" playbooks/config/config.yml -vvvv --tag osimages
+
+
+update hostSetting for osimages
+-----------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.197.119','subcmd':'hostsettings', 'osimages_dict':{'action': 'update', 'hosts': [{'storageSettings': {'targetDevice': 'localdisk'}, 'uuid': 'A1445C6FDBAA11E6A87F86E06E3AFFFF', 'networkSettings': {'dns2': '', 'dns1': '10.240.0.10', 'hostname': 'nodeundefined', 'vlanId': 0, 'selectedMAC': 'AUTO', 'gateway': '10.243.0.1', 'subnetMask': '255.255.240.0', 'mt': 1500, 'prefixLength': 64, 'ipAddress': '10.243.9.79'}}, {'storageSettings': {'targetDevice': 'localdisk'}, 'uuid': 'A122FB03FF4011E68D9BA32E3A66DDDD', 'networkSettings': {'dns2': '', 'dns1': '10.240.0.10', 'hostname': 'proton1', 'vlanId': 0, 'selectedMAC': 'AUTO', 'gateway': '10.243.0.1', 'subnetMask': '255.255.240.0', 'mt': 1500, 'prefixLength': 64, 'ipAddress': '10.243.9.87'}}]}}" playbooks/config/config.yml -vvvv --tag osimages
+
+
+delete hostSetting for osimages
+-----------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'hostsettings', 'osimages_dict':{'action': 'delete', 'uuid': 'A1445C6FDBAA11E6A87F86E06E3AFFFF'}}" playbooks/config/config.yml -vvvv --tag osimages
 
 import osimage file from remote server
 -------------------------------------
 ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'osimages_imagetype_dict':{'imageType':'OS'}, 'import_dict':{'imageType':'OS','os':'rhels','imageName':'fixed','path':'iso/rhel73.iso','serverId':'1'}}" playbooks/config/config.yml -vvvv --tag import_osimages
 
+
+import osimage script file from local
+-------------------------------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'osimages_imagetype_dict':{'imageType':'SCRIPT'}, 'import_dict':{'imageType':'SCRIPT', "imageName":"trail.py", "os":"rhels", "description":"test_python_file", "file": "/home/naval/trail.py" }}" playbooks/config/config.yml -vvvv --tag import_osimages
+
 get hostplatforms detail for osimages
 ------------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'hostPlatforms'}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'hostplatforms'}" playbooks/config/config.yml -vvvv --tag osimages
 
 deploy osimage to node
 ----------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'hostPlatforms','osimages_dict':{'networkSettings':{'dns1': '10.240.0.10','dns2':'10.240.0.11','gateway':'10.240.28.1','ipAddress':'10.240.29.226','mtu':1500,'prefixLength':64,'selectedMac':'AUTO','subnetMask':'255.255.252.0','vlanId':521},'selectedImage':'rhels7.3|rhels7.3-x86_64-install-Minimal','storageSettings':{'targetDevice':'localdisk'},'uuid':'B918EDCA1B5F11E2803EBECB82710ADE'}}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'hostplatforms','osimages_dict':{'networkSettings':{'dns1': '10.240.0.10','dns2':'10.240.0.11','gateway':'10.240.28.1','ipAddress':'10.240.29.226','mtu':1500,'prefixLength':64,'selectedMac':'AUTO','subnetMask':'255.255.252.0','vlanId':521},'selectedImage':'rhels7.3|rhels7.3-x86_64-install-Minimal','storageSettings':{'targetDevice':'localdisk'},'uuid':'B918EDCA1B5F11E2803EBECB82710ADE'}}" playbooks/config/config.yml -vvvv --tag osimages
 
 get all remoteFileServers
 -------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'remoteFileServers'}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'remotefileservers'}" playbooks/config/config.yml -vvvv --tag osimages
 
 Get Specific remoteFileServers
 ------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'remoteFileServers', 'osimages_dict':{'id':'1'}}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'remotefileservers', 'osimages_dict':{'id':'1'}}" playbooks/config/config.yml -vvvv --tag osimages
 
 Delete Specific Remote File Server
 ---------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'remoteFileServers', 'osimages_dict':{'deleteid':'2'}}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'remotefileservers', 'osimages_dict':{'deleteid':'2'}}" playbooks/config/config.yml -vvvv --tag osimages
 
 Add Remote File Server
 ----------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','osimages_info':'remoteFileServers', 'osimages_dict':{'displayName':'TEST99','address': '192.168.1.10','keyPassphrase': 'Passw0rd','keyType': 'RSA-2048','port': 8080,'protocol': 'HTTPS'}}" playbooks/config/config.yml -vvvv --tag osimages
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'remotefileservers', 'osimages_dict':{'displayName':'TEST99','address': '192.168.1.10','keyPassphrase': 'Passw0rd','keyType': 'RSA-2048','port': 8080,'protocol': 'HTTPS'}}" playbooks/config/config.yml -vvvv --tag osimages
 ```
 
 ###### managementserver operations
 ```
 get managementserver with different key options
 -----------------------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','update_key':'importDir'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'query', 'update_key':'importDir'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
 
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','update_key':'size'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'query', 'update_key':'size'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
 
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','update_key':'updates'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'query', 'update_key':'updates'}" playbooks/config/config.yml -vvvv --tag get_managementserver_pkg
 
 get particular details with fixids
 ----------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','update_key':'filetypes', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch'}" playbooks/config/config.yml -vvvv --tag get_particular_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'query_fixids', 'update_key':'filetypes', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch'}" playbooks/config/config.yml -vvvv --tag get_particular_managementserver_pkg
 
-nsible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','type':'readme'}" playbooks/config/config.yml -vvvv --tag get_particular_managementserver_pkg
+nsible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217',  'subcmd':'query_fixids', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','type':'readme'}" playbooks/config/config.yml -vvvv --tag get_particular_managementserver_pkg
 
 Update options for managementserver
 ----------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'lxca_action':'refresh'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'subcmd':'refresh'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
 
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','lxca_action':'acquire'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','subcmd':'acquire'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
 
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','lxca_action':'delete'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','subcmd':'apply'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
+
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'fixids':'lnvgy_sw_lxca-fw-repository-pack_1-1.0.1_anyos_noarch','subcmd':'delete'}" playbooks/config/config.yml -vvvv --tag update_managementserver_pkg
 
 Import local files to managementserver
 --------------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','lxca_action':'import', 'files':'/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt,/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.chg,/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'import', 'files':'/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.txt,/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.chg,/home/naval/updates/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
 
 files specified with relative to playbook file
 ----------------------------------------------
-ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','lxca_action':'import', 'files':'../../files/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217','subcmd':'import', 'files':'../../files/updates/lnvgy_sw_lxca_thinksystemrepo1-1.3.2_anyos_noarch.xml'}" playbooks/config/config.yml -vvvv --tag import_managementserver_pkg
 
 ```
 
+###### Resource Group operations
+```
+Sending Solution Manifest to LXCA
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.220 sol_id=1 manifest_path=/tmp/test.manifest" playbooks/uhm/manifests.yml -vvvv
+
+Create Resource Groups
+----------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 resource_group_name='TEST2' description='TestGroup' resource_type='solution' solutionVPD={'id':'59A54997C18DCF0594A8CCD0','machineType':'TESTMTM','model':'TESTMODEL','serialNumber':'TESTSERIAL','manufacturer':'LENOVO'} members=[] criteria=[]" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+Create Resource Groups extra_vars as JSON
+---------------------------
+ansible-playbook -e "{'lxca_user':'USERID', 'lxca_password':'Passw0rd', 'lxca_url':'https://10.240.29.217', 'resource_group_name':'TEST3', 'description':'TestGroup', 'resource_type':'solution', 'solutionVPD':{'id':'59A54997C18DCF0594A8CCD1','machineType':'TESTMTM','model':'TESTMODEL','serialNumber':'TESTSERIAL','manufacturer':'LENOVO'}, 'members':[], 'criteria':[]}" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+Create dynamic resource group
+------------------------------
+ansible-playbook -e '{"lxca_user":"USERID", "lxca_password":"Passw0rd", "lxca_url":"https://10.240.197.119", "resource_group_name":"TEST3", "description":"TestGroup", "resource_type":"dynamic",  "criteria":{"parent":"root", "value":None, "criteria":[{"operator":"contains","value":"test", "property":"hostname", "id":"1001", "parent":"lxca_customUI_resourceViews_allGroupsPage_editGroupDynamicPage_2"}], "operator":"AND", "property": None, "id":"root"}}' playbooks/uhm/thinkagile.yml -vvvv --tag create_dynamic_resourcegroups
+
+Create Resource Groups extra_vars as JSON file
+---------------------------
+ansible-playbook -e "@files/resource_groups.json" playbooks/uhm/thinkagile.yml -vvvv --tag create_resourcegroups
+
+Add Resource Groups members
+---------------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0 members=['nodes/9C4D0000B22E44F1A0000A1D85B4ECD0','switches/38D9D7DBCB713C12A210E60C74A0E931']" playbooks/uhm/thinkagile.yml -vvvv --tag add_group_members
+
+Get all Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 " playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+Get specific Resource Groups
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 uuid=59A54997C18DCF0594A8CCD0" playbooks/uhm/thinkagile.yml -vvvv --tag get_resourcegroups
+
+```
+###### compliance rules operations
+```
+get all compliance rules
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+get specific rule
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a2a2d8df9a2f31486aa8b83" playbooks/uhm/thinkagile.yml -vvvv --tag get_compliance_rules
+
+import compliance rules from files of compliance_rules.yaml at uhm roles vars folder
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag import_compliance_rules
+
+Get compositeResults
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
+
+get specific compositeResults
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217 id=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag get_compositeresults
+
+update composit results
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 solutionGroups=5a0eec085ababd3b02cc04a2" playbooks/uhm/thinkagile.yml -vvvv --tag update_solutiongroup_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 targetResources=[u'nodes/4C7D5FD237D411E2875EE4C686742121', u'nodes/1B247BCC918311E2B0703440B5EFBAB8' ]" playbooks/uhm/thinkagile.yml -vvvv --tag update_targetresources_compositeresults
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.243.13.182 all_rules=True" playbooks/uhm/thinkagile.yml -vvvv --tag process_all_rules_compositeresults
+
+Executing Compliance Validation in LXCA
+-------------------
+ansible-playbook -e "lxca_user=USERID lxca_password=Passw0rd lxca_url=https://10.240.29.217" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
+ansible-playbook -e "plugin_name=test_plugin plugin_location=/home/prashant/git/ansible.lenovo-lxca/files/compliance_plugins" playbooks/uhm/compliance.yml  --tag validate_plugin_compliance -vvvv
+ansible-playbook -e "lxca_user=USERID lxca_password=CME44ibm lxca_url=https://10.240.29.215 RESOURCE_UUID=AB6C2B0F827811E29C8B3440B5EAB968 RESOURCE_TYPE=Server BASIC_RULES=[{'property':'powerStatus','ref_value':8}]" playbooks/uhm/compliance.yml  --tag gather_server_facts,validate_basic_server_facts -vvvv
+
+```
 
 ###### unittest cases
 ```

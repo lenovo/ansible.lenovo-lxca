@@ -26,7 +26,6 @@ func_dict = {
                 'unmanage': pylxca_module._unmanage_endpoint,
                 'manage_status': pylxca_module._manage_status,
                 'unmanage_status': pylxca_module._unmanage_status,
-                'manifests': pylxca_module._get_manifests,
                 'nodes': pylxca_module._get_nodes,
                 'osimages': pylxca_module._get_osimages,
                 'powersupplies': pylxca_module._get_powersupplies,
@@ -43,6 +42,7 @@ func_dict = {
                 'import_managementserver_pkg': pylxca_module._import_managementserver_pkg,
                 'updatepolicy': pylxca_module._get_updatepolicy,
                 'users': pylxca_module._get_users,
+
 }
 
 expected_arguments_spec = dict(
@@ -62,7 +62,6 @@ expected_arguments_spec = dict(
     percentage=dict(default=None),
     state=dict(default=None),
     sol_id=dict(default=None),
-    manifest_path=dict(default=None),
     description=dict(default=None),
     solutionVPD=dict(default=None, type=('dict')),
     members=dict(default=None, type=('list')),
@@ -93,7 +92,6 @@ expected_arguments_spec = dict(
     unassign=dict(default=None),
     powerdown=dict(default=None),
     resetimm=dict(default=None),
-    inv_data=dict(default=None, type=('dict')),
     pattern_update_dict=dict(default=None, type=('dict')),
     includeSettings=dict(default=None),
     osimages_info=dict(default=None),
@@ -118,7 +116,7 @@ class TestPylxcaMod:
         args = {
                 "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "connect",
                  "unittest": None,
                }
@@ -140,9 +138,9 @@ class TestPylxcaMod:
     def test__main_nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.240.29.217",
+                "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "nodes",
                  "unittest": "True",
                }
@@ -170,9 +168,9 @@ class TestPylxcaMod:
     def test__nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.240.29.217",
+                "auth_url": "https://10.243.12.139",
                  "login_user": "USERID",
-                 "login_password": "Passw0rd",
+                 "login_password": "CME44ibm",
                  "command_options": "nodes",
                }
         mod_obj.params = args
