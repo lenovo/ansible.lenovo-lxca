@@ -2,4 +2,5 @@
   hosts: localhost
   connection: local
   roles:
-    - { role: lenovo.lxca-config }
+    - pre
+    - lenovo.lxca-config

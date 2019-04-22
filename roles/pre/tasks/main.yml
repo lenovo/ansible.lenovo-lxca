@@ -1,0 +1,5 @@
+# Installs the pylxca python library that is going to be used by the pylxca_module
+- name: Install PyLXCA dependency
+  pip:
+    name: pylxca
+  tags: always
