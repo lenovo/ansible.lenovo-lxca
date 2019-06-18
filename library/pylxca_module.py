@@ -962,6 +962,7 @@ def _get_do_not_update_components(module, policies):
 
     # This dict can be updated based as you found type which are not covered here
     type_to_name_dict = {"XCC-Backup": "XCC (Backup)",
+                         "IMM-Backup": "IMM (Backup)",
                          "UEFI-Backup": "UEFI (Backup)"}
     for policy in policies:
 
@@ -1063,7 +1064,9 @@ def _update_firmware_all(module, kwargs):
             skip_components = _get_do_not_update_components(module, rep['policies'])
             _call_remove_components(skip_components, mod_dev_list)
 
-            dev_json_str = json.dumps(mod_dev_list)
+            final_dev = {}
+            final_dev['DeviceList'] = mod_dev_list
+            dev_json_str = json.dumps(final_dev)
             result = updatecomp(con, 'apply', mode=kwargs.get(
                 'mode'), action=kwargs.get('lxca_action'), dev_list=dev_json_str)
             __changed__ = True
