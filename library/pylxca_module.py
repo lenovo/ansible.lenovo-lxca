@@ -961,8 +961,9 @@ def _get_do_not_update_components(module, policies):
     switch_list = []
 
     # This dict can be updated based as you found type which are not covered here
-    type_to_name_dict = {"XCC-Backup": "XCC (Backup)",
-                         "UEFI-Backup": "UEFI (Backup)"}
+    type_to_name_dict = {"XCC-Backup": ["XCC (Backup)"],
+                         "IMM-Backup": ["IMM (Backup)","IMM2 (Backup)"],
+                         "UEFI-Backup": ["UEFI (Backup)"]}
     for policy in policies:
 
         if len(policy['deviceslist']) > 0:
@@ -976,8 +977,9 @@ def _get_do_not_update_components(module, policies):
                         if c['type'] not in type_to_name_dict:
                             module.fail_json(msg="Following type is missing from type_to_name_dict " + c['type'])
                         else:
-                            comp_dict = {"Component": type_to_name_dict[c['type']]}
-                            components_list.append(comp_dict)
+                            for component in type_to_name_dict[c['type']]:
+                                comp_dict = {"Component": component}
+                                components_list.append(comp_dict)
 
             if components_list:
                 for uuid_dict in uuids:
@@ -1063,7 +1065,9 @@ def _update_firmware_all(module, kwargs):
             skip_components = _get_do_not_update_components(module, rep['policies'])
             _call_remove_components(skip_components, mod_dev_list)
 
-            dev_json_str = json.dumps(mod_dev_list)
+            final_dev = {}
+            final_dev['DeviceList'] = mod_dev_list
+            dev_json_str = json.dumps(final_dev)
             result = updatecomp(con, 'apply', mode=kwargs.get(
                 'mode'), action=kwargs.get('lxca_action'), dev_list=dev_json_str)
             __changed__ = True
