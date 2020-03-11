@@ -817,7 +817,13 @@ def _get_nodes(module, kwargs):
     result = None
     try:
         with connection_object(module, kwargs) as con:
-            result = nodes(con, kwargs.get('uuid'))
+            result = nodes(
+                con, 
+                kwargs.get('uuid'),
+                kwargs.get('chassis'),
+                kwargs.get('status'),
+                json.dumps(kwargs.get('modify')),
+            )
     except Exception as err:
         module.fail_json(msg="Error getting nodes inventory " + str(err))
     return result
