@@ -967,7 +967,8 @@ def _get_do_not_update_components(module, policies):
 
     # This dict can be updated based as you found type which are not covered here
     type_to_name_dict = {"XCC-BACKUP": ["XCC (Backup)"],
-                         "IMM-BACKUP": ["IMM (Backup)","IMM2 (Backup)"],
+                         "IMM-BACKUP": ["IMM (Backup)"],
+                         "IMM2-BACKUP": ["IMM2 (Backup)"],
                          "UEFI-BACKUP": ["UEFI (Backup)"]}
     for policy in policies:
 
