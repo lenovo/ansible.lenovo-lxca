@@ -980,7 +980,7 @@ def _get_do_not_update_components(module, policies):
             for comp in comp_details:
                 for c in comp['components']:
                     type = c['type'].upper()
-                    if c['targetVersion'].find('DoNotUpdate') == 0:
+                    if c['targetVersion'].find('DoNotUpdate') == 0 and type:
                         if type not in type_to_name_dict:
                             module.fail_json(msg="Following type is missing from type_to_name_dict " + type)
                         else:
