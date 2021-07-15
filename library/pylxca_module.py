@@ -969,7 +969,11 @@ def _get_do_not_update_components(module, policies):
     type_to_name_dict = {"XCC-BACKUP": ["XCC (Backup)"],
                          "IMM-BACKUP": ["IMM (Backup)"],
                          "IMM2-BACKUP": ["IMM2 (Backup)"],
-                         "UEFI-BACKUP": ["UEFI (Backup)"]}
+                         "UEFI-BACKUP": ["UEFI (Backup)"],
+                         "XCC": ["XCC"],
+                         "IMM": ["IMM"],
+                         "IMM2": ["IMM2"],
+                         "UEFI": ["UEFI"]}
     for policy in policies:
 
         if len(policy['deviceslist']) > 0:
@@ -980,7 +984,7 @@ def _get_do_not_update_components(module, policies):
             for comp in comp_details:
                 for c in comp['components']:
                     type = c['type'].upper()
-                    if c['targetVersion'].find('DoNotUpdate') == 0:
+                    if c['targetVersion'].find('DoNotUpdate') == 0 and type:
                         if type not in type_to_name_dict:
                             module.fail_json(msg="Following type is missing from type_to_name_dict " + type)
                         else:
