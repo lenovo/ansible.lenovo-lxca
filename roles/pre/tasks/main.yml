@@ -2,4 +2,5 @@
 - name: Install PyLXCA dependency
   pip:
     name: pylxca
+    name: jsonpath-ng
   tags: always
