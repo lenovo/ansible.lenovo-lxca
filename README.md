@@ -6,6 +6,12 @@ Project cotains following Ansible Roles
 - Inventory : Role to get all inventory from LXCA. 
 - Configuration i: Role to do config operation, firmware update, apply patterns, os deploy.
 
+Dependencies
+------------
+ -python3 version 3.10.4
+ -pip version 22.0.2
+ -ansible [core 2.12.5]
+
 Installation
 ------------
 ansible-galaxy install lenovo.lxca-inventory
