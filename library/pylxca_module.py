@@ -1390,7 +1390,6 @@ def main():
             unittest=dict(default=None),
 
         ),
-        check_invalid_arguments=False,
         supports_check_mode=False,
     )
 
