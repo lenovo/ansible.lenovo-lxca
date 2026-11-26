@@ -150,9 +150,9 @@ options:
     description:
       - Used with following command
       - "manage - ip of endpoint to be managed
-             i.e 10.240.72.172"
+             i.e ENDPOINT_IP"
       - "unmanage - combination of ip,uuid of device and type of device
-             i.e 10.240.72.172;46920C143355486F97C19A34ABC7D746;Chassis
+             i.e ENDPOINT_IP;ENDPOINT_UUID;Chassis
              type have following options
                 Chassis
                 ThinkServer
@@ -475,9 +475,9 @@ EXAMPLES = '''
 - name: get cmms data from LXCA
   pylxca_module:
     command_options: cmms
-    login_userr: USERID
-    login_password: CME44ibm
-    auth_url: "https://10.243.15.168"
+    login_user: "{{ lookup('env', 'LXCA_USER') }}"
+    login_password: "{{ lookup('env', 'LXCA_PASSWORD') }}"
+    auth_url: "{{ lookup('env', 'LXCA_URL') }}"
 '''
 
 import os
