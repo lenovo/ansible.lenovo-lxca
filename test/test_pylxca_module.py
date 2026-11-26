@@ -1,7 +1,16 @@
+import os
+
 import mock
 from nose.tools import assert_equals
 from nose.tools import assert_not_equal
 from library import pylxca_module
+
+
+lxca_test_args = {
+    "auth_url": os.getenv("LXCA_URL"),
+    "login_user": os.getenv("LXCA_USER"),
+    "login_password": os.getenv("LXCA_PASSWORD"),
+}
 
 
 # this dict is used to get command_options
@@ -114,9 +123,9 @@ class TestPylxcaMod:
     def test__main__success(self, ansible_mod_cls):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.243.12.139",
-                 "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                "auth_url": lxca_test_args["auth_url"],
+                 "login_user": lxca_test_args["login_user"],
+                 "login_password": lxca_test_args["login_password"],
                  "command_options": "connect",
                  "unittest": None,
                }
@@ -138,9 +147,9 @@ class TestPylxcaMod:
     def test__main_nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.243.12.139",
-                 "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                "auth_url": lxca_test_args["auth_url"],
+                 "login_user": lxca_test_args["login_user"],
+                 "login_password": lxca_test_args["login_password"],
                  "command_options": "nodes",
                  "unittest": "True",
                }
@@ -168,9 +177,9 @@ class TestPylxcaMod:
     def test__nodes(self, ansible_mod_cls,_get_nodes):
         mod_obj = ansible_mod_cls.return_value
         args = {
-                "auth_url": "https://10.243.12.139",
-                 "login_user": "USERID",
-                 "login_password": "CME44ibm",
+                "auth_url": lxca_test_args["auth_url"],
+                 "login_user": lxca_test_args["login_user"],
+                 "login_password": lxca_test_args["login_password"],
                  "command_options": "nodes",
                }
         mod_obj.params = args
